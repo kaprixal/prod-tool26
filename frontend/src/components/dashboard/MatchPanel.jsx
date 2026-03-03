@@ -1,46 +1,119 @@
 import { useState, useEffect } from 'react';
 import { updateMatch, swapTeams, clearMatch } from '../../api';
 
-/**
- * Get the character/hero options for the current game.
- */
-function getCharOptions(game, gameData) {
-  if (!gameData || !game) return [];
-  switch (game) {
-    case 'lol': return gameData.lol?.champions || [];
-    case 'ow2': return (gameData.ow2?.heroes || []).map((h) => ({ name: h, value: h }));
-    case 'val': return (gameData.val?.agents || []).map((a) => ({ name: a, value: a }));
-    case 'mr': return (gameData.mr?.heroes || []).map((h) => ({ name: h, value: h }));
-    default: return [];
-  }
+/* ── Shared styles ── */
+const INPUT = 'w-full bg-gray-800 h-6 rounded-md p-1';
+const SELECT_SM = 'w-auto bg-gray-800 h-5 rounded-md text-xs';
+const SELECT_SM_ALT = 'w-auto bg-gray-700 h-5 rounded-md text-xs';
+
+/* ── Game-data helpers ── */
+const toOpts = (arr = []) => arr.map((v) => ({ name: v, value: v }));
+
+function getCharOptions(game, gd) {
+  if (!gd?.[game]) return [];
+  if (game === 'lol') return gd.lol.champions || [];
+  const key = { ow2: 'heroes', val: 'agents', mr: 'heroes' }[game];
+  return key ? toOpts(gd[game][key]) : [];
 }
 
-function getRoleOptions(game, gameData) {
-  if (!gameData || !game) return [];
-  switch (game) {
-    case 'lol': return gameData.lol?.roles || [];
-    case 'ow2': return gameData.ow2?.roles || [];
-    case 'val': return gameData.val?.roles || [];
-    case 'mr': return gameData.mr?.roles || [];
-    default: return [];
-  }
+const getList = (field) => (game, gd) => gd?.[game]?.[field] || [];
+const getRoleOptions = getList('roles');
+const getMapOptions = getList('maps');
+const getMapTypeOptions = (game, gd) => (game === 'ow2' ? gd?.ow2?.mapTypes || [] : []);
+
+/* ── Sub-components ── */
+function LabeledInput({ label, ...props }) {
+  return (
+    <div className="flex flex-row items-center">
+      <label className="pr-3 w-20 text-right text-xs">{label}</label>
+      <input className={INPUT} {...props} />
+    </div>
+  );
 }
 
-function getMapOptions(game, gameData) {
-  if (!gameData || !game) return [];
-  switch (game) {
-    case 'ow2': return gameData.ow2?.maps || [];
-    case 'val': return gameData.val?.maps || [];
-    case 'mr': return gameData.mr?.maps || [];
-    default: return [];
-  }
+function PlayerRow({ player, showChars, showRoles, charOptions, roleOptions, onChange }) {
+  return (
+    <div className="flex flex-row items-center gap-1">
+      <input
+        type="text"
+        className={INPUT}
+        placeholder={player.placeholder}
+        value={player.name}
+        onChange={(e) => onChange('name', e.target.value)}
+      />
+      {showChars && (
+        <select className={SELECT_SM} value={player.character} onChange={(e) => onChange('character', e.target.value)}>
+          {charOptions.map((opt) => {
+            const v = typeof opt === 'string' ? opt : opt.value;
+            return <option key={v} value={v}>{typeof opt === 'string' ? opt : opt.name}</option>;
+          })}
+        </select>
+      )}
+      {showRoles && (
+        <select className={SELECT_SM_ALT} value={player.role} onChange={(e) => onChange('role', e.target.value)}>
+          {roleOptions.map((r) => <option key={r} value={r}>{r}</option>)}
+        </select>
+      )}
+    </div>
+  );
 }
 
-function getMapTypeOptions(game, gameData) {
-  if (game === 'ow2') return gameData.ow2?.mapTypes || [];
-  return [];
+function TeamSection({ label, teamName, teamLogo, onNameChange, onLogoChange, playerKeys, players, showPlayer6, p6Key, showChars, showRoles, charOptions, roleOptions, onPlayerChange }) {
+  return (
+    <div className="mb-2 p-2 bg-gray-900 rounded-lg flex-1">
+      <h2 className="mb-2 text-gray-400">{label}</h2>
+      <div className="space-y-2">
+        <LabeledInput label="Team" type="text" placeholder={`${label} Name`} value={teamName} onChange={(e) => onNameChange(e.target.value)} />
+        <LabeledInput label="Logo" type="text" placeholder={`${label} Logo Link`} value={teamLogo} onChange={(e) => onLogoChange(e.target.value)} />
+        {playerKeys.map(({ key, placeholder }) => (
+          <PlayerRow
+            key={key}
+            player={{ ...(players[key] || { name: '', character: '+', role: '+' }), placeholder }}
+            showChars={showChars} showRoles={showRoles} charOptions={charOptions} roleOptions={roleOptions}
+            onChange={(field, val) => onPlayerChange(key, field, val)}
+          />
+        ))}
+        {showPlayer6 && (
+          <PlayerRow
+            key={p6Key}
+            player={{ ...(players[p6Key] || { name: '', character: '+', role: '+' }), placeholder: 'P6 IGN' }}
+            showChars={showChars} showRoles={showRoles} charOptions={charOptions} roleOptions={roleOptions}
+            onChange={(field, val) => onPlayerChange(p6Key, field, val)}
+          />
+        )}
+      </div>
+    </div>
+  );
 }
 
+function MapColumn({ index, mapData, showMapType, showMapName, mapTypeOptions, mapOptions, onUpdate }) {
+  const mapKey = `map${index}`;
+  const data = mapData[mapKey] || { type: '+', name: '+', t1: '', t2: '', done: false };
+  return (
+    <div className="flex flex-col items-center px-1">
+      <label className="text-xs">Map {index}</label>
+      {showMapType && (
+        <select className="w-20 bg-gray-800 h-6 rounded-md text-xs" value={data.type} onChange={(e) => onUpdate(mapKey, 'type', e.target.value)}>
+          {mapTypeOptions.map((t) => <option key={t} value={t}>{t}</option>)}
+        </select>
+      )}
+      {showMapName && (
+        <select className="w-24 bg-gray-800 h-6 rounded-md text-xs" value={data.name} onChange={(e) => onUpdate(mapKey, 'name', e.target.value)}>
+          {mapOptions.map((m) => <option key={m} value={m}>{m}</option>)}
+        </select>
+      )}
+      <div className="flex flex-row items-center gap-1">
+        <input type="text" className="w-10 bg-gray-800 h-6 rounded-md text-center text-xs" value={data.t1} onChange={(e) => onUpdate(mapKey, 't1', e.target.value)} />
+        <span>:</span>
+        <input type="text" className="w-10 bg-gray-800 h-6 rounded-md text-center text-xs" value={data.t2} onChange={(e) => onUpdate(mapKey, 't2', e.target.value)} />
+      </div>
+      <label className="text-xs mt-1">Done?</label>
+      <input type="checkbox" className="w-4 h-4" checked={data.done || false} onChange={(e) => onUpdate(mapKey, 'done', e.target.checked)} />
+    </div>
+  );
+}
+
+/* ── Main component ── */
 export default function MatchPanel({ matchNumber, matchData, game, gameData, onUpdate }) {
   const [team1Name, setTeam1Name] = useState('');
   const [team1Logo, setTeam1Logo] = useState('');
@@ -49,11 +122,11 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
   const [players, setPlayers] = useState({});
   const [maps, setMaps] = useState({});
 
+  const showChars = ['lol', 'ow2', 'val', 'mr'].includes(game);
+  const showRoles = showChars;
+  const showPlayer6 = game === 'mr';
   const showMapType = game === 'ow2';
   const showMapName = ['ow2', 'val', 'mr'].includes(game);
-  const showChars = ['lol', 'ow2', 'val', 'mr'].includes(game);
-  const showRoles = ['lol', 'ow2', 'val', 'mr'].includes(game);
-  const showPlayer6 = game === 'mr';
 
   const charOptions = getCharOptions(game, gameData);
   const roleOptions = getRoleOptions(game, gameData);
@@ -70,225 +143,70 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
     setMaps(matchData.maps || {});
   }, [matchData, matchNumber]);
 
-  const updatePlayer = (key, field, value) => {
-    setPlayers((prev) => ({
-      ...prev,
-      [key]: { ...prev[key], [field]: value },
-    }));
-  };
+  const updatePlayer = (key, field, value) =>
+    setPlayers((prev) => ({ ...prev, [key]: { ...prev[key], [field]: value } }));
 
-  const updateMap = (key, field, value) => {
-    setMaps((prev) => ({
-      ...prev,
-      [key]: { ...prev[key], [field]: field === 'done' ? value : value },
-    }));
-  };
+  const updateMap = (key, field, value) =>
+    setMaps((prev) => ({ ...prev, [key]: { ...prev[key], [field]: value } }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await updateMatch(matchNumber, {
-      team1Name,
-      team1Logo,
-      team2Name,
-      team2Logo,
-      players,
-      maps,
-    });
+    await updateMatch(matchNumber, { team1Name, team1Logo, team2Name, team2Logo, players, maps });
     onUpdate();
   };
 
-  const handleSwap = async () => {
-    await swapTeams(matchNumber);
-    onUpdate();
-  };
+  const handleSwap = async () => { await swapTeams(matchNumber); onUpdate(); };
+  const handleClear = async () => { await clearMatch(matchNumber); onUpdate(); };
 
-  const handleClear = async () => {
-    await clearMatch(matchNumber);
-    onUpdate();
-  };
-
-  const renderPlayerRow = (pKey, placeholder) => {
-    const player = players[pKey] || { name: '', character: '+', role: '+' };
-    return (
-      <div key={pKey} className="flex flex-row items-center gap-1">
-        <input
-          type="text"
-          className="w-full bg-gray-800 h-6 rounded-md p-1"
-          placeholder={placeholder}
-          value={player.name}
-          onChange={(e) => updatePlayer(pKey, 'name', e.target.value)}
-        />
-        {showChars && (
-          <select
-            className="w-auto bg-gray-800 h-5 rounded-md text-xs"
-            value={player.character}
-            onChange={(e) => updatePlayer(pKey, 'character', e.target.value)}
-          >
-            {charOptions.map((opt) => (
-              <option key={typeof opt === 'string' ? opt : opt.value} value={typeof opt === 'string' ? opt : opt.value}>
-                {typeof opt === 'string' ? opt : opt.name}
-              </option>
-            ))}
-          </select>
-        )}
-        {showRoles && (
-          <select
-            className="w-auto bg-gray-700 h-5 rounded-md text-xs"
-            value={player.role}
-            onChange={(e) => updatePlayer(pKey, 'role', e.target.value)}
-          >
-            {roleOptions.map((r) => (
-              <option key={r} value={r}>{r}</option>
-            ))}
-          </select>
-        )}
-      </div>
-    );
-  };
+  /* Player key lists for each team */
+  const team1Players = [1, 2, 3, 4, 5].map((i) => ({ key: `p${i}`, placeholder: `P${i} IGN` }));
+  const team2Players = [6, 7, 8, 9, 10].map((i) => ({ key: `p${i}`, placeholder: `P${i - 5} IGN` }));
 
   return (
     <form onSubmit={handleSubmit} className="text-sm">
       <div className="flex flex-row gap-2">
-        {/* Team 1 */}
-        <div className="mb-2 p-2 bg-gray-900 rounded-lg flex-1">
-          <h2 className="mb-2 text-gray-400">Team 1</h2>
-          <div className="space-y-2">
-            <div className="flex flex-row items-center">
-              <label className="pr-3 w-20 text-right text-xs">Team</label>
-              <input
-                type="text"
-                className="w-full bg-gray-800 h-6 rounded-md p-1"
-                placeholder="Team 1 Name"
-                value={team1Name}
-                onChange={(e) => setTeam1Name(e.target.value)}
-              />
-            </div>
-            <div className="flex flex-row items-center">
-              <label className="pr-3 w-20 text-right text-xs">Logo</label>
-              <input
-                type="text"
-                className="w-full bg-gray-800 h-6 rounded-md p-1"
-                placeholder="Team 1 Logo Link"
-                value={team1Logo}
-                onChange={(e) => setTeam1Logo(e.target.value)}
-              />
-            </div>
-            {[1, 2, 3, 4, 5].map((i) => renderPlayerRow(`p${i}`, `P${i} IGN`))}
-            {showPlayer6 && renderPlayerRow('p11', 'P6 IGN')}
-          </div>
-        </div>
-
-        {/* Team 2 */}
-        <div className="mb-2 p-2 bg-gray-900 rounded-lg flex-1">
-          <h2 className="mb-2 text-gray-400">Team 2</h2>
-          <div className="space-y-2">
-            <div className="flex flex-row items-center">
-              <label className="pr-3 w-20 text-right text-xs">Team</label>
-              <input
-                type="text"
-                className="w-full bg-gray-800 h-6 rounded-md p-1"
-                placeholder="Team 2 Name"
-                value={team2Name}
-                onChange={(e) => setTeam2Name(e.target.value)}
-              />
-            </div>
-            <div className="flex flex-row items-center">
-              <label className="pr-3 w-20 text-right text-xs">Logo</label>
-              <input
-                type="text"
-                className="w-full bg-gray-800 h-6 rounded-md p-1"
-                placeholder="Team 2 Logo Link"
-                value={team2Logo}
-                onChange={(e) => setTeam2Logo(e.target.value)}
-              />
-            </div>
-            {[6, 7, 8, 9, 10].map((i) => renderPlayerRow(`p${i}`, `P${i - 5} IGN`))}
-            {showPlayer6 && renderPlayerRow('p12', 'P6 IGN')}
-          </div>
-        </div>
+        <TeamSection
+          label="Team 1"
+          teamName={team1Name} teamLogo={team1Logo}
+          onNameChange={setTeam1Name} onLogoChange={setTeam1Logo}
+          playerKeys={team1Players} players={players}
+          showPlayer6={showPlayer6} p6Key="p11"
+          showChars={showChars} showRoles={showRoles} charOptions={charOptions} roleOptions={roleOptions}
+          onPlayerChange={updatePlayer}
+        />
+        <TeamSection
+          label="Team 2"
+          teamName={team2Name} teamLogo={team2Logo}
+          onNameChange={setTeam2Name} onLogoChange={setTeam2Logo}
+          playerKeys={team2Players} players={players}
+          showPlayer6={showPlayer6} p6Key="p12"
+          showChars={showChars} showRoles={showRoles} charOptions={charOptions} roleOptions={roleOptions}
+          onPlayerChange={updatePlayer}
+        />
       </div>
 
-      {/* Swap button */}
-      <button
-        type="button"
-        onClick={handleSwap}
-        className="bg-gray-500 hover:bg-gray-400 px-6 py-2 rounded-lg text-white w-full"
-      >
+      <button type="button" onClick={handleSwap} className="bg-gray-500 hover:bg-gray-400 px-6 py-2 rounded-lg text-white w-full">
         SWAP
       </button>
 
       <div className="h-4" />
 
-      {/* Maps section */}
       <div className="py-2 bg-gray-900 rounded-lg flex flex-row justify-evenly w-full overflow-x-auto">
-        {[1, 2, 3, 4, 5].map((i) => {
-          const mapKey = `map${i}`;
-          const mapData = maps[mapKey] || { type: '+', name: '+', t1: '', t2: '', done: false };
-          return (
-            <div key={i} className="flex flex-col items-center px-1">
-              <label className="text-xs">Map {i}</label>
-              {showMapType && (
-                <select
-                  className="w-20 bg-gray-800 h-6 rounded-md text-xs"
-                  value={mapData.type}
-                  onChange={(e) => updateMap(mapKey, 'type', e.target.value)}
-                >
-                  {mapTypeOptions.map((t) => (
-                    <option key={t} value={t}>{t}</option>
-                  ))}
-                </select>
-              )}
-              {showMapName && (
-                <select
-                  className="w-24 bg-gray-800 h-6 rounded-md text-xs"
-                  value={mapData.name}
-                  onChange={(e) => updateMap(mapKey, 'name', e.target.value)}
-                >
-                  {mapOptions.map((m) => (
-                    <option key={m} value={m}>{m}</option>
-                  ))}
-                </select>
-              )}
-              <div className="flex flex-row items-center gap-1">
-                <input
-                  type="text"
-                  className="w-10 bg-gray-800 h-6 rounded-md text-center text-xs"
-                  value={mapData.t1}
-                  onChange={(e) => updateMap(mapKey, 't1', e.target.value)}
-                />
-                <span>:</span>
-                <input
-                  type="text"
-                  className="w-10 bg-gray-800 h-6 rounded-md text-center text-xs"
-                  value={mapData.t2}
-                  onChange={(e) => updateMap(mapKey, 't2', e.target.value)}
-                />
-              </div>
-              <label className="text-xs mt-1">Done?</label>
-              <input
-                type="checkbox"
-                className="w-4 h-4"
-                checked={mapData.done || false}
-                onChange={(e) => updateMap(mapKey, 'done', e.target.checked)}
-              />
-            </div>
-          );
-        })}
+        {[1, 2, 3, 4, 5].map((i) => (
+          <MapColumn
+            key={i} index={i} mapData={maps}
+            showMapType={showMapType} showMapName={showMapName}
+            mapTypeOptions={mapTypeOptions} mapOptions={mapOptions}
+            onUpdate={updateMap}
+          />
+        ))}
       </div>
 
-      {/* Buttons */}
       <div className="flex justify-between mt-4">
-        <button
-          type="button"
-          onClick={handleClear}
-          className="w-10 h-10 bg-gray-700 hover:bg-red-500 rounded-full flex items-center justify-center"
-        >
+        <button type="button" onClick={handleClear} className="w-10 h-10 bg-gray-700 hover:bg-red-500 rounded-full flex items-center justify-center">
           <span className="text-xl text-gray-200">X</span>
         </button>
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-400 px-6 py-2 rounded-lg text-white"
-        >
+        <button type="submit" className="bg-blue-500 hover:bg-blue-400 px-6 py-2 rounded-lg text-white">
           APPLY
         </button>
       </div>
