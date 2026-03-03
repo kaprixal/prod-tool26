@@ -106,7 +106,7 @@ export default function MapsOverlay() {
 
     if (mapState === 'unplayed') {
       return (
-        <div className="unplayed" style={base}>
+        <div className="unplayed font-integral-regular" style={base}>
           <br /><br />
           <h1 style={{ marginTop: 210, fontSize: 20, height: 100 }}>{mapName}</h1>
           <img className="icon" style={{ marginTop: 135 }} src={icon} alt="" />
@@ -115,7 +115,7 @@ export default function MapsOverlay() {
     }
     if (mapState === 'up next') {
       return (
-        <div className="upnext" style={base}>
+        <div className="upnext font-integral-regular" style={base}>
           <br />
           <h1 style={{ marginTop: 210, fontSize: 20 }}>UP NEXT:</h1>
           <h2 style={{ fontSize: 20, marginTop: 35 }}>{mapName}</h2>
@@ -125,7 +125,7 @@ export default function MapsOverlay() {
     }
     if (mapState === 'in progress') {
       return (
-        <div className="ipr" style={base}>
+        <div className="ipr font-integral-regular" style={base}>
           <br />
           <h1 style={{ fontSize: 80, marginTop: 210 }}>{scores}</h1>
           <h2>{mapName}</h2>
@@ -137,7 +137,7 @@ export default function MapsOverlay() {
       const winnerLogo = w === 1 ? t1logo : w === 2 ? t2logo : '';
       const colorClass = w === 1 ? 'done-blue' : w === 2 ? 'done-red' : 'done-draw';
       return (
-        <div className={colorClass} style={base}>
+        <div className={`${colorClass} font-integral-regular`} style={base}>
           <br />
           {winnerLogo && <img className="winner-logo" src={winnerLogo} alt="" />}
           <h1 style={{ fontSize: 80, marginTop: 35 }}>{scores}</h1>
@@ -170,7 +170,6 @@ export default function MapsOverlay() {
       return (
         <React.Fragment key={`${key}-${i}`}>
           <img
-            className="font-integral-regular"
             src={imgSrc}
             style={imgStyle}
             alt=""
