@@ -4,7 +4,8 @@ import { updateOwBan, asset } from '../../api';
 
 /**
  * Overwatch Hero Ban overlay.
- * Left click = blue team ban, Right click = red team ban, Click again = remove.
+ * Left click = blue team ban, Right click = red team ban,
+ * Middle click = previous ban, Click again = remove.
  * Click the Tank header to reset all bans.
  *
  * Ported from legacy live/owban.html
@@ -32,6 +33,7 @@ const SUPPORTS = [
 const OVERLAY_IMAGES = {
   t1: asset('/assets/ow_ban_assets/blueban.png'),
   t2: asset('/assets/ow_ban_assets/redban.png'),
+  prev: asset('/assets/ow_ban_assets/prevban.png'),
 };
 
 export default function OwBanOverlay() {
@@ -47,7 +49,7 @@ export default function OwBanOverlay() {
   const handleMouseDown = useCallback(
     async (hero, button) => {
       // Prevent context menu
-      const team = button === 0 ? 't1' : button === 2 ? 't2' : null;
+      const team = button === 0 ? 't1' : button === 2 ? 't2' : button === 1 ? 'prev' : null;
       if (team === null) return;
 
       const currentBan = bans[hero];
@@ -125,7 +127,7 @@ export default function OwBanOverlay() {
   );
 
   return (
-    <div onContextMenu={(e) => e.preventDefault()}>
+    <div onContextMenu={(e) => e.preventDefault()} onAuxClick={(e) => e.preventDefault()}>
       {/* VS banner with team logos */}
       <img
         className="stacked-image"
