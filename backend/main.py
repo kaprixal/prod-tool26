@@ -24,10 +24,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve assets folder from frontend overlays
-ASSETS_DIR = os.path.join(os.path.dirname(__file__), "..", "frontend", "src", "components", "overlays", "assets")
-if os.path.exists(ASSETS_DIR):
+# Serve assets folder – try multiple candidate paths so it works both locally
+# and on Railway (where root dir may be 'backend/' or the full repo root).
+_ASSET_CANDIDATES = [
+    os.path.join(os.path.dirname(__file__), "..", "frontend", "src", "components", "overlays", "assets"),
+    os.path.join(os.path.dirname(__file__), "frontend", "src", "components", "overlays", "assets"),
+    os.path.join("/app", "frontend", "src", "components", "overlays", "assets"),
+]
+ASSETS_DIR = None
+for _p in _ASSET_CANDIDATES:
+    _p = os.path.abspath(_p)
+    if os.path.isdir(_p):
+        ASSETS_DIR = _p
+        break
+
+if ASSETS_DIR:
+    print(f"[assets] Serving from {ASSETS_DIR}")
     app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
+else:
+    print(f"[assets] WARNING: No assets directory found. Checked: {_ASSET_CANDIDATES}")
 
 
 # ---------------------------------------------------------------------------
