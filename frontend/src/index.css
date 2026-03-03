@@ -575,14 +575,14 @@ html, body, #root {
   padding-right: 150px;
   width: 650px;
   height: 500px;
-  animation: slide1 0.32s 1s;
+  animation: slide1 0.32s 1s backwards;
   transform: translate(0, 287px);
 }
 #animatedImage2 {
   padding-left: 150px;
   width: 650px;
   height: 500px;
-  animation: slide2 0.32s 1s;
+  animation: slide2 0.32s 1s backwards;
   transform: translate(0, 287px);
 }
 
