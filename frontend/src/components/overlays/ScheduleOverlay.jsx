@@ -1,4 +1,5 @@
 import { usePolledState } from '../../hooks/usePolledState';
+import { asset } from '../../api';
 
 /**
  * Schedule / break screen overlay.
@@ -27,9 +28,9 @@ export default function ScheduleOverlay() {
     const details = match.details || '';
 
     /* Winner state determines background graphic */
-    let bgSrc = '/assets/break/startingsoon_vs.png';
-    if (winner === 't1') bgSrc = '/assets/break/startingsoon_blue.png';
-    else if (winner === 't2') bgSrc = '/assets/break/startingsoon_red.png';
+    let bgSrc = asset('/assets/break/startingsoon_vs.png');
+    if (winner === 't1') bgSrc = asset('/assets/break/startingsoon_blue.png');
+    else if (winner === 't2') bgSrc = asset('/assets/break/startingsoon_red.png');
 
     const scoreDisplay =
       t1s === 0 && t2s === 0 && winner === 'none' ? 'VS' : `${t1s} - ${t2s}`;
@@ -91,7 +92,7 @@ export default function ScheduleOverlay() {
   return (
     <div className="stack-container">
       <div style={{ color: 'white' }}>
-        <img className="stacked-image" src="/assets/break/starting_displaybox.png" alt="" />
+        <img className="stacked-image" src={asset('/assets/break/starting_displaybox.png')} alt="" />
         <div
           className="font-integral-bold"
           style={{

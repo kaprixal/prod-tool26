@@ -1,4 +1,5 @@
 import { usePolledState } from '../../hooks/usePolledState';
+import { asset } from '../../api';
 
 /**
  * Map display overlay – shows map images and states (unplayed / up next / in progress / done).
@@ -46,7 +47,7 @@ export default function MapsOverlay() {
   }
 
   const mapCount = format === 'ft1' ? 1 : format === 'ft2' ? 3 : 5;
-  const mapsetSrc = `/assets/maps/map_${format}_box.png`;
+  const mapsetSrc = asset(`/assets/maps/map_${format}_box.png`);
 
   /* Determine CSS class prefix per format */
   const slotClass = format === 'ft1' ? 'bo1' : format === 'ft2' ? 'bo3' : 'bo5';
@@ -58,16 +59,16 @@ export default function MapsOverlay() {
     const clean = mapName.replace(/[\s:.'-]+/g, '');
     if (game === 'ow2') {
       const src = m.name === '+' ? (m.type || '+') : clean.toUpperCase();
-      return `/assets/maps/ow2/${format}/${src}.png`;
+      return asset(`/assets/maps/ow2/${format}/${src}.png`);
     }
     if (game === 'val') {
-      return `/assets/maps/val/map_tile_valo_${slotClass}_${clean.toLowerCase()}.png`;
+      return asset(`/assets/maps/val/map_tile_valo_${slotClass}_${clean.toLowerCase()}.png`);
     }
     if (game === 'mr') {
       const suffix = format === 'ft1' ? '5-1' : format === 'ft2' ? '3' : '5';
-      return `/assets/maps/rivals/Rivals_Map_${clean}${suffix}.png`;
+      return asset(`/assets/maps/rivals/Rivals_Map_${clean}${suffix}.png`);
     }
-    return '/assets/maps/blank.png';
+    return asset('/assets/maps/blank.png');
   };
 
   /* Map state rendering */
@@ -77,7 +78,7 @@ export default function MapsOverlay() {
     const mapState = m.state || 'unplayed';
     const effectiveState = mapState === 'up next' && m.t1 && m.t2 ? 'in progress' : mapState;
     const w = winners[idx];
-    const typeIcon = game === 'ow2' && m.type && m.type !== '+' ? `/assets/maps/ow2/ow_icons/modeicon_${m.type.toLowerCase()}.png` : '/assets/maps/blank.png';
+    const typeIcon = game === 'ow2' && m.type && m.type !== '+' ? asset(`/assets/maps/ow2/ow_icons/modeicon_${m.type.toLowerCase()}.png`) : asset('/assets/maps/blank.png');
 
     if (effectiveState === 'unplayed') {
       return (
@@ -142,7 +143,7 @@ export default function MapsOverlay() {
       {Array.from({ length: 5 }, (_, idx) => {
         const m = maps[`map${idx + 1}`] || {};
         const visible = idx < mapCount;
-        const imgSrc = visible ? resolveMapImg(m, idx) : '/assets/maps/blank.png';
+        const imgSrc = visible ? resolveMapImg(m, idx) : asset('/assets/maps/blank.png');
         const pos = positions[idx] || positions[0];
         return (
           <div

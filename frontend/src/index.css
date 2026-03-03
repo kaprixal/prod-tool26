@@ -11,25 +11,25 @@ html, body, #root {
 /* BuiltTilting font faces */
 @font-face {
   font-family: 'BuiltTilting';
-  src: url('/assets/fonts/BuiltTilting/builttitlingbd.ttf') format('truetype');
+  src: url('/fonts/BuiltTilting/builttitlingbd.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
 }
 @font-face {
   font-family: 'BuiltTilting';
-  src: url('/assets/fonts/BuiltTilting/builttitlingsb.ttf') format('truetype');
+  src: url('/fonts/BuiltTilting/builttitlingsb.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
 }
 @font-face {
   font-family: 'BuiltTilting';
-  src: url('/assets/fonts/BuiltTilting/builttitlingrg.ttf') format('truetype');
+  src: url('/fonts/BuiltTilting/builttitlingrg.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: 'BuiltTilting';
-  src: url('/assets/fonts/BuiltTilting/builttitlinglt.ttf') format('truetype');
+  src: url('/fonts/BuiltTilting/builttitlinglt.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;
 }
@@ -37,19 +37,19 @@ html, body, #root {
 /* IntegralCF font faces */
 @font-face {
   font-family: 'IntegralCF';
-  src: url('/assets/fonts/Integral CF/IntegralCF-Bold copy.otf') format('opentype');
+  src: url('/fonts/Integral CF/IntegralCF-Bold copy.otf') format('opentype');
   font-weight: bold;
   font-style: normal;
 }
 @font-face {
   font-family: 'IntegralCF';
-  src: url('/assets/fonts/Integral CF/IntegralCF-Medium copy.otf') format('opentype');
+  src: url('/fonts/Integral CF/IntegralCF-Medium copy.otf') format('opentype');
   font-weight: 500;
   font-style: normal;
 }
 @font-face {
   font-family: 'IntegralCF';
-  src: url('/assets/fonts/Integral CF/IntegralCF-Regular copy.otf') format('opentype');
+  src: url('/fonts/Integral CF/IntegralCF-Regular copy.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }

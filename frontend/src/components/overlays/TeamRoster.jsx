@@ -1,4 +1,5 @@
 import { usePolledState } from '../../hooks/usePolledState';
+import { asset } from '../../api';
 
 /**
  * Team roster overlay for 5-player teams (OW2, LoL, Valorant).
@@ -23,8 +24,8 @@ export default function TeamRoster({ team = 1, playerCount = 5 }) {
   const isTeam1 = team === 1;
   const teamData = isTeam1 ? match.team1 : match.team2;
   const bgImage = isTeam1
-    ? '/assets/roster/roster_box_blueteam.png'
-    : '/assets/roster/roster_box_redteam.png';
+    ? asset('/assets/roster/roster_box_blueteam.png')
+    : asset('/assets/roster/roster_box_redteam.png');
 
   /* Player keys: team1 → p1-p5, team2 → p6-p10 */
   const playerKeys = isTeam1
@@ -36,18 +37,18 @@ export default function TeamRoster({ team = 1, playerCount = 5 }) {
   /* Resolve hero image path per game */
   const heroImgPath = (hero) => {
     const clean = hero.replace(/[\s:.-]+/g, '');
-    if (game === 'lol') return `/assets/league_champs/${clean}.png`;
-    if (game === 'ow2') return `/assets/ow_heroes/${clean.toUpperCase()}.png`;
-    if (game === 'val') return `/assets/val_agents/${clean.toLowerCase()}.png`;
+    if (game === 'lol') return asset(`/assets/league_champs/${clean}.png`);
+    if (game === 'ow2') return asset(`/assets/ow_heroes/${clean.toUpperCase()}.png`);
+    if (game === 'val') return asset(`/assets/val_agents/${clean.toLowerCase()}.png`);
     return '';
   };
 
   /* Resolve role icon path per game */
   const roleIconPath = (role) => {
     const r = role.toLowerCase();
-    if (game === 'lol') return `/assets/roster/icons/lol/${r}.png`;
-    if (game === 'ow2') return `/assets/roster/icons/ow/${r}.png`;
-    if (game === 'val') return `/assets/roster/icons/val/${r}.png`;
+    if (game === 'lol') return asset(`/assets/roster/icons/lol/${r}.png`);
+    if (game === 'ow2') return asset(`/assets/roster/icons/ow/${r}.png`);
+    if (game === 'val') return asset(`/assets/roster/icons/val/${r}.png`);
     return '';
   };
 

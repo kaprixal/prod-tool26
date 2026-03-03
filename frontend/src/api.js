@@ -1,6 +1,9 @@
 const API_URL = import.meta.env.VITE_API_URL || '';
 const API_BASE = API_URL + '/api';
-export const ASSET_BASE = API_URL + '/assets';
+export const ASSET_BASE = API_URL;
+
+/** Prefix an /assets/... path with the backend URL for production */
+export const asset = (path) => API_URL + path;
 
 export async function fetchState() {
   const res = await fetch(`${API_BASE}/state`);

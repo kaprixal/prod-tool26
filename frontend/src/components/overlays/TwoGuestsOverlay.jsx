@@ -1,4 +1,5 @@
 import { usePolledState } from '../../hooks/usePolledState';
+import { asset } from '../../api';
 
 /**
  * 2-guest interview cam overlay.
@@ -18,8 +19,8 @@ export default function TwoGuestsOverlay() {
 
   const isZeroZero = t1score === 0 && t2score === 0;
   const vsSrc = isZeroZero
-    ? '/assets/casters_and_interviews/casters_vs_1.png'
-    : '/assets/casters_and_interviews/casters_vs_2.png';
+    ? asset('/assets/casters_and_interviews/casters_vs_1.png')
+    : asset('/assets/casters_and_interviews/casters_vs_2.png');
 
   return (
     <div className="stack-container text-white">
@@ -97,7 +98,7 @@ export default function TwoGuestsOverlay() {
       )}
 
       {/* Background */}
-      <img className="stacked-image" src="/assets/casters_and_interviews/interview2_cam_box.png" alt="" />
+      <img className="stacked-image" src={asset('/assets/casters_and_interviews/interview2_cam_box.png')} alt="" />
     </div>
   );
 }

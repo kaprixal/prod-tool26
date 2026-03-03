@@ -1,4 +1,5 @@
 import { usePolledState } from '../../hooks/usePolledState';
+import { asset } from '../../api';
 
 /**
  * 2-caster cam overlay – shows caster names/tags, scores, team logos.
@@ -17,8 +18,8 @@ export default function CastersOverlay() {
 
   const isZeroZero = t1score === 0 && t2score === 0;
   const vsSrc = isZeroZero
-    ? '/assets/casters_and_interviews/casters_vs_1.png'
-    : '/assets/casters_and_interviews/casters_vs_2.png';
+    ? asset('/assets/casters_and_interviews/casters_vs_1.png')
+    : asset('/assets/casters_and_interviews/casters_vs_2.png');
 
   return (
     <div className="stack-container text-white">
@@ -39,7 +40,7 @@ export default function CastersOverlay() {
       <div id="divider" />
 
       {/* Background */}
-      <img className="stacked-image" src="/assets/casters_and_interviews/casters_cam_box.png" alt="" />
+      <img className="stacked-image" src={asset('/assets/casters_and_interviews/casters_cam_box.png')} alt="" />
 
       {/* VS asset */}
       <img className="stacked-image" src={vsSrc} style={{ zIndex: 2 }} alt="" />

@@ -1,4 +1,5 @@
 import { usePolledState } from '../../hooks/usePolledState';
+import { asset } from '../../api';
 
 /**
  * In-game overlay – shows team names, logos, scores, format
@@ -95,10 +96,10 @@ export default function Overlay() {
 
   /* ---- Determine overlay image ---- */
   const overlayImgMap = {
-    ow2: '/assets/in_game_overlay/ingame_ow_main.png',
-    lol: '/assets/in_game_overlay/ingame_league_main.png',
-    val: '/assets/in_game_overlay/ingame_valo_main.png',
-    mr: '/assets/in_game_overlay/ingame_rivals_main.png',
+    ow2: asset('/assets/in_game_overlay/ingame_ow_main.png'),
+    lol: asset('/assets/in_game_overlay/ingame_league_main.png'),
+    val: asset('/assets/in_game_overlay/ingame_valo_main.png'),
+    mr: asset('/assets/in_game_overlay/ingame_rivals_main.png'),
   };
   const overlayImg = overlayImgMap[game] || '';
 
@@ -108,8 +109,8 @@ export default function Overlay() {
   /* ---- OW map-type icon path ---- */
   const owTypeIcon = (type) =>
     type === '+'
-      ? '/assets/in_game_overlay/ow_icons/undecided.png'
-      : `/assets/in_game_overlay/ow_icons/${type.toLowerCase()}.png`;
+      ? asset('/assets/in_game_overlay/ow_icons/undecided.png')
+      : asset(`/assets/in_game_overlay/ow_icons/${type.toLowerCase()}.png`);
 
   /* ------------ RENDER ------------ */
   return (
@@ -221,7 +222,7 @@ export default function Overlay() {
               const isActive = i === activeIdx;
               const iconSrc = game === 'ow2'
                 ? owTypeIcon(entry.type)
-                : '/assets/in_game_overlay/ow_icons/undecided.png';
+                : asset('/assets/in_game_overlay/ow_icons/undecided.png');
               return (
                 <div className="map-label" key={i}>
                   <div className={`font-integral-bold ${isActive ? 'map-on' : 'map-off'}`}>

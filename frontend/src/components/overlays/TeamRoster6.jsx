@@ -1,4 +1,5 @@
 import { usePolledState } from '../../hooks/usePolledState';
+import { asset } from '../../api';
 
 /**
  * 6-player roster overlay (used for Marvel Rivals).
@@ -24,8 +25,8 @@ export default function TeamRoster6({ team = 1 }) {
   const isTeam1 = team === 1;
   const teamData = isTeam1 ? match.team1 : match.team2;
   const bgImage = isTeam1
-    ? '/assets/roster/roster_box_blueteam6.png'
-    : '/assets/roster/roster_box_redteam6.png';
+    ? asset('/assets/roster/roster_box_blueteam6.png')
+    : asset('/assets/roster/roster_box_redteam6.png');
 
   /* Player keys: team1 → p1-p5 + p11, team2 → p6-p10 + p12 */
   const playerKeys = isTeam1
@@ -37,11 +38,11 @@ export default function TeamRoster6({ team = 1 }) {
   /* Marvel Rivals hero image path */
   const heroImgPath = (hero) => {
     const clean = hero.replace(/\s+/g, '_');
-    return `/assets/mr_heroes/Rivals_Hero_${clean}.png`;
+    return asset(`/assets/mr_heroes/Rivals_Hero_${clean}.png`);
   };
 
   /* Role icon path for MR */
-  const roleIconPath = (role) => `/assets/roster/icons/mr/${role.toLowerCase()}.png`;
+  const roleIconPath = (role) => asset(`/assets/roster/icons/mr/${role.toLowerCase()}.png`);
 
   return (
     <div className="stack-container text-center">

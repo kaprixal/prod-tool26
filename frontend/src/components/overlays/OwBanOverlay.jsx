@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { usePolledState } from '../../hooks/usePolledState';
-import { updateOwBan } from '../../api';
+import { updateOwBan, asset } from '../../api';
 
 /**
  * Overwatch Hero Ban overlay.
@@ -30,8 +30,8 @@ const SUPPORTS = [
 ];
 
 const OVERLAY_IMAGES = {
-  t1: '/assets/ow_ban_assets/blueban.png',
-  t2: '/assets/ow_ban_assets/redban.png',
+  t1: asset('/assets/ow_ban_assets/blueban.png'),
+  t2: asset('/assets/ow_ban_assets/redban.png'),
 };
 
 export default function OwBanOverlay() {
@@ -104,7 +104,7 @@ export default function OwBanOverlay() {
             }}
             onContextMenu={(e) => e.preventDefault()}
           >
-            <img src={`/assets/ow_ban_assets/${hero}.png`} alt={hero} style={{ width: '100%' }} />
+            <img src={asset(`/assets/ow_ban_assets/${hero}.png`)} alt={hero} style={{ width: '100%' }} />
             {banTeam && (
               <img
                 src={OVERLAY_IMAGES[banTeam]}
@@ -129,7 +129,7 @@ export default function OwBanOverlay() {
       {/* VS banner with team logos */}
       <img
         className="stacked-image"
-        src="/assets/ow_ban_assets/versus.png"
+        src={asset('/assets/ow_ban_assets/versus.png')}
         style={{ top: 48, left: 696 }}
         alt=""
       />
@@ -151,7 +151,7 @@ export default function OwBanOverlay() {
         {/* Tanks */}
         <div>
           <img
-            src="/assets/ow_ban_assets/tank.png"
+            src={asset('/assets/ow_ban_assets/tank.png')}
             onClick={resetAll}
             style={{ cursor: 'pointer' }}
             alt="Tank"
@@ -161,13 +161,13 @@ export default function OwBanOverlay() {
 
         {/* DPS */}
         <div>
-          <img src="/assets/ow_ban_assets/damage.png" alt="Damage" />
+          <img src={asset('/assets/ow_ban_assets/damage.png')} alt="Damage" />
           {renderHeroGrid(DPS, 5)}
         </div>
 
         {/* Support */}
         <div>
-          <img src="/assets/ow_ban_assets/support.png" alt="Support" />
+          <img src={asset('/assets/ow_ban_assets/support.png')} alt="Support" />
           {renderHeroGrid(SUPPORTS, 4)}
         </div>
       </div>
