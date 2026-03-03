@@ -64,7 +64,7 @@ export default function OwBanOverlay() {
         return next;
       });
 
-      await updateOwBan({ hero, team: newTeam });
+      await updateOwBan(hero, newTeam);
     },
     [bans]
   );
@@ -73,7 +73,7 @@ export default function OwBanOverlay() {
     setBans({});
     // Reset each ban on the server
     for (const hero of Object.keys(bans)) {
-      await updateOwBan({ hero, team: null });
+      await updateOwBan(hero, null);
     }
   }, [bans]);
 
