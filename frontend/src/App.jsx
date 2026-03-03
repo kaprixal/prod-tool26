@@ -9,6 +9,7 @@ import CastersOverlay from './components/overlays/CastersOverlay';
 import GuestOverlay from './components/overlays/GuestOverlay';
 import TwoGuestsOverlay from './components/overlays/TwoGuestsOverlay';
 import OwBanOverlay from './components/overlays/OwBanOverlay';
+import AnimateLogoOverlay from './components/overlays/AnimateLogoOverlay';
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
       {/* Live overlay pages */}
       <Route path="/live/overlay" element={<Overlay />} />
       <Route path="/live/maps" element={<MapsOverlay />} />
+      <Route path="/animatelogo" element={<AnimateLogoOverlay />} />
       <Route path="/live/team1" element={<TeamRoster team={1} playerCount={5} />} />
       <Route path="/live/team2" element={<TeamRoster team={2} playerCount={5} />} />
       <Route path="/live/team1-6" element={<TeamRoster6 team={1} />} />

@@ -558,6 +558,34 @@ html, body, #root {
   margin: auto;
 }
 
+/* ===== Animated Logo Overlay ===== */
+@keyframes slide1 {
+  0% { transform: translate(-2000px, 287px); }
+  100% { transform: translate(0px, 287px); }
+}
+@keyframes slide2 {
+  0% { transform: translate(2000px, 287px); }
+  100% { transform: translate(0px, 287px); }
+}
+#animatedbox {
+  width: 1920px;
+  height: 1080px;
+}
+#animatedImage1 {
+  padding-right: 150px;
+  width: 650px;
+  height: 500px;
+  animation: slide1 0.32s 1s;
+  transform: translate(0, 287px);
+}
+#animatedImage2 {
+  padding-left: 150px;
+  width: 650px;
+  height: 500px;
+  animation: slide2 0.32s 1s;
+  transform: translate(0, 287px);
+}
+
 /* ===== Roster Overlay ===== */
 .roster-team {
   color: white;
