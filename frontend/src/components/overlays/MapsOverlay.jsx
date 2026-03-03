@@ -1,27 +1,35 @@
+import React from 'react';
 import { usePolledState } from '../../hooks/usePolledState';
 import { asset } from '../../api';
 
 /**
  * Map display overlay – shows map images and states (unplayed / up next / in progress / done).
  * Ported from legacy live/maps.html
+ *
+ * Legacy renders ALL 9 slots (1 bo1, 3 bo3, 5 bo5) as direct children of the
+ * stack-container. Each slot has an <img> and a <div> that share the same
+ * absolute position (via CSS IDs), stacked on top of each other. Only the
+ * active format's slots get real map images; the rest get blank.png.
  */
 
-/* Pixel-perfect slot positions from legacy CSS */
-const SLOT_POSITIONS = {
-  bo1: [{ left: 329, width: 1262, height: 701 }],
+/* Per-slot positions exactly from legacy CSS  */
+const SLOTS = {
+  bo1: [{ left: 329, width: 1262, height: 701, borderRadius: 0 }],
   bo3: [
-    { left: 296, width: 416, height: 701 },
-    { left: 753, width: 414, height: 701 },
-    { left: 1208, width: 416, height: 701 },
+    { left: 296, width: 416, height: 701, borderRadius: 30 },
+    { left: 753, width: 414, height: 701, borderRadius: 30 },
+    { left: 1208, width: 416, height: 701, borderRadius: 30 },
   ],
   bo5: [
-    { left: 166, width: 295, height: 701 },
-    { left: 489, width: 295, height: 701 },
-    { left: 813, width: 295, height: 701 },
-    { left: 1136, width: 295, height: 701 },
-    { left: 1459, width: 295, height: 701 },
+    { left: 166, width: 295, height: 701, borderRadius: 30 },
+    { left: 489, width: 295, height: 701, borderRadius: 30 },
+    { left: 813, width: 295, height: 701, borderRadius: 30 },
+    { left: 1136, width: 295, height: 701, borderRadius: 30 },
+    { left: 1459, width: 295, height: 701, borderRadius: 30 },
   ],
 };
+
+const BLANK = '/assets/maps/blank.png';
 
 export default function MapsOverlay() {
   const { state } = usePolledState(1000);
@@ -38,6 +46,8 @@ export default function MapsOverlay() {
   const t1logo = match.team1?.logo || '';
   const t2logo = match.team2?.logo || '';
   const maps = match.maps || {};
+
+  /* Compute per-map winner (1 = t1, 2 = t2, 0 = draw/none) */
   const winners = [];
   for (let i = 1; i <= 5; i++) {
     const m = maps[`map${i}`] || {};
@@ -46,15 +56,12 @@ export default function MapsOverlay() {
     winners.push(a > b ? 1 : b > a ? 2 : 0);
   }
 
+  /* Active format info */
+  const activeKey = format === 'ft1' ? 'bo1' : format === 'ft2' ? 'bo3' : 'bo5';
   const mapCount = format === 'ft1' ? 1 : format === 'ft2' ? 3 : 5;
-  const mapsetSrc = asset(`/assets/maps/map_${format}_box.png`);
 
-  /* Determine CSS class prefix per format */
-  const slotClass = format === 'ft1' ? 'bo1' : format === 'ft2' ? 'bo3' : 'bo5';
-  const positions = SLOT_POSITIONS[slotClass] || SLOT_POSITIONS.bo3;
-
-  /* Helper to resolve image path per game */
-  const resolveMapImg = (m, idx) => {
+  /* ---- Image path helpers ---- */
+  const resolveMapImg = (m) => {
     const mapName = m.name === '+' ? 'undecided' : m.name;
     const clean = mapName.replace(/[\s:.'-]+/g, '');
     if (game === 'ow2') {
@@ -62,73 +69,122 @@ export default function MapsOverlay() {
       return asset(`/assets/maps/ow2/${format}/${src}.png`);
     }
     if (game === 'val') {
-      return asset(`/assets/maps/val/map_tile_valo_${slotClass}_${clean.toLowerCase()}.png`);
+      return asset(`/assets/maps/val/map_tile_valo_${activeKey}_${clean.toLowerCase()}.png`);
     }
     if (game === 'mr') {
       const suffix = format === 'ft1' ? '5-1' : format === 'ft2' ? '3' : '5';
       return asset(`/assets/maps/rivals/Rivals_Map_${clean}${suffix}.png`);
     }
-    return asset('/assets/maps/blank.png');
+    return asset(BLANK);
   };
 
-  /* Map state rendering */
-  const renderMapState = (m, idx) => {
+  const typeIcon = (m) =>
+    game === 'ow2' && m.type && m.type !== '+'
+      ? asset(`/assets/maps/ow2/ow_icons/modeicon_${m.type.toLowerCase()}.png`)
+      : asset(BLANK);
+
+  /* ---- State div content (mirrors legacy setDivState) ---- */
+  const renderState = (m, idx, pos) => {
     const mapName = m.name === '+' ? 'Undecided' : m.name;
     const scores = `${m.t1 || ''} - ${m.t2 || ''}`;
-    const mapState = m.state || 'unplayed';
-    const effectiveState = mapState === 'up next' && m.t1 && m.t2 ? 'in progress' : mapState;
+    let mapState = m.state || 'unplayed';
+    if (mapState === 'up next' && m.t1 && m.t2) mapState = 'in progress';
     const w = winners[idx];
-    const typeIcon = game === 'ow2' && m.type && m.type !== '+' ? asset(`/assets/maps/ow2/ow_icons/modeicon_${m.type.toLowerCase()}.png`) : asset('/assets/maps/blank.png');
+    const icon = typeIcon(m);
 
-    if (effectiveState === 'unplayed') {
+    /* Shared absolute style matching the img's position exactly */
+    const base = {
+      display: 'flex',
+      flexDirection: 'column',
+      borderRadius: pos.borderRadius,
+      position: 'absolute',
+      top: 292,
+      left: pos.left,
+      width: pos.width,
+      height: pos.height,
+    };
+
+    if (mapState === 'unplayed') {
       return (
-        <div className="unplayed">
+        <div className="unplayed" style={base}>
           <br /><br />
           <h1 style={{ marginTop: 210, fontSize: 20, height: 100 }}>{mapName}</h1>
-          <img className="icon" style={{ marginTop: 135 }} src={typeIcon} alt="" />
+          <img className="icon" style={{ marginTop: 135 }} src={icon} alt="" />
         </div>
       );
     }
-    if (effectiveState === 'up next') {
+    if (mapState === 'up next') {
       return (
-        <div className="upnext">
+        <div className="upnext" style={base}>
           <br />
           <h1 style={{ marginTop: 210, fontSize: 20 }}>UP NEXT:</h1>
           <h2 style={{ fontSize: 20, marginTop: 35 }}>{mapName}</h2>
-          <img className="icon" src={typeIcon} alt="" />
+          <img className="icon" src={icon} alt="" />
         </div>
       );
     }
-    if (effectiveState === 'in progress') {
+    if (mapState === 'in progress') {
       return (
-        <div className="ipr">
+        <div className="ipr" style={base}>
           <br />
           <h1 style={{ fontSize: 80, marginTop: 210 }}>{scores}</h1>
           <h2>{mapName}</h2>
-          <img className="icon" src={typeIcon} alt="" />
+          <img className="icon" src={icon} alt="" />
         </div>
       );
     }
-    if (effectiveState === 'done') {
+    if (mapState === 'done') {
       const winnerLogo = w === 1 ? t1logo : w === 2 ? t2logo : '';
       const colorClass = w === 1 ? 'done-blue' : w === 2 ? 'done-red' : 'done-draw';
       return (
-        <div className={colorClass}>
+        <div className={colorClass} style={base}>
           <br />
           {winnerLogo && <img className="winner-logo" src={winnerLogo} alt="" />}
           <h1 style={{ fontSize: 80, marginTop: 35 }}>{scores}</h1>
           <h2>{mapName}</h2>
-          <img className="icon" src={typeIcon} alt="" />
+          <img className="icon" src={icon} alt="" />
         </div>
       );
     }
     return null;
   };
 
+  /* ---- Build all 9 slots (bo1×1 + bo3×3 + bo5×5) like legacy ---- */
+  const renderSlotGroup = (key, count) => {
+    const positions = SLOTS[key];
+    const isActive = key === activeKey;
+    return positions.slice(0, count).map((pos, i) => {
+      const mapIdx = i; // 0-based index within format
+      const m = isActive ? (maps[`map${mapIdx + 1}`] || {}) : {};
+      const imgSrc = isActive ? resolveMapImg(m) : asset(BLANK);
+      const imgStyle = {
+        display: 'flex',
+        flexDirection: 'column',
+        borderRadius: pos.borderRadius,
+        position: 'absolute',
+        top: 292,
+        left: pos.left,
+        width: pos.width,
+        height: pos.height,
+      };
+      return (
+        <React.Fragment key={`${key}-${i}`}>
+          <img
+            className="font-integral-regular"
+            src={imgSrc}
+            style={imgStyle}
+            alt=""
+          />
+          {isActive && renderState(m, mapIdx, pos)}
+        </React.Fragment>
+      );
+    });
+  };
+
   return (
     <div className="stack-container text-center">
       {/* Background map set box */}
-      <img className="stacked-image" src={mapsetSrc} alt="" />
+      <img className="stacked-image" src={asset(`/assets/maps/map_${format}_box.png`)} alt="" />
 
       {/* Score header */}
       <div id="total-score">
@@ -139,36 +195,10 @@ export default function MapsOverlay() {
         <img id="logo2" src={t2logo} style={{ height: 136, width: 136 }} alt="" />
       </div>
 
-      {/* Map slots */}
-      {Array.from({ length: 5 }, (_, idx) => {
-        const m = maps[`map${idx + 1}`] || {};
-        const visible = idx < mapCount;
-        const imgSrc = visible ? resolveMapImg(m, idx) : asset('/assets/maps/blank.png');
-        const pos = positions[idx] || positions[0];
-        return (
-          <div
-            key={idx}
-            className={`font-integral-regular ${slotClass}`}
-            style={
-              visible
-                ? {
-                    display: 'flex',
-                    flexDirection: 'column',
-                    borderRadius: 30,
-                    position: 'absolute',
-                    top: 292,
-                    left: pos.left,
-                    width: pos.width,
-                    height: pos.height,
-                  }
-                : { visibility: 'hidden' }
-            }
-          >
-            <img src={imgSrc} alt="" />
-            {visible && renderMapState(m, idx)}
-          </div>
-        );
-      })}
+      {/* All 9 map slots — only the active format shows real content */}
+      {renderSlotGroup('bo1', 1)}
+      {renderSlotGroup('bo3', 3)}
+      {renderSlotGroup('bo5', 5)}
     </div>
   );
 }
