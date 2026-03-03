@@ -1,4 +1,6 @@
-const API_BASE = (import.meta.env.VITE_API_URL || '') + '/api';
+const API_URL = import.meta.env.VITE_API_URL || '';
+const API_BASE = API_URL + '/api';
+export const ASSET_BASE = API_URL + '/assets';
 
 export async function fetchState() {
   const res = await fetch(`${API_BASE}/state`);
