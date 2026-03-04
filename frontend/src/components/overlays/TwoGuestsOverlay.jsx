@@ -53,6 +53,7 @@ export default function TwoGuestsOverlay() {
       {/* Team logos */}
       <img
         src={t1logo}
+        onError={(e) => { e.target.src = defaultLogo; }}
         style={{
           position: 'absolute',
           height: 136,
@@ -65,6 +66,7 @@ export default function TwoGuestsOverlay() {
       />
       <img
         src={t2logo}
+        onError={(e) => { e.target.src = defaultLogo; }}
         style={{
           position: 'absolute',
           height: 136,
