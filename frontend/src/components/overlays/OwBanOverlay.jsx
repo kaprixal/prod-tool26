@@ -93,7 +93,7 @@ export default function OwBanOverlay() {
   const cm = state?.currMatch || '1';
   const match = state?.matches?.[cm];
   const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' };
-  const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[state?.game] || 'ow'}.png`);
+  const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[state?.game] || 'blank'}.png`);
   const t1logo = match?.team1?.logo || defaultLogo;
   const t2logo = match?.team2?.logo || defaultLogo;
 

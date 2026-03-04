@@ -15,7 +15,7 @@ export default function TwoGuestsOverlay() {
   const t1score = match?.t1TotalScore ?? 0;
   const t2score = match?.t2TotalScore ?? 0;
   const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' };
-  const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[state?.game] || 'ow'}.png`);
+  const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[state?.game] || 'blank'}.png`);
   const t1logo = match?.team1?.logo || defaultLogo;
   const t2logo = match?.team2?.logo || defaultLogo;
 

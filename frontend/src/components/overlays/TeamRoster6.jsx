@@ -82,7 +82,7 @@ export default function TeamRoster6({ team = 1 }) {
 
   return (
     <div className="stack-container text-center">
-      <img className="roster-logo" src={teamData?.logo || asset(`/assets/game_logos/${{ ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' }[game] || 'ow'}.png`)} alt="" />
+      <img className="roster-logo" src={teamData?.logo || asset(`/assets/game_logos/${{ ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' }[game] || 'blank'}.png`)} alt="" />
       <div className="roster-team uppercase font-integral-bold">{teamData?.name || ''}</div>
       <img className="stacked-image" src={bgImage} alt="" />
 
