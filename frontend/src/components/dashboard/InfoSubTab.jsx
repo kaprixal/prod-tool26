@@ -85,7 +85,12 @@ export default function InfoSubTab({ state, onUpdate }) {
         <button
           type="button"
           className="w-10 h-10 bg-gray-700 hover:bg-red-500 rounded-full flex items-center justify-center"
-          onClick={() => setForm({ streamTitle: '', subtitle: '', caster1Name: '', caster1Info: '', caster2Name: '', caster2Info: '', guest1Name: '', guest1Info: '', guest2Name: '', guest2Info: '' })}
+          onClick={() => {
+            const empty = { streamTitle: '', subtitle: '', caster1Name: '', caster1Info: '', caster2Name: '', caster2Info: '', guest1Name: '', guest1Info: '', guest2Name: '', guest2Info: '' };
+            setForm(empty);
+            updateGeneralInfo(empty);
+            onUpdate();
+          }}
         >
           <span className="text-xl text-gray-200">X</span>
         </button>
