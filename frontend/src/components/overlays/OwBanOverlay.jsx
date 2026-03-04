@@ -156,7 +156,7 @@ export default function OwBanOverlay() {
         className="justify-center"
         style={{
           display: 'grid',
-          gridTemplateColumns: '484.86px 607.87px 484.86px',
+          gridTemplateColumns: '493px 591.6px 493px',
           gap: 57,
           marginTop: 265,
           width: '100%',
@@ -171,19 +171,19 @@ export default function OwBanOverlay() {
             style={{ cursor: 'pointer' }}
             alt="Tank"
           />
-          {renderHeroGrid(TANKS, 4)}
+          {renderHeroGrid(TANKS, 5)}
         </div>
 
         {/* DPS */}
         <div>
           <img src={asset('/assets/ow_ban_assets/damage.png')} alt="Damage" />
-          {renderHeroGrid(DPS, 5)}
+          {renderHeroGrid(DPS, 6)}
         </div>
 
         {/* Support */}
         <div>
           <img src={asset('/assets/ow_ban_assets/support.png')} alt="Support" />
-          {renderHeroGrid(SUPPORTS, 4)}
+          {renderHeroGrid(SUPPORTS, 5)}
         </div>
       </div>
     </div>
