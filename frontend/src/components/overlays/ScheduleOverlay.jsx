@@ -26,7 +26,8 @@ export default function ScheduleOverlay() {
     const t1s = match.t1TotalScore ?? 0;
     const t2s = match.t2TotalScore ?? 0;
     const winner = match.winner || 'none';
-    const fmt = match.format || '';
+    const fmtRaw = match.format || '';
+    const fmt = { ft1: 'bo1', ft2: 'bo3', ft3: 'bo5' }[fmtRaw] || fmtRaw;
     const details = match.details || '';
 
     /* Winner state determines background graphic */
