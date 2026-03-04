@@ -1,20 +1,10 @@
 import { useState, useEffect } from 'react';
-import { fetchState, fetchGameData, restoreState } from '../../api';
+import { fetchState, fetchGameData } from '../../api';
 import ModeTab from './ModeTab';
 import GeneralTab from './GeneralTab';
 import LiveTab from './LiveTab';
 
 const TABS = ['MODE', 'GENERAL', 'LIVE'];
-const LS_KEY = 'prodToolState';
-
-/** Check if backend state looks like a fresh default (no game set, no team names). */
-function isDefaultState(s) {
-  if (!s) return true;
-  if (s.game) return false;
-  const m = s.matches?.['1'];
-  if (m?.team1?.name || m?.team2?.name) return false;
-  return true;
-}
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('GENERAL');
@@ -22,39 +12,14 @@ export default function Dashboard() {
   const [gameData, setGameData] = useState(null);
 
   useEffect(() => {
-    initState();
+    // State is now read from localStorage (synchronous)
+    setState(fetchState());
     fetchGameData().then(setGameData);
   }, []);
 
-  const initState = async () => {
-    const data = await fetchState();
-    // If backend is fresh and we have a localStorage backup, restore it
-    if (isDefaultState(data)) {
-      try {
-        const saved = localStorage.getItem(LS_KEY);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (!isDefaultState(parsed)) {
-            await restoreState(parsed);
-            const restored = await fetchState();
-            setState(restored);
-            return;
-          }
-        }
-      } catch (e) {
-        console.warn('[persist] Could not restore from localStorage:', e);
-      }
-    }
-    // Save to localStorage for future recovery
-    localStorage.setItem(LS_KEY, JSON.stringify(data));
-    setState(data);
-  };
-
-  const loadState = async () => {
-    const data = await fetchState();
-    // Persist a copy to localStorage
-    localStorage.setItem(LS_KEY, JSON.stringify(data));
-    setState(data);
+  /** Re-read state from localStorage after any mutation */
+  const loadState = () => {
+    setState(fetchState());
   };
 
   if (!state || !gameData) {

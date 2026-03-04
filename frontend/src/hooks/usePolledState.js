@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { fetchState } from '../api';
+import { getState } from '../localStore';
 
 /**
- * Hook that polls the backend state every `intervalMs` milliseconds.
- * Used by overlay pages to stay in sync.
+ * Hook that polls localStorage every `intervalMs` milliseconds.
+ * Used by overlay pages to stay in sync with the dashboard.
  */
 export function usePolledState(intervalMs = 1000) {
   const [state, setState] = useState(null);
@@ -13,13 +13,12 @@ export function usePolledState(intervalMs = 1000) {
   useEffect(() => {
     let cancelled = false;
 
-    const poll = async () => {
+    const poll = () => {
       try {
-        const data = await fetchState();
+        const data = getState();
         if (!cancelled) {
-          // Detect game change for overlays that need to re-render
           if (prevGameRef.current !== null && prevGameRef.current !== data.game) {
-            // Game changed - overlays might want to know
+            // Game changed — overlays might want to know
           }
           prevGameRef.current = data.game;
           setState(data);
