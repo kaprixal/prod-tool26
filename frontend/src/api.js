@@ -78,3 +78,12 @@ export async function resetState() {
   const res = await fetch(`${API_BASE}/reset`, { method: 'POST' });
   return res.json();
 }
+
+export async function restoreState(data) {
+  const res = await fetch(`${API_BASE}/restore`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  return res.json();
+}

@@ -62,8 +62,8 @@ export default function ScheduleOverlay() {
         <div className="bname font-integral-regular" style={{ top: nameTopOffsets[idx], left: 545 }}>{t2name}</div>
 
         {/* Team logos */}
-        <img className={`blogo ${t1GrayOut}`} src={t1logo} style={{ top: logoTopOffsets[idx], left: 228 }} alt="" />
-        <img className={`blogo ${t2GrayOut}`} src={t2logo} style={{ top: logoTopOffsets[idx], left: 601 }} alt="" />
+        <img className={`blogo ${t1GrayOut}`} src={t1logo} onError={(e) => { e.target.src = defaultLogo; }} style={{ top: logoTopOffsets[idx], left: 228 }} alt="" />
+        <img className={`blogo ${t2GrayOut}`} src={t2logo} onError={(e) => { e.target.src = defaultLogo; }} style={{ top: logoTopOffsets[idx], left: 601 }} alt="" />
 
         {/* Score */}
         <div

@@ -362,6 +362,19 @@ def reset_state():
     return {"status": "ok"}
 
 
+@app.post("/api/restore")
+def restore_state(data: dict):
+    """Restore full state from client-side localStorage backup."""
+    global STATE
+    default = make_default_state()
+    default.update(data)
+    STATE = default
+    # Recompute scores for all matches
+    for mn in STATE["matches"]:
+        compute_match_scores(STATE["matches"][mn])
+    return {"status": "ok"}
+
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))
