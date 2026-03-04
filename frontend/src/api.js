@@ -9,8 +9,10 @@ const API_URL = import.meta.env.VITE_API_URL || '';
 const API_BASE = API_URL + '/api';
 export const ASSET_BASE = API_URL;
 
-/** Prefix an /assets/... path with the backend URL for production */
-export const asset = (path) => API_URL + path;
+/** Prefix an /assets/... path with the backend URL for production.
+ *  Appends a cache-busting version param so browsers fetch fresh files. */
+const ASSET_VERSION = '2';
+export const asset = (path) => `${API_URL}${path}?v=${ASSET_VERSION}`;
 
 // ---------------------------------------------------------------------------
 // Read state (from localStorage)
