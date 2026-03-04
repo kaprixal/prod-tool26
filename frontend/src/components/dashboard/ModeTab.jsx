@@ -33,6 +33,7 @@ export default function ModeTab({ state, onUpdate }) {
               <option value="lol">League of Legends</option>
               <option value="val">Valorant</option>
               <option value="mr">Marvel Rivals</option>
+              <option value="dl">Deadlock</option>
             </select>
           </div>
           <div className="flex flex-row items-center">

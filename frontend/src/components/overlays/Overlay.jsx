@@ -100,8 +100,12 @@ export default function Overlay() {
     lol: asset('/assets/in_game_overlay/ingame_league_main.png'),
     val: asset('/assets/in_game_overlay/ingame_valo_main.png'),
     mr: asset('/assets/in_game_overlay/ingame_rivals_main.png'),
+    dl: asset('/assets/in_game_overlay/ingame_deadlock_main.png'),
   };
   const overlayImg = overlayImgMap[game] || '';
+
+  /* Deadlock: surface player names for overlay */
+  const players = match.players || {};
 
   /* ---- Format text for OW ---- */
   const formatLabel = format === 'ft3' ? 'Best of 5' : format === 'ft2' ? 'Best of 3' : 'Best of 1';
@@ -121,25 +125,25 @@ export default function Overlay() {
 
         {/* Team logos */}
         <img
-          className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo1' : game === 'lol' ? 'lol-overlay-logo1' : game === 'val' ? 'val-overlay-logo1' : game === 'mr' ? 'rivals-overlay-logo1' : ''}`}
+          className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo1' : game === 'lol' ? 'lol-overlay-logo1' : game === 'val' ? 'val-overlay-logo1' : game === 'mr' ? 'rivals-overlay-logo1' : game === 'dl' ? 'dl-overlay-logo1' : ''}`}
           src={t1logo}
           alt=""
         />
         <img
-          className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo2' : game === 'lol' ? 'lol-overlay-logo2' : game === 'val' ? 'val-overlay-logo2' : game === 'mr' ? 'rivals-overlay-logo2' : ''}`}
+          className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo2' : game === 'lol' ? 'lol-overlay-logo2' : game === 'val' ? 'val-overlay-logo2' : game === 'mr' ? 'rivals-overlay-logo2' : game === 'dl' ? 'dl-overlay-logo2' : ''}`}
           src={t2logo}
           alt=""
         />
 
         {/* Team names */}
         <div
-          className={`font-integral-bold text-white ${game === 'ow2' ? 'ow-overlay-name-1' : game === 'lol' ? 'lol-overlay-name-1' : game === 'val' ? 'val-overlay-name-1' : game === 'mr' ? 'rivals-overlay-name-1' : ''}`}
+          className={`font-integral-bold text-white ${game === 'ow2' ? 'ow-overlay-name-1' : game === 'lol' ? 'lol-overlay-name-1' : game === 'val' ? 'val-overlay-name-1' : game === 'mr' ? 'rivals-overlay-name-1' : game === 'dl' ? 'dl-overlay-name-1' : ''}`}
           style={{ zIndex: 2 }}
         >
           {t1name}
         </div>
         <div
-          className={`font-integral-bold text-white ${game === 'ow2' ? 'ow-overlay-name-2' : game === 'lol' ? 'lol-overlay-name-2' : game === 'val' ? 'val-overlay-name-2' : game === 'mr' ? 'rivals-overlay-name-2' : ''}`}
+          className={`font-integral-bold text-white ${game === 'ow2' ? 'ow-overlay-name-2' : game === 'lol' ? 'lol-overlay-name-2' : game === 'val' ? 'val-overlay-name-2' : game === 'mr' ? 'rivals-overlay-name-2' : game === 'dl' ? 'dl-overlay-name-2' : ''}`}
           style={{ zIndex: 2 }}
         >
           {t2name}
@@ -164,6 +168,27 @@ export default function Overlay() {
         {/* VAL title */}
         {game === 'val' && (
           <div className="font-integral-bold val-overlay-title capitalize" style={{ marginTop: 4 }}>{streamTitle}</div>
+        )}
+
+        {/* ---- Deadlock overlay data ---- */}
+        {game === 'dl' && (
+          <>
+            <div className="font-integral-bold dl-overlay-format capitalize" style={{ zIndex: 2 }}>{formatLabel}</div>
+            <div className="dl-overlay-players dl-overlay-players-t1" style={{ zIndex: 2 }}>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="dl-player-name">{players[`p${i}`]?.name || ''}</div>
+              ))}
+              <div className="dl-player-name">{players['p11']?.name || ''}</div>
+            </div>
+            <div className="dl-overlay-players dl-overlay-players-t2" style={{ zIndex: 2 }}>
+              {[6, 7, 8, 9, 10].map((i) => (
+                <div key={i} className="dl-player-name">{players[`p${i}`]?.name || ''}</div>
+              ))}
+              <div className="dl-player-name">{players['p12']?.name || ''}</div>
+            </div>
+            <div className="font-integral-bold dl-overlay-score-1" style={{ zIndex: 2 }}>{t1score}</div>
+            <div className="font-integral-bold dl-overlay-score-2" style={{ zIndex: 2 }}>{t2score}</div>
+          </>
         )}
 
         {/* ---- LoL Score Pips ---- */}

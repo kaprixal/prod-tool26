@@ -12,6 +12,10 @@ import { asset } from '../../api';
 const IMG_LEFT = [100, 448, 796, 1144, 1492];
 const NAME_LEFT = [100, 448, 796, 1144, 1492];
 
+/* Card dimensions for the hero image — crop to fit */
+const CARD_WIDTH = 327;
+const CARD_HEIGHT = 660;
+
 export default function TeamRoster({ team = 1, playerCount = 5 }) {
   const { state } = usePolledState(1000);
   if (!state) return null;
@@ -38,7 +42,11 @@ export default function TeamRoster({ team = 1, playerCount = 5 }) {
   const heroImgPath = (hero) => {
     const clean = hero.replace(/[\s:.-]+/g, '');
     if (game === 'lol') return asset(`/assets/league_champs/${clean}.png`);
-    if (game === 'ow2') return asset(`/assets/ow_heroes/${clean.toUpperCase()}.png`);
+    if (game === 'ow2') {
+      const OW_FILE_OVERRIDES = { 'Jetpack Cat': 'JETPACK_CAT' };
+      const file = OW_FILE_OVERRIDES[hero] || clean.toUpperCase();
+      return asset(`/assets/ow_heroes/${file}.png`);
+    }
     if (game === 'val') return asset(`/assets/val_agents/${clean.toLowerCase()}.png`);
     return '';
   };
@@ -77,6 +85,10 @@ export default function TeamRoster({ team = 1, playerCount = 5 }) {
               position: 'absolute',
               top: 222,
               left: IMG_LEFT[i],
+              width: CARD_WIDTH,
+              height: CARD_HEIGHT,
+              objectFit: 'cover',
+              objectPosition: 'top center',
             }}
           />
           <div

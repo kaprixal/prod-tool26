@@ -175,18 +175,21 @@ LOL_CHAMPS = [
     {"name": "ZOE", "value": "champ_161"},
     {"name": "ZYRA", "value": "champ_162"},
     {"name": "YUUMI", "value": "champ_163"},
+    {"name": "YUNARA", "value": "champ_171"},
+    {"name": "ZAAHEN", "value": "champ_172"},
 ]
 
 LOL_ROLES = ["+", "Top", "Jungle", "Mid", "ADC", "Support"]
 
 OW_HEROES = [
-    "+", "Ana", "Ashe", "Baptiste", "Bastion", "Brigitte", "Cassidy",
-    "D.Va", "Doomfist", "Echo", "Genji", "Hanzo", "Illari", "Junker Queen",
-    "Junkrat", "Juno", "Kiriko", "Lifeweaver", "Lucio", "Mauga", "Mei",
-    "Mercy", "Moira", "Orisa", "Pharah", "Ramattra", "Reaper", "Reinhardt",
-    "Roadhog", "Sigma", "Sojourn", "Soldier: 76", "Sombra", "Symmetra",
-    "Torbjorn", "Tracer", "Venture", "Widowmaker", "Winston",
-    "Wrecking Ball", "Zarya", "Zenyatta",
+    "+", "Ana", "Anran", "Ashe", "Baptiste", "Bastion", "Brigitte", "Cassidy",
+    "D.Va", "Domina", "Doomfist", "Echo", "Emre", "Genji", "Hanzo", "Hazard",
+    "Illari", "Jetpack Cat", "Junker Queen", "Junkrat", "Juno", "Kiriko",
+    "Lifeweaver", "Lucio", "Mauga", "Mei", "Mercy", "Mizuki", "Moira", "Orisa",
+    "Pharah", "Ramattra", "Reaper", "Reinhardt", "Roadhog", "Sigma", "Sojourn",
+    "Soldier: 76", "Sombra", "Symmetra", "Torbjorn", "Tracer", "Vendetta",
+    "Venture", "Widowmaker", "Winston", "Wrecking Ball", "Wuyang", "Zarya",
+    "Zenyatta",
 ]
 
 OW_ROLES = ["+", "Tank", "DPS", "Support", "Flex"]
@@ -220,7 +223,8 @@ VAL_AGENTS = [
     "+", "Brimstone", "Phoenix", "Sage", "Sova", "Viper", "Cypher",
     "Reyna", "Killjoy", "Breach", "Omen", "Jett", "Raze", "Skye",
     "Yoru", "Astra", "Kayo", "Chamber", "Neon", "Fade", "Harbor",
-    "Gekko", "Deadlock", "Iso", "Clove", "Vyse", "Veto",
+    "Gekko", "Deadlock", "Iso", "Clove", "Vyse", "Veto", "Tejo",
+    "Waylay",
 ]
 
 VAL_ROLES = ["+", "Sentinel", "Duelist", "Controller", "Initiator", "Flex"]
@@ -241,10 +245,23 @@ MR_HEROES = [
     "Psylocke", "Moon Knight", "Hawkeye", "Squirrel Girl", "Iron Fist",
     "Black Widow", "Cloak & Dagger", "Wolverine", "Mister Fantastic",
     "Invisible Woman", "Human Torch", "The Thing", "Emma Frost", "Ultron",
-    "Angela", "Blade", "Daredevil",
+    "Angela", "Blade", "Daredevil", "Deadpool", "Elsa Bloodstone",
+    "Gambit", "Rogue",
 ]
 
 MR_ROLES = ["+", "Vanguard", "Duelist", "Strategist", "Flex"]
+
+DL_HEROES = [
+    "+", "Abrams", "Apollo", "Bebop", "Billy", "Calico", "Celeste",
+    "Drifter", "Dynamo", "Graves", "Grey Talon", "Haze", "Holliday",
+    "Infernus", "Ivy", "Kelvin", "Lady Geist", "Lash", "McGinnis",
+    "Mina", "Mirage", "Mo & Krill", "Paige", "Paradox", "Pocket",
+    "Rem", "Seven", "Shiv", "Silver", "Sinclair", "The Doorman",
+    "Venator", "Victor", "Vindicta", "Viscous", "Vyper", "Warden",
+    "Wraith", "Yamato",
+]
+
+DL_ROLES = ["+", "Flex"]
 
 # OW Ban heroes organized by role
 OW_BAN_TANKS = [
@@ -289,5 +306,9 @@ def get_game_data():
             "heroes": MR_HEROES,
             "roles": MR_ROLES,
             "maps": MR_MAPS,
+        },
+        "dl": {
+            "heroes": DL_HEROES,
+            "roles": DL_ROLES,
         },
     }

@@ -375,6 +375,108 @@ html, body, #root {
   width: 52px;
 }
 
+/* Deadlock */
+.dl-overlay-name-1 {
+  position: absolute;
+  text-align: left;
+  padding-left: 10px;
+  padding-top: 5px;
+  top: 0px;
+  left: 304px;
+  font-size: 20px;
+  color: black;
+  width: 547px;
+  height: 55px;
+}
+.dl-overlay-name-2 {
+  position: absolute;
+  text-align: right;
+  padding-right: 10px;
+  padding-top: 5px;
+  top: 0px;
+  right: 304px;
+  font-size: 20px;
+  color: black;
+}
+.dl-overlay-logo1 {
+  position: absolute;
+  top: 0px;
+  left: 800px;
+  z-index: 3;
+  height: 40px;
+  width: 40px;
+}
+.dl-overlay-logo2 {
+  position: absolute;
+  top: 0px;
+  right: 805px;
+  z-index: 3;
+  height: 40px;
+  width: 40px;
+}
+.dl-overlay-score-1 {
+  position: absolute;
+  top: 0px;
+  left: 248px;
+  width: 56px;
+  height: 55px;
+  line-height: 55px;
+  text-align: center;
+  font-size: 24px;
+  color: black;
+}
+.dl-overlay-score-2 {
+  position: absolute;
+  top: 0px;
+  right: 248px;
+  width: 56px;
+  height: 55px;
+  line-height: 55px;
+  text-align: center;
+  font-size: 24px;
+  color: black;
+}
+.dl-overlay-players {
+  position: absolute;
+  top: 40px;
+  width: 513px;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  z-index: 2;
+}
+.dl-overlay-players-t1 {
+  left: 335px;
+  text-align: center;
+}
+.dl-overlay-players-t2 {
+  right: 335px;
+  text-align: center;
+}
+.dl-player-name {
+  font-size: 10px;
+  color: black;
+  font-family: 'Integral CF', sans-serif;
+  width: 77px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+.dl-overlay-format {
+  position: absolute;
+  z-index: 3;
+  color: white;
+  top: 4px;
+  left: 877px;
+  padding-top: 15px;
+  text-align: center;
+  width: 167px;
+  height: 51px;
+  font-size: 16px;
+}
+
 /* ===== Mapset Display in Overlay ===== */
 .val-bo3-mapset, .val-bo5-mapset {
   position: absolute;

@@ -12,7 +12,7 @@ const toOpts = (arr = []) => arr.map((v) => ({ name: v, value: v }));
 function getCharOptions(game, gd) {
   if (!gd?.[game]) return [];
   if (game === 'lol') return gd.lol.champions || [];
-  const key = { ow2: 'heroes', val: 'agents', mr: 'heroes' }[game];
+  const key = { ow2: 'heroes', val: 'agents', mr: 'heroes', dl: 'heroes' }[game];
   return key ? toOpts(gd[game][key]) : [];
 }
 
@@ -122,11 +122,12 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
   const [players, setPlayers] = useState({});
   const [maps, setMaps] = useState({});
 
-  const showChars = ['lol', 'ow2', 'val', 'mr'].includes(game);
+  const showChars = ['lol', 'ow2', 'val', 'mr', 'dl'].includes(game);
   const showRoles = showChars;
-  const showPlayer6 = game === 'mr';
+  const showPlayer6 = game === 'mr' || game === 'dl';
   const showMapType = game === 'ow2';
   const showMapName = ['ow2', 'val', 'mr'].includes(game);
+  const showMaps = ['ow2', 'val', 'mr', 'lol', 'dl'].includes(game);
 
   const charOptions = getCharOptions(game, gameData);
   const roleOptions = getRoleOptions(game, gameData);
@@ -191,16 +192,18 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
 
       <div className="h-4" />
 
-      <div className="py-2 bg-gray-900 rounded-lg flex flex-row justify-evenly w-full overflow-x-auto">
-        {[1, 2, 3, 4, 5].map((i) => (
-          <MapColumn
-            key={i} index={i} mapData={maps}
-            showMapType={showMapType} showMapName={showMapName}
-            mapTypeOptions={mapTypeOptions} mapOptions={mapOptions}
-            onUpdate={updateMap}
-          />
-        ))}
-      </div>
+      {showMaps && (
+        <div className="py-2 bg-gray-900 rounded-lg flex flex-row justify-evenly w-full overflow-x-auto">
+          {Array.from({ length: (matchData?.format === 'ft3' ? 5 : matchData?.format === 'ft1' ? 1 : 3) }, (_, i) => i + 1).map((i) => (
+            <MapColumn
+              key={i} index={i} mapData={maps}
+              showMapType={showMapType} showMapName={showMapName}
+              mapTypeOptions={mapTypeOptions} mapOptions={mapOptions}
+              onUpdate={updateMap}
+            />
+          ))}
+        </div>
+      )}
 
       <div className="flex justify-between mt-4">
         <button type="button" onClick={handleClear} className="w-10 h-10 bg-gray-700 hover:bg-red-500 rounded-full flex items-center justify-center">
