@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { updateMatch, swapTeams, clearMatch } from '../../api';
 
 /* ── Shared styles ── */
-const INPUT = 'w-full bg-gray-800 h-6 rounded-md p-1';
-const SELECT_SM = 'w-auto bg-gray-800 h-5 rounded-md text-xs';
-const SELECT_SM_ALT = 'w-auto bg-gray-700 h-5 rounded-md text-xs';
+const INPUT = 'flex-1 min-w-0 w-16 bg-gray-800 h-6 rounded-md p-1';
+const SELECT_SM = 'w-12 shrink-0 bg-gray-800 h-5 rounded-md text-xs truncate';
+const SELECT_SM_ALT = 'w-10 shrink-0 bg-gray-700 h-5 rounded-md text-xs truncate';
 
 /* ── Game-data helpers ── */
 const toOpts = (arr = []) => arr.map((v) => ({ name: v, value: v }));
