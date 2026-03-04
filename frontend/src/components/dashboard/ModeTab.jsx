@@ -56,6 +56,7 @@ export default function ModeTab({ state, onUpdate }) {
         <button
           type="button"
           className="w-10 h-10 bg-gray-700 hover:bg-red-500 rounded-full flex items-center justify-center"
+          onClick={() => { setGame(''); setCurrMatch('1'); }}
         >
           <span className="text-xl text-gray-200">X</span>
         </button>

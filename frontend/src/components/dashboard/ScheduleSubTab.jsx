@@ -93,6 +93,7 @@ export default function ScheduleSubTab({ state, onUpdate }) {
         <button
           type="button"
           className="w-10 h-10 bg-gray-700 hover:bg-red-500 rounded-full flex items-center justify-center"
+          onClick={() => { setMatchCount('1'); setFormats({ match1Format: 'ft2', match1Details: '', match2Format: 'ft2', match2Details: '', match3Format: 'ft2', match3Details: '' }); }}
         >
           <span className="text-xl text-gray-200">X</span>
         </button>
