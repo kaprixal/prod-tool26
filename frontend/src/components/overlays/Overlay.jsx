@@ -66,8 +66,10 @@ export default function Overlay() {
 
   const t1name = match.team1?.name || '';
   const t2name = match.team2?.name || '';
-  const t1logo = match.team1?.logo || '';
-  const t2logo = match.team2?.logo || '';
+  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' };
+  const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[game] || 'ow'}.png`);
+  const t1logo = match.team1?.logo || defaultLogo;
+  const t2logo = match.team2?.logo || defaultLogo;
   const t1score = match.t1TotalScore ?? 0;
   const t2score = match.t2TotalScore ?? 0;
   const format = match.format || 'ft2';

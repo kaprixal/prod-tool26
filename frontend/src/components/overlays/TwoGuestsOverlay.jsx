@@ -14,8 +14,10 @@ export default function TwoGuestsOverlay() {
   const match = state.matches?.[cm];
   const t1score = match?.t1TotalScore ?? 0;
   const t2score = match?.t2TotalScore ?? 0;
-  const t1logo = match?.team1?.logo || '';
-  const t2logo = match?.team2?.logo || '';
+  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' };
+  const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[state?.game] || 'ow'}.png`);
+  const t1logo = match?.team1?.logo || defaultLogo;
+  const t2logo = match?.team2?.logo || defaultLogo;
 
   const isZeroZero = t1score === 0 && t2score === 0;
   const vsSrc = isZeroZero

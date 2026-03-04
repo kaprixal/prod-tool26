@@ -19,8 +19,10 @@ export default function ScheduleOverlay() {
 
     const t1name = match.team1?.name || '';
     const t2name = match.team2?.name || '';
-    const t1logo = match.team1?.logo || '';
-    const t2logo = match.team2?.logo || '';
+    const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' };
+    const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[state?.game] || 'ow'}.png`);
+    const t1logo = match.team1?.logo || defaultLogo;
+    const t2logo = match.team2?.logo || defaultLogo;
     const t1s = match.t1TotalScore ?? 0;
     const t2s = match.t2TotalScore ?? 0;
     const winner = match.winner || 'none';

@@ -265,19 +265,19 @@ DL_ROLES = ["+", "Flex"]
 
 # OW Ban heroes organized by role
 OW_BAN_TANKS = [
-    "dva", "doomfist", "hazard", "junkerqueen", "mauga", "orisa",
+    "domina", "dva", "doomfist", "hazard", "junkerqueen", "mauga", "orisa",
     "ramattra", "reinhardt", "roadhog", "sigma", "winston", "wreckingball", "zarya",
 ]
 
 OW_BAN_DPS = [
-    "ashe", "bastion", "cassidy", "echo", "genji", "hanzo", "junkrat",
+    "anran", "ashe", "bastion", "cassidy", "echo", "emre", "genji", "hanzo", "junkrat",
     "mei", "pharah", "reaper", "sojourn", "soldier76", "sombra",
-    "symmetra", "torbjorn", "tracer", "venture", "widowmaker",
+    "symmetra", "torbjorn", "tracer", "vendetta", "venture", "widowmaker",
 ]
 
 OW_BAN_SUPPORTS = [
-    "ana", "baptiste", "brigitte", "illari", "juno", "kiriko",
-    "lifeweaver", "lucio", "mercy", "moira", "zenyatta",
+    "ana", "baptiste", "brigitte", "illari", "jetpack_cat", "juno", "kiriko",
+    "lifeweaver", "lucio", "mercy", "mizuki", "moira", "zenyatta",
 ]
 
 

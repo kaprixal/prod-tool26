@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { usePolledState } from '../../hooks/usePolledState';
 import { updateOwBan, asset } from '../../api';
 
@@ -12,22 +12,22 @@ import { updateOwBan, asset } from '../../api';
  */
 
 const TANKS = [
-  'dva', 'doomfist', 'hazard', 'junkerqueen',
+  'domina', 'dva', 'doomfist', 'hazard', 'junkerqueen',
   'mauga', 'orisa', 'ramattra', 'reinhardt',
   'roadhog', 'sigma', 'winston', 'wreckingball', 'zarya',
 ];
 
 const DPS = [
-  'ashe', 'bastion', 'cassidy', 'echo', 'freja',
+  'anran', 'ashe', 'bastion', 'cassidy', 'echo', 'emre', 'freja',
   'genji', 'hanzo', 'junkrat', 'mei', 'pharah',
   'reaper', 'sojourn', 'soldier76', 'sombra', 'symmetra',
-  'torbjorn', 'tracer', 'venture', 'widowmaker',
+  'torbjorn', 'tracer', 'vendetta', 'venture', 'widowmaker',
 ];
 
 const SUPPORTS = [
   'ana', 'baptiste', 'brigitte', 'illari',
-  'juno', 'kiriko', 'lifeweaver', 'lucio',
-  'mercy', 'moira', 'wuyang', 'zenyatta',
+  'jetpack_cat', 'juno', 'kiriko', 'lifeweaver', 'lucio',
+  'mercy', 'mizuki', 'moira', 'wuyang', 'zenyatta',
 ];
 
 const OVERLAY_IMAGES = {
@@ -39,9 +39,10 @@ const OVERLAY_IMAGES = {
 export default function OwBanOverlay() {
   const { state } = usePolledState(1000);
   const [bans, setBans] = useState({});
+  const pendingRef = useRef(0); // track in-flight server updates
 
   useEffect(() => {
-    if (state?.owBans) {
+    if (state?.owBans && pendingRef.current === 0) {
       setBans(state.owBans);
     }
   }, [state?.owBans]);
@@ -66,23 +67,35 @@ export default function OwBanOverlay() {
         return next;
       });
 
-      await updateOwBan(hero, newTeam);
+      pendingRef.current += 1;
+      try {
+        await updateOwBan(hero, newTeam);
+      } finally {
+        pendingRef.current -= 1;
+      }
     },
     [bans]
   );
 
   const resetAll = useCallback(async () => {
     setBans({});
-    // Reset each ban on the server
-    for (const hero of Object.keys(bans)) {
-      await updateOwBan(hero, null);
+    pendingRef.current += 1;
+    try {
+      // Reset each ban on the server
+      for (const hero of Object.keys(bans)) {
+        await updateOwBan(hero, null);
+      }
+    } finally {
+      pendingRef.current -= 1;
     }
   }, [bans]);
 
   const cm = state?.currMatch || '1';
   const match = state?.matches?.[cm];
-  const t1logo = match?.team1?.logo || '';
-  const t2logo = match?.team2?.logo || '';
+  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' };
+  const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[state?.game] || 'ow'}.png`);
+  const t1logo = match?.team1?.logo || defaultLogo;
+  const t2logo = match?.team2?.logo || defaultLogo;
 
   const renderHeroGrid = (heroes, cols) => (
     <div
