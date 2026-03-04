@@ -22,10 +22,11 @@ export default function TeamRoster6({ team = 1 }) {
   const { state } = usePolledState(1000);
   if (!state) return null;
 
-  const game = state.game;
   const cm = state.currMatch || '1';
   const match = state.matches?.[cm];
   if (!match) return null;
+
+  const game = match.game || '';
 
   const isTeam1 = team === 1;
   const teamData = isTeam1 ? match.team1 : match.team2;
@@ -43,6 +44,7 @@ export default function TeamRoster6({ team = 1 }) {
   /* Hero image path — game-aware */
   /* Build candidate image paths for MR heroes (tries multiple naming formats) */
   const mrHeroCandidates = (hero) => {
+    if (!hero || hero === '+') return [];
     const clean = hero.replace(/\s+/g, '_');
     return [
       asset(`/assets/mr_heroes/Rivals_Hero_${clean}.png`),
@@ -52,7 +54,7 @@ export default function TeamRoster6({ team = 1 }) {
   };
 
   const heroImgPath = (hero) => {
-    if (hero === '+') return '';
+    if (!hero || hero === '+') return '';
     if (game === 'dl') {
       const clean = hero.replace(/\s+/g, '_');
       return asset(`/assets/deadlock_heroes/${clean}_Render.png`);
@@ -76,6 +78,7 @@ export default function TeamRoster6({ team = 1 }) {
 
   /* Role icon path — game-aware */
   const roleIconPath = (role) => {
+    if (!role || role === '+') return '';
     if (game === 'dl') return asset(`/assets/roster/icons/dl/${role.toLowerCase()}.png`);
     return asset(`/assets/roster/icons/mr/${role.toLowerCase()}.png`);
   };

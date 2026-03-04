@@ -20,10 +20,11 @@ export default function TeamRoster({ team = 1, playerCount = 5 }) {
   const { state } = usePolledState(1000);
   if (!state) return null;
 
-  const game = state.game;
   const cm = state.currMatch || '1';
   const match = state.matches?.[cm];
   if (!match) return null;
+
+  const game = match.game || '';
 
   const isTeam1 = team === 1;
   const teamData = isTeam1 ? match.team1 : match.team2;
@@ -40,6 +41,7 @@ export default function TeamRoster({ team = 1, playerCount = 5 }) {
 
   /* Resolve hero image path per game */
   const heroImgPath = (hero) => {
+    if (!hero || hero === '+') return '';
     const clean = hero.replace(/[\s:.-]+/g, '');
     if (game === 'lol') return asset(`/assets/league_champs/${clean}.png`);
     if (game === 'ow2') {
@@ -53,6 +55,7 @@ export default function TeamRoster({ team = 1, playerCount = 5 }) {
 
   /* Resolve role icon path per game */
   const roleIconPath = (role) => {
+    if (!role || role === '+') return '';
     const r = role.toLowerCase();
     if (game === 'lol') return asset(`/assets/roster/icons/lol/${r}.png`);
     if (game === 'ow2') return asset(`/assets/roster/icons/ow/${r}.png`);

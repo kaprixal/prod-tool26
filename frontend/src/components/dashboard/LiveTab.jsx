@@ -1,8 +1,17 @@
 import { useState } from 'react';
+import { setCurrMatch } from '../../api';
 import MatchPanel from './MatchPanel';
 
 export default function LiveTab({ state, gameData, onUpdate }) {
-  const [activeMatch, setActiveMatch] = useState('1');
+  const [activeMatch, setActiveMatch] = useState(state.currMatch || '1');
+
+  const handleTabSwitch = (n) => {
+    setActiveMatch(n);
+    setCurrMatch(n);
+    onUpdate();
+  };
+
+  const matchGame = state.matches?.[activeMatch]?.game || '';
 
   return (
     <>
@@ -16,7 +25,7 @@ export default function LiveTab({ state, gameData, onUpdate }) {
                 ? 'bg-blue-500 text-white'
                 : 'bg-gray-700 hover:bg-gray-600 text-white'
             }`}
-            onClick={() => setActiveMatch(n)}
+            onClick={() => handleTabSwitch(n)}
           >
             Match {n}
           </button>
@@ -26,7 +35,7 @@ export default function LiveTab({ state, gameData, onUpdate }) {
       <MatchPanel
         matchNumber={activeMatch}
         matchData={state.matches?.[activeMatch]}
-        game={state.game}
+        game={matchGame}
         gameData={gameData}
         onUpdate={onUpdate}
       />

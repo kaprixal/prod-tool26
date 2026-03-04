@@ -59,10 +59,11 @@ export default function Overlay() {
   const { state } = usePolledState(1000);
   if (!state) return null;
 
-  const game = state.game;
   const cm = state.currMatch || '1';
   const match = state.matches?.[cm];
   if (!match) return null;
+
+  const game = match.game || '';
 
   const t1name = match.team1?.name || '';
   const t2name = match.team2?.name || '';

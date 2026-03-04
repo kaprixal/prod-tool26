@@ -33,8 +33,8 @@ export async function fetchGameData() {
 // Mutations — all local, synchronous (return the updated state)
 // ---------------------------------------------------------------------------
 
-export function updateMode(data) {
-  return store.updateMode(data);
+export function setCurrMatch(matchNumber) {
+  return store.setCurrMatch(matchNumber);
 }
 
 export function updateGeneralInfo(data) {

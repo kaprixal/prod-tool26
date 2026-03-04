@@ -115,6 +115,7 @@ function MapColumn({ index, mapData, showMapType, showMapName, mapTypeOptions, m
 
 /* ── Main component ── */
 export default function MatchPanel({ matchNumber, matchData, game, gameData, onUpdate }) {
+  const [selectedGame, setSelectedGame] = useState(game || '');
   const [team1Name, setTeam1Name] = useState('');
   const [team1Logo, setTeam1Logo] = useState('');
   const [team2Name, setTeam2Name] = useState('');
@@ -122,20 +123,22 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
   const [players, setPlayers] = useState({});
   const [maps, setMaps] = useState({});
 
-  const showChars = ['lol', 'ow2', 'val', 'mr', 'dl'].includes(game);
+  const activeGame = selectedGame;
+  const showChars = ['lol', 'ow2', 'val', 'mr', 'dl'].includes(activeGame);
   const showRoles = showChars;
-  const showPlayer6 = game === 'mr' || game === 'dl';
-  const showMapType = game === 'ow2';
-  const showMapName = ['ow2', 'val', 'mr'].includes(game);
-  const showMaps = ['ow2', 'val', 'mr', 'lol', 'dl'].includes(game);
+  const showPlayer6 = activeGame === 'mr' || activeGame === 'dl';
+  const showMapType = activeGame === 'ow2';
+  const showMapName = ['ow2', 'val', 'mr'].includes(activeGame);
+  const showMaps = ['ow2', 'val', 'mr', 'lol', 'dl'].includes(activeGame);
 
-  const charOptions = getCharOptions(game, gameData);
-  const roleOptions = getRoleOptions(game, gameData);
-  const mapOptions = getMapOptions(game, gameData);
-  const mapTypeOptions = getMapTypeOptions(game, gameData);
+  const charOptions = getCharOptions(activeGame, gameData);
+  const roleOptions = getRoleOptions(activeGame, gameData);
+  const mapOptions = getMapOptions(activeGame, gameData);
+  const mapTypeOptions = getMapTypeOptions(activeGame, gameData);
 
   useEffect(() => {
     if (!matchData) return;
+    setSelectedGame(matchData.game || game || '');
     setTeam1Name(matchData.team1?.name || '');
     setTeam1Logo(matchData.team1?.logo || '');
     setTeam2Name(matchData.team2?.name || '');
@@ -152,7 +155,7 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await updateMatch(matchNumber, { team1Name, team1Logo, team2Name, team2Logo, players, maps });
+    await updateMatch(matchNumber, { game: selectedGame, team1Name, team1Logo, team2Name, team2Logo, players, maps });
     onUpdate();
   };
 
@@ -165,6 +168,25 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
 
   return (
     <form onSubmit={handleSubmit} className="text-sm">
+      {/* Game selector */}
+      <div className="mb-2 p-2 bg-gray-700 rounded-lg">
+        <div className="flex flex-row items-center">
+          <label className="pr-3 w-20 text-right text-xs">Game</label>
+          <select
+            className="w-full bg-gray-800 h-6 rounded-md"
+            value={selectedGame}
+            onChange={(e) => setSelectedGame(e.target.value)}
+          >
+            <option value="">Choose a game</option>
+            <option value="ow2">Overwatch 2</option>
+            <option value="lol">League of Legends</option>
+            <option value="val">Valorant</option>
+            <option value="mr">Marvel Rivals</option>
+            <option value="dl">Deadlock</option>
+          </select>
+        </div>
+      </div>
+
       <div className="flex flex-row gap-2">
         <TeamSection
           label="Team 1"

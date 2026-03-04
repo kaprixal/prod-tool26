@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { getState } from '../localStore';
 
 /**
@@ -8,7 +8,6 @@ import { getState } from '../localStore';
 export function usePolledState(intervalMs = 1000) {
   const [state, setState] = useState(null);
   const [error, setError] = useState(null);
-  const prevGameRef = useRef(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -17,10 +16,6 @@ export function usePolledState(intervalMs = 1000) {
       try {
         const data = getState();
         if (!cancelled) {
-          if (prevGameRef.current !== null && prevGameRef.current !== data.game) {
-            // Game changed — overlays might want to know
-          }
-          prevGameRef.current = data.game;
           setState(data);
           setError(null);
         }

@@ -35,7 +35,6 @@ function makeDefaultMatch() {
 
 export function makeDefaultState() {
   return {
-    game: '',
     currMatch: '1',
     streamTitle: '',
     subtitle: '',
@@ -45,9 +44,9 @@ export function makeDefaultState() {
     guest2: { name: '', info: '' },
     matchCount: '1',
     matches: {
-      '1': { ...makeDefaultMatch(), format: 'ft2', details: '' },
-      '2': { ...makeDefaultMatch(), format: 'ft2', details: '' },
-      '3': { ...makeDefaultMatch(), format: 'ft2', details: '' },
+      '1': { ...makeDefaultMatch(), game: '', format: 'ft2', details: '' },
+      '2': { ...makeDefaultMatch(), game: '', format: 'ft2', details: '' },
+      '3': { ...makeDefaultMatch(), game: '', format: 'ft2', details: '' },
     },
     owBans: {},
   };
@@ -153,10 +152,9 @@ function saveState(state) {
 // Mutation helpers (mirror the old API endpoints)
 // ---------------------------------------------------------------------------
 
-export function updateMode({ game, currMatch }) {
+export function setCurrMatch(matchNumber) {
   const s = getState();
-  s.game = game;
-  s.currMatch = currMatch;
+  s.currMatch = matchNumber;
   return saveState(s);
 }
 
@@ -188,6 +186,7 @@ export function updateMatch(matchNumber, data) {
   if (!s.matches[matchNumber]) return s;
 
   const match = s.matches[matchNumber];
+  if (data.game !== undefined) match.game = data.game;
   match.team1.name = data.team1Name;
   match.team1.logo = data.team1Logo;
   match.team2.name = data.team2Name;
@@ -237,9 +236,10 @@ export function clearMatch(matchNumber) {
   const s = getState();
   if (!s.matches[matchNumber]) return s;
 
+  const game = s.matches[matchNumber].game;
   const fmt = s.matches[matchNumber].format;
   const details = s.matches[matchNumber].details;
-  s.matches[matchNumber] = { ...makeDefaultMatch(), format: fmt, details };
+  s.matches[matchNumber] = { ...makeDefaultMatch(), game, format: fmt, details };
   return saveState(s);
 }
 

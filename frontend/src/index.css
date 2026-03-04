@@ -80,6 +80,7 @@ html, body, #root {
 .overlay-logo {
   position: absolute;
   z-index: 2;
+  object-fit: contain;
 }
 
 /* ===== Caster / Interview Overlay ===== */
@@ -200,6 +201,7 @@ html, body, #root {
   top: 41px;
   left: 56px;
   z-index: 2;
+  object-fit: contain;
 }
 .ow-overlay-logo2 {
   position: absolute;
@@ -209,6 +211,7 @@ html, body, #root {
   top: 41px;
   right: 56px;
   z-index: 2;
+  object-fit: contain;
 }
 .ow-overlay-format {
   position: absolute;
@@ -272,6 +275,7 @@ html, body, #root {
   z-index: 2;
   height: 59px;
   width: 59px;
+  object-fit: contain;
 }
 .lol-overlay-logo2 {
   position: absolute;
@@ -280,6 +284,7 @@ html, body, #root {
   z-index: 2;
   height: 59px;
   width: 59px;
+  object-fit: contain;
 }
 
 /* VAL */
@@ -319,6 +324,7 @@ html, body, #root {
   left: 545px;
   height: 28px;
   width: 28px;
+  object-fit: contain;
 }
 .val-overlay-logo2 {
   position: absolute;
@@ -327,6 +333,7 @@ html, body, #root {
   height: 28px;
   right: 545px;
   width: 28px;
+  object-fit: contain;
 }
 .val-overlay-title {
   width: 390px;
@@ -365,6 +372,7 @@ html, body, #root {
   z-index: 3;
   height: 52px;
   width: 52px;
+  object-fit: contain;
 }
 .rivals-overlay-logo2 {
   position: absolute;
@@ -373,6 +381,7 @@ html, body, #root {
   z-index: 3;
   height: 52px;
   width: 52px;
+  object-fit: contain;
 }
 
 /* Deadlock */
@@ -405,6 +414,7 @@ html, body, #root {
   z-index: 3;
   height: 40px;
   width: 40px;
+  object-fit: contain;
 }
 .dl-overlay-logo2 {
   position: absolute;
@@ -413,6 +423,7 @@ html, body, #root {
   z-index: 3;
   height: 40px;
   width: 40px;
+  object-fit: contain;
 }
 .dl-overlay-score-1 {
   position: absolute;
@@ -702,6 +713,7 @@ html, body, #root {
   width: 145px;
   top: 33px;
   left: 100px;
+  object-fit: contain;
 }
 .roles {
   position: absolute;
@@ -737,6 +749,7 @@ html, body, #root {
   height: 105px;
   position: absolute;
   z-index: 2;
+  object-fit: contain;
 }
 .bdate {
   position: absolute;

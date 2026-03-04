@@ -35,10 +35,11 @@ export default function MapsOverlay() {
   const { state } = usePolledState(1000);
   if (!state) return null;
 
-  const game = state.game;
   const cm = state.currMatch || '1';
   const match = state.matches?.[cm];
   if (!match) return null;
+
+  const game = match.game || '';
 
   const format = match.format || 'ft2';
   const t1score = match.t1TotalScore ?? 0;
@@ -190,8 +191,8 @@ export default function MapsOverlay() {
         <div id="match-score" style={{ fontSize: 25, color: '#0D534D' }} className="font-integral-bold">MATCH SCORE</div>
         <br />
         <div id="miniscore" style={{ fontSize: 80, fontWeight: 900 }} className="font-integral-bold">{t1score} - {t2score}</div>
-        <img id="logo1" src={t1logo} style={{ height: 136, width: 136 }} alt="" />
-        <img id="logo2" src={t2logo} style={{ height: 136, width: 136 }} alt="" />
+        <img id="logo1" src={t1logo} style={{ height: 136, width: 136, objectFit: 'contain' }} alt="" />
+        <img id="logo2" src={t2logo} style={{ height: 136, width: 136, objectFit: 'contain' }} alt="" />
       </div>
 
       {/* All 9 map slots — only the active format shows real content */}
