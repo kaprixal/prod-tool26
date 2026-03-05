@@ -44,8 +44,10 @@ export default function MapsOverlay() {
   const format = match.format || 'ft2';
   const t1score = match.t1TotalScore ?? 0;
   const t2score = match.t2TotalScore ?? 0;
-  const t1logo = match.team1?.logo || '';
-  const t2logo = match.team2?.logo || '';
+  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' };
+  const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[game] || 'blank'}.png`);
+  const t1logo = match.team1?.logo || defaultLogo;
+  const t2logo = match.team2?.logo || defaultLogo;
   const maps = match.maps || {};
 
   /* Compute per-map winner (1 = t1, 2 = t2, 0 = draw/none) */
@@ -129,7 +131,7 @@ export default function MapsOverlay() {
         <div className="ipr font-integral-regular" style={base}>
           <br />
           <h1 style={{ fontSize: 80, marginTop: 210 }}>{scores}</h1>
-          <h2>{mapName}</h2>
+          {m.name !== '+' && <h2>{mapName}</h2>}
           <img className="icon" src={icon} alt="" />
         </div>
       );
@@ -142,7 +144,7 @@ export default function MapsOverlay() {
           <br />
           {winnerLogo && <img className="winner-logo" src={winnerLogo} alt="" />}
           <h1 style={{ fontSize: 80, marginTop: 35 }}>{scores}</h1>
-          <h2>{mapName}</h2>
+          {m.name !== '+' && <h2>{mapName}</h2>}
           <img className="icon" src={icon} alt="" />
         </div>
       );
