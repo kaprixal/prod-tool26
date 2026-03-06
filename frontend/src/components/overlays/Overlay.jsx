@@ -130,11 +130,13 @@ export default function Overlay() {
         <img
           className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo1' : game === 'lol' ? 'lol-overlay-logo1' : game === 'val' ? 'val-overlay-logo1' : game === 'mr' ? 'rivals-overlay-logo1' : game === 'dl' ? 'dl-overlay-logo1' : ''}`}
           src={t1logo}
+          onError={(e) => { e.target.src = defaultLogo; }}
           alt=""
         />
         <img
           className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo2' : game === 'lol' ? 'lol-overlay-logo2' : game === 'val' ? 'val-overlay-logo2' : game === 'mr' ? 'rivals-overlay-logo2' : game === 'dl' ? 'dl-overlay-logo2' : ''}`}
           src={t2logo}
+          onError={(e) => { e.target.src = defaultLogo; }}
           alt=""
         />
 

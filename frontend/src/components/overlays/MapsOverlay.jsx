@@ -44,8 +44,10 @@ export default function MapsOverlay() {
   const format = match.format || 'ft2';
   const t1score = match.t1TotalScore ?? 0;
   const t2score = match.t2TotalScore ?? 0;
-  const t1logo = match.team1?.logo || '';
-  const t2logo = match.team2?.logo || '';
+  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' };
+  const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[game] || 'blank'}.png`);
+  const t1logo = match.team1?.logo || defaultLogo;
+  const t2logo = match.team2?.logo || defaultLogo;
   const maps = match.maps || {};
 
   /* Compute per-map winner (1 = t1, 2 = t2, 0 = draw/none) */
@@ -140,7 +142,7 @@ export default function MapsOverlay() {
       return (
         <div className={`${colorClass} font-integral-regular`} style={base}>
           <br />
-          {winnerLogo && <img className="winner-logo" src={winnerLogo} alt="" />}
+          {winnerLogo && <img className="winner-logo" src={winnerLogo} onError={(e) => { e.target.src = defaultLogo; }} alt="" />}
           <h1 style={{ fontSize: 80, marginTop: 35 }}>{scores}</h1>
           <h2>{mapName}</h2>
           <img className="icon" src={icon} alt="" />
@@ -191,8 +193,8 @@ export default function MapsOverlay() {
         <div id="match-score" style={{ fontSize: 25, color: '#0D534D' }} className="font-integral-bold">MATCH SCORE</div>
         <br />
         <div id="miniscore" style={{ fontSize: 80, fontWeight: 900 }} className="font-integral-bold">{t1score} - {t2score}</div>
-        <img id="logo1" src={t1logo} style={{ height: 136, width: 136, objectFit: 'contain' }} alt="" />
-        <img id="logo2" src={t2logo} style={{ height: 136, width: 136, objectFit: 'contain' }} alt="" />
+        <img id="logo1" src={t1logo} onError={(e) => { e.target.src = defaultLogo; }} style={{ height: 136, width: 136, objectFit: 'contain' }} alt="" />
+        <img id="logo2" src={t2logo} onError={(e) => { e.target.src = defaultLogo; }} style={{ height: 136, width: 136, objectFit: 'contain' }} alt="" />
       </div>
 
       {/* All 9 map slots — only the active format shows real content */}

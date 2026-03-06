@@ -148,8 +148,8 @@ export default function OwBanOverlay() {
         style={{ top: 48, left: 696 }}
         alt=""
       />
-      <img src={t1logo} style={{ width: 97, position: 'absolute', left: 742, top: 68, zIndex: 4 }} alt="" />
-      <img src={t2logo} style={{ width: 97, position: 'absolute', left: 1082, top: 68, zIndex: 4 }} alt="" />
+      <img src={t1logo} onError={(e) => { e.target.src = defaultLogo; }} style={{ width: 97, position: 'absolute', left: 742, top: 68, zIndex: 4 }} alt="" />
+      <img src={t2logo} onError={(e) => { e.target.src = defaultLogo; }} style={{ width: 97, position: 'absolute', left: 1082, top: 68, zIndex: 4 }} alt="" />
 
       {/* Hero grids: Tanks | DPS | Supports */}
       <div
