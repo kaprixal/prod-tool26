@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Node dependencies/build cache
+node_modules/
+**/node_modules/
+.vite/
+**/.vite/

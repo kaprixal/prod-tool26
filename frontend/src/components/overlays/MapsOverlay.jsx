@@ -131,7 +131,7 @@ export default function MapsOverlay() {
         <div className="ipr font-integral-regular" style={base}>
           <br />
           <h1 style={{ fontSize: 80, marginTop: 210 }}>{scores}</h1>
-          <h2>{mapName}</h2>
+          {m.name !== '+' && <h2>{mapName}</h2>}
           <img className="icon" src={icon} alt="" />
         </div>
       );
@@ -144,7 +144,7 @@ export default function MapsOverlay() {
           <br />
           {winnerLogo && <img className="winner-logo" src={winnerLogo} onError={(e) => { e.target.src = defaultLogo; }} alt="" />}
           <h1 style={{ fontSize: 80, marginTop: 35 }}>{scores}</h1>
-          <h2>{mapName}</h2>
+          {m.name !== '+' && <h2>{mapName}</h2>}
           <img className="icon" src={icon} alt="" />
         </div>
       );
