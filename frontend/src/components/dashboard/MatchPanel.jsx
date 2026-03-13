@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import HeroCounterStatsDashboard from './HeroCounterStatsDashboard';
 import { updateMatch, swapTeams, clearMatch } from '../../api';
 
 /* ── Shared styles ── */
@@ -167,74 +168,82 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
   const team2Players = [6, 7, 8, 9, 10].map((i) => ({ key: `p${i}`, placeholder: `P${i - 5} IGN` }));
 
   return (
-    <form onSubmit={handleSubmit} className="text-sm">
-      {/* Game selector */}
-      <div className="mb-2 p-2 bg-gray-700 rounded-lg">
-        <div className="flex flex-row items-center">
-          <label className="pr-3 w-20 text-right text-xs">Game</label>
-          <select
-            className="w-full bg-gray-800 h-6 rounded-md"
-            value={selectedGame}
-            onChange={(e) => setSelectedGame(e.target.value)}
-          >
-            <option value="">Choose a game</option>
-            <option value="ow2">Overwatch 2</option>
-            <option value="lol">League of Legends</option>
-            <option value="val">Valorant</option>
-            <option value="mr">Marvel Rivals</option>
-            <option value="dl">Deadlock</option>
-          </select>
+    <>
+      <form onSubmit={handleSubmit} className="text-sm">
+        {/* Game selector */}
+        <div className="mb-2 p-2 bg-gray-700 rounded-lg">
+          <div className="flex flex-row items-center">
+            <label className="pr-3 w-20 text-right text-xs">Game</label>
+            <select
+              className="w-full bg-gray-800 h-6 rounded-md"
+              value={selectedGame}
+              onChange={(e) => setSelectedGame(e.target.value)}
+            >
+              <option value="">Choose a game</option>
+              <option value="ow2">Overwatch 2</option>
+              <option value="lol">League of Legends</option>
+              <option value="val">Valorant</option>
+              <option value="mr">Marvel Rivals</option>
+              <option value="dl">Deadlock</option>
+            </select>
+          </div>
         </div>
-      </div>
 
-      <div className="flex flex-row gap-2">
-        <TeamSection
-          label="Team 1"
-          teamName={team1Name} teamLogo={team1Logo}
-          onNameChange={setTeam1Name} onLogoChange={setTeam1Logo}
-          playerKeys={team1Players} players={players}
-          showPlayer6={showPlayer6} p6Key="p11"
-          showChars={showChars} showRoles={showRoles} charOptions={charOptions} roleOptions={roleOptions}
-          onPlayerChange={updatePlayer}
-        />
-        <TeamSection
-          label="Team 2"
-          teamName={team2Name} teamLogo={team2Logo}
-          onNameChange={setTeam2Name} onLogoChange={setTeam2Logo}
-          playerKeys={team2Players} players={players}
-          showPlayer6={showPlayer6} p6Key="p12"
-          showChars={showChars} showRoles={showRoles} charOptions={charOptions} roleOptions={roleOptions}
-          onPlayerChange={updatePlayer}
-        />
-      </div>
+        <div className="flex flex-row gap-2">
+          <TeamSection
+            label="Team 1"
+            teamName={team1Name} teamLogo={team1Logo}
+            onNameChange={setTeam1Name} onLogoChange={setTeam1Logo}
+            playerKeys={team1Players} players={players}
+            showPlayer6={showPlayer6} p6Key="p11"
+            showChars={showChars} showRoles={showRoles} charOptions={charOptions} roleOptions={roleOptions}
+            onPlayerChange={updatePlayer}
+          />
+          <TeamSection
+            label="Team 2"
+            teamName={team2Name} teamLogo={team2Logo}
+            onNameChange={setTeam2Name} onLogoChange={setTeam2Logo}
+            playerKeys={team2Players} players={players}
+            showPlayer6={showPlayer6} p6Key="p12"
+            showChars={showChars} showRoles={showRoles} charOptions={charOptions} roleOptions={roleOptions}
+            onPlayerChange={updatePlayer}
+          />
+        </div>
 
-      <button type="button" onClick={handleSwap} className="bg-gray-500 hover:bg-gray-400 px-6 py-2 rounded-lg text-white w-full">
-        SWAP
-      </button>
+        <button type="button" onClick={handleSwap} className="bg-gray-500 hover:bg-gray-400 px-6 py-2 rounded-lg text-white w-full">
+          SWAP
+        </button>
 
-      <div className="h-4" />
+        <div className="h-4" />
 
-      {showMaps && (
-        <div className="py-2 bg-gray-900 rounded-lg flex flex-row justify-evenly w-full overflow-x-auto">
-          {Array.from({ length: (matchData?.format === 'ft3' ? 5 : matchData?.format === 'ft1' ? 1 : 3) }, (_, i) => i + 1).map((i) => (
-            <MapColumn
-              key={i} index={i} mapData={maps}
-              showMapType={showMapType} showMapName={showMapName}
-              mapTypeOptions={mapTypeOptions} mapOptions={mapOptions}
-              onUpdate={updateMap}
-            />
-          ))}
+        {showMaps && (
+          <div className="py-2 bg-gray-900 rounded-lg flex flex-row justify-evenly w-full overflow-x-auto">
+            {Array.from({ length: (matchData?.format === 'ft3' ? 5 : matchData?.format === 'ft1' ? 1 : 3) }, (_, i) => i + 1).map((i) => (
+              <MapColumn
+                key={i} index={i} mapData={maps}
+                showMapType={showMapType} showMapName={showMapName}
+                mapTypeOptions={mapTypeOptions} mapOptions={mapOptions}
+                onUpdate={updateMap}
+              />
+            ))}
+          </div>
+        )}
+
+        <div className="flex justify-between mt-4">
+          <button type="button" onClick={handleClear} className="w-10 h-10 bg-gray-700 hover:bg-red-500 rounded-full flex items-center justify-center">
+            <span className="text-xl text-gray-200">X</span>
+          </button>
+          <button type="submit" className="bg-blue-500 hover:bg-blue-400 px-6 py-2 rounded-lg text-white">
+            APPLY
+          </button>
+        </div>
+      </form>
+      {/* Show HeroCounterStatsDashboard if Deadlock is selected */}
+      {selectedGame === 'dl' && (
+        <div className="mt-8">
+          <HeroCounterStatsDashboard />
         </div>
       )}
-
-      <div className="flex justify-between mt-4">
-        <button type="button" onClick={handleClear} className="w-10 h-10 bg-gray-700 hover:bg-red-500 rounded-full flex items-center justify-center">
-          <span className="text-xl text-gray-200">X</span>
-        </button>
-        <button type="submit" className="bg-blue-500 hover:bg-blue-400 px-6 py-2 rounded-lg text-white">
-          APPLY
-        </button>
-      </div>
-    </form>
+    </>
   );
 }

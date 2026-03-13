@@ -9,6 +9,7 @@ import GuestOverlay from './components/overlays/GuestOverlay';
 import TwoGuestsOverlay from './components/overlays/TwoGuestsOverlay';
 import OwBanOverlay from './components/overlays/OwBanOverlay';
 import AnimateLogoOverlay from './components/overlays/AnimateLogoOverlay';
+import HeroCounterStatsTable from './components/overlays/HeroCounterStatsTable';
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
       <Route path="/general/2casters" element={<CastersOverlay />} />
       <Route path="/general/1guest" element={<GuestOverlay />} />
       <Route path="/general/2guests" element={<TwoGuestsOverlay />} />
+      <Route path="/general/dl-hero-counter-stats" element={<HeroCounterStatsTable />} />
     </Routes>
   );
 }

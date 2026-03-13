@@ -60,7 +60,7 @@ export default function InfoSubTab({ state, onUpdate }) {
   ];
 
   return (
-    <form onSubmit={handleSubmit}>
+    <>
       {fields.map(({ section, items }) => (
         <div key={section} className="mb-2 p-2 bg-gray-700 rounded-lg">
           <h2 className="mb-2 text-gray-400">{section}</h2>
@@ -81,26 +81,29 @@ export default function InfoSubTab({ state, onUpdate }) {
         </div>
       ))}
 
-      <div className="flex justify-between mt-4">
-        <button
-          type="button"
-          className="w-10 h-10 bg-gray-700 hover:bg-red-500 rounded-full flex items-center justify-center"
-          onClick={() => {
-            const empty = { streamTitle: '', subtitle: '', caster1Name: '', caster1Info: '', caster2Name: '', caster2Info: '', guest1Name: '', guest1Info: '', guest2Name: '', guest2Info: '' };
-            setForm(empty);
-            updateGeneralInfo(empty);
-            onUpdate();
-          }}
-        >
-          <span className="text-xl text-gray-200">X</span>
-        </button>
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-400 px-6 py-2 rounded-lg text-white"
-        >
-          APPLY
-        </button>
-      </div>
-    </form>
+      <form onSubmit={handleSubmit} className="mb-6">
+        <div className="flex justify-between mt-4">
+          <button
+            type="button"
+            className="w-10 h-10 bg-gray-700 hover:bg-red-500 rounded-full flex items-center justify-center"
+            onClick={() => {
+              const empty = { streamTitle: '', subtitle: '', caster1Name: '', caster1Info: '', caster2Name: '', caster2Info: '', guest1Name: '', guest1Info: '', guest2Name: '', guest2Info: '' };
+              setForm(empty);
+              updateGeneralInfo(empty);
+              onUpdate();
+            }}
+          >
+            <span className="text-xl text-gray-200">X</span>
+          </button>
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-400 px-6 py-2 rounded-lg text-white"
+          >
+            APPLY
+          </button>
+        </div>
+      </form>
+
+    </>
   );
 }
