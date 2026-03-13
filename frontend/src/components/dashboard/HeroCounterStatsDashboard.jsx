@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const API_URL = "/api/hero-counter-stats";
+const API_URL = (import.meta.env.VITE_API_URL || "") + "/api/hero-counter-stats";
 const DEADLOCK_API = "https://assets.deadlock-api.com/v2/heroes";
 
 const SELECT = "w-full bg-gray-800 h-8 rounded-md text-xs px-1 truncate";
