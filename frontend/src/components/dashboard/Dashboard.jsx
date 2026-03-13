@@ -21,13 +21,6 @@ export default function Dashboard() {
     setState(fetchState());
   };
 
-  if (!state || !gameData) {
-    return (
-      <div className="bg-gray-900 flex items-center justify-center h-screen text-gray-200">
-        Loading...
-      </div>
-    );
-  }
 
   return (
     <div className="bg-gray-900 flex items-center justify-center min-h-screen py-4">
