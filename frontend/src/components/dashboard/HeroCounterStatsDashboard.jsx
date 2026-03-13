@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 const API_URL = (import.meta.env.VITE_API_URL || "") + "/api/hero-counter-stats";
+// Debug: Log API_URL at runtime
+if (typeof window !== "undefined") {
+  console.log("[HeroCounterStatsDashboard] API_URL:", API_URL);
+}
 const DEADLOCK_API = "https://assets.deadlock-api.com/v2/heroes";
 
 const SELECT = "w-full bg-gray-800 h-8 rounded-md text-xs px-1 truncate";
@@ -51,12 +55,19 @@ export default function HeroCounterStatsDashboard() {
         .filter(([_, v]) => v !== "" && v !== null)
         .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
         .join("&");
-      const res = await fetch(`${API_URL}?${query}`);
-      if (!res.ok) throw new Error("Failed to fetch data");
+      const url = `${API_URL}?${query}`;
+      console.log("[HeroCounterStatsDashboard] Fetching:", url);
+      const res = await fetch(url);
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("[HeroCounterStatsDashboard] Fetch failed:", res.status, text);
+        throw new Error(`Failed to fetch data: ${res.status} ${text}`);
+      }
       const json = await res.json();
       localStorage.setItem("heroCounterStats", JSON.stringify(json));
       localStorage.setItem("heroCounterStatsParams", JSON.stringify(params));
     } catch (e) {
+      console.error("[HeroCounterStatsDashboard] Error:", e);
       setError(e.message);
     } finally {
       setLoading(false);
