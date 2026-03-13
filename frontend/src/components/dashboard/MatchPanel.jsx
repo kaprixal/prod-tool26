@@ -126,7 +126,7 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
 
   const activeGame = selectedGame;
   const showChars = ['lol', 'ow2', 'val', 'mr', 'dl'].includes(activeGame);
-  const showRoles = showChars;
+  const showRoles = activeGame === 'dl' ? false : showChars;
   const showPlayer6 = activeGame === 'mr' || activeGame === 'dl';
   const showMapType = activeGame === 'ow2';
   const showMapName = ['ow2', 'val', 'mr'].includes(activeGame);
