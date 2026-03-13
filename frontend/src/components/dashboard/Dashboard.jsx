@@ -7,12 +7,10 @@ const TABS = ['GENERAL', 'LIVE'];
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('GENERAL');
-  const [state, setState] = useState(null);
+  const [state, setState] = useState(() => fetchState());
   const [gameData, setGameData] = useState(null);
 
   useEffect(() => {
-    // State is now read from localStorage (synchronous)
-    setState(fetchState());
     fetchGameData().then(setGameData);
   }, []);
 
