@@ -35,7 +35,7 @@ function fmt(val) {
 function wrClass(wr) {
   if (wr >= 55) return "text-green-400";
   if (wr >= 45) return "text-yellow-400";
-  return "text-red-400";
+  return "text-[#5979E7]";
 }
 
 function barPct(hero, enemy) {
@@ -50,14 +50,14 @@ function StatCol({ label, heroVal, enemyVal }) {
     <div className="flex flex-col items-center justify-center flex-1 gap-2 px-4 py-3 border-r border-white/5 last:border-r-0">
       <span className="text-sm font-bold uppercase tracking-widest text-white/40">{label}</span>
       <div className="flex items-baseline gap-3">
-        <span className="text-3xl font-bold text-blue-300">{fmt(heroVal)}</span>
+        <span className="text-3xl font-bold" style={{ color: '#E6B663' }}>{fmt(heroVal)}</span>
         <span className="text-xs font-semibold text-white/20">vs</span>
-        <span className="text-3xl font-bold text-red-300">{fmt(enemyVal)}</span>
+        <span className="text-3xl font-bold" style={{ color: '#5979E7' }}>{fmt(enemyVal)}</span>
       </div>
-      <div className="w-4/5 h-1 rounded-full bg-red-400/20 overflow-hidden">
+      <div className="w-4/5 h-1 rounded-full" style={{ background: '#5979E7', opacity: 0.2 }}>
         <div
-          className="h-full rounded-full bg-blue-400/70"
-          style={{ width: `${pct}%` }}
+          className="h-full rounded-full"
+          style={{ width: `${pct}%`, background: '#E6B663', opacity: 0.7 }}
         />
       </div>
     </div>
@@ -70,9 +70,9 @@ function HeroCard({ heroData, side, heroId, teamLogo, defaultLogo, teamName }) {
     <div
       className={`flex items-center gap-5 flex-1 rounded-2xl px-7 py-4 bg-black/10 backdrop-blur border border-white/8
         ${isEnemy
-          ? "flex-row-reverse text-right border-l-0 border-r-[3px] border-r-red-500"
-          : "border-l-[3px] border-l-blue-500"
-        }`}
+          ? "flex-row-reverse text-right border-l-0 border-r-[3px]" : "border-l-[3px]"}
+      `}
+      style={isEnemy ? { borderRightColor: '#5979E7' } : { borderLeftColor: '#E6B663' }}
     >
       {/* Hero icon */}
       {heroData?.images?.icon_hero_card_webp ? (
@@ -93,7 +93,10 @@ function HeroCard({ heroData, side, heroId, teamLogo, defaultLogo, teamName }) {
 
       {/* Hero info */}
       <div className="flex flex-col gap-1 flex-1">
-        <span className={`text-xs font-bold uppercase tracking-widest ${isEnemy ? "text-red-500" : "text-blue-500"}`}>
+        <span
+          className="text-xs font-bold uppercase tracking-widest"
+          style={{ color: isEnemy ? '#5979E7' : '#E6B663' }}
+        >
           {isEnemy ? "Enemy Hero" : "Hero"}
         </span>
         <span className="text-4xl font-bold text-white leading-none">
@@ -219,11 +222,11 @@ export default function HeroCounterStatsTable() {
             <div className="w-px h-8 bg-white/10 flex-shrink-0" />
             <div className="flex flex-col flex-1 gap-1.5">
               <div className="flex justify-between text-xs font-bold">
-                <span className="text-blue-300">{heroes[heroId]?.name ?? `Hero ${heroId}`}</span>
-                <span className="text-red-300">{heroes[enemyHeroId]?.name ?? `Hero ${enemyHeroId}`}</span>
+                <span style={{ color: '#E6B663' }}>{heroes[heroId]?.name ?? `Hero ${heroId}`}</span>
+                <span style={{ color: '#5979E7' }}>{heroes[enemyHeroId]?.name ?? `Hero ${enemyHeroId}`}</span>
               </div>
-              <div className="h-1.5 rounded-full bg-red-400/25 overflow-hidden">
-                <div className="h-full rounded-full bg-blue-400" style={{ width: `${winPct}%` }} />
+              <div className="h-1.5 rounded-full" style={{ background: '#5979E7', opacity: 0.25, overflow: 'hidden' }}>
+                <div className="h-full rounded-full" style={{ width: `${winPct}%`, background: '#E6B663' }} />
               </div>
             </div>
           </div>
@@ -252,7 +255,7 @@ export default function HeroCounterStatsTable() {
               <div className="flex flex-1">
                 <StatCol label="Networth"  heroVal={row.networth}  enemyVal={row.enemy_networth} />
                 <StatCol label="Last Hits" heroVal={row.last_hits} enemyVal={row.enemy_last_hits} />
-                <StatCol label="Creeps"    heroVal={row.creeps}    enemyVal={row.enemy_creeps} />
+                <StatCol label="Troopers"    heroVal={row.creeps}    enemyVal={row.enemy_creeps} />
                 <StatCol label="Denies"    heroVal={row.denies}    enemyVal={row.enemy_denies} />
               </div>
             </div>
