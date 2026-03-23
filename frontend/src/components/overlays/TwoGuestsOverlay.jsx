@@ -86,17 +86,18 @@ export default function TwoGuestsOverlay() {
       {/* Score */}
       {!isZeroZero && (
         <div
-          className="druk-wide-heavy"
+          className="text-center font-integral-bold"
           style={{
             fontSize: 80,
             borderRadius: 38,
             fontWeight: 900,
             position: 'absolute',
-            top: 890,
+            top: 875,
             left: 1340,
             width: 259.53,
-            height: 122,
+            height: 115,
             zIndex: 3,
+            color: '#172953',
           }}
         >
           {t1score} - {t2score}
