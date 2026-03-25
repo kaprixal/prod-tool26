@@ -76,6 +76,9 @@ export default function GuestOverlay() {
         alt=""
       />
 
+      {/* Background */}
+      <img className="stacked-image" src={asset('/assets/casters_and_interviews/interview_cam_box.png')} alt="" />
+
       {/* VS asset */}
       <img className="stacked-image" src={vsSrc} style={{ zIndex: 2 }} alt="" />
 
@@ -99,9 +102,6 @@ export default function GuestOverlay() {
           {t1score} - {t2score}
         </div>
       )}
-
-      {/* Background */}
-      <img className="stacked-image" src={asset('/assets/casters_and_interviews/interview_cam_box.png')} alt="" />
     </div>
   );
 }
