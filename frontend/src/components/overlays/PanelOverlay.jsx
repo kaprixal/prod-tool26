@@ -83,9 +83,9 @@ const RANKDLE_TITLE_TOP = {
 
 // Standard title default (no override — uses CSS class positioning)
 const STANDARD_TITLE_OVERRIDES = {
-  '4': { width: 1287, height: 124, top: 922, left: 560 },
-  '5': { width: 1287, height: 124, top: 908, left: 560 },
-  '6': { width: 1287, height: 124, top: 914, left: 560 },
+  '4': { width: 1287, top: 900, left: 560 },
+  '5': { width: 1287, top: 890, left: 560 },
+  '6': { width: 1287, top: 900, left: 560 },
 };
 
 export default function PanelOverlay({ count, variant = 'standard' }) {
@@ -151,7 +151,7 @@ export default function PanelOverlay({ count, variant = 'standard' }) {
     ? {
         width: STANDARD_TITLE_OVERRIDES[String(count)].width,
         height: 60,
-        top: STANDARD_TITLE_OVERRIDES[String(count)].top + STANDARD_TITLE_OVERRIDES[String(count)].height,
+        top: STANDARD_TITLE_OVERRIDES[String(count)].top + (STANDARD_TITLE_OVERRIDES[String(count)].height ?? 80),
         left: STANDARD_TITLE_OVERRIDES[String(count)].left,
         position: 'absolute',
         zIndex: 3,
