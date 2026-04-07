@@ -878,10 +878,10 @@ html, body, #root {
 /* Subtitle bar on standard panel overlays (below stream title) */
 .panel-subtitle {
   position: absolute;
-  height: 60px;
+  height: 124px;
   width: 1287px;
   left: 560px;
-  top: 915px;
+  top: 820px;
   z-index: 3;
   color: white;
   display: flex;
@@ -896,7 +896,7 @@ html, body, #root {
   height: 124px;
   width: 1287px;
   left: 560px;
-  top: 791px;
+  top: 770px;
   z-index: 3;
   color: white;
   display: flex;
