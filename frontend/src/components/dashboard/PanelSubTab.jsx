@@ -91,15 +91,6 @@ export default function PanelSubTab({ state, onUpdate }) {
         </div>
       </div>
 
-      {/* Overlay links */}
-      <div className="mb-2 p-2 bg-gray-700 rounded-lg">
-        <h2 className="mb-2 text-gray-400">OVERLAY LINKS</h2>
-        <div className="space-y-1 text-xs text-blue-300">
-          <div>/panels/{count}panel</div>
-          <div>/panels/{count}panel-rankdle</div>
-        </div>
-      </div>
-
       <div className="flex justify-between mt-4">
         <button
           type="button"
