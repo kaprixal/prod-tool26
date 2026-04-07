@@ -34,6 +34,50 @@ html, body, #root {
   font-style: normal;
 }
 
+/* Druk font faces */
+@font-face {
+  font-family: 'DrukMedium';
+  src: url('/fonts/Druk/Druk-Medium-Trial.otf') format('opentype');
+}
+@font-face {
+  font-family: 'DrukMediumText';
+  src: url('/fonts/Druk/DrukText-Medium-Trial.otf') format('opentype');
+}
+@font-face {
+  font-family: 'DrukWideBold';
+  src: url('/fonts/Druk/DrukWide-Bold-Trial.otf') format('opentype');
+}
+@font-face {
+  font-family: 'DrukWideMedium';
+  src: url('/fonts/Druk/DrukWide-Medium-Trial.otf') format('opentype');
+}
+@font-face {
+  font-family: 'DrukWideHeavy';
+  src: url('/fonts/Druk/DrukTextWide-Heavy-Trial.otf') format('opentype');
+}
+@font-face {
+  font-family: 'DrukSuperWide';
+  src: url('/fonts/Druk/DrukTextWide-Super-Trial.otf') format('opentype');
+}
+@font-face {
+  font-family: 'DrukHeavyText';
+  src: url('/fonts/Druk/DrukText-Heavy-Trial.otf') format('opentype');
+}
+@font-face {
+  font-family: 'DrukBold';
+  src: url('/fonts/Druk/Druk-Bold-Trial.otf') format('opentype');
+}
+
+/* Druk font utility classes */
+.druk-medium        { font-family: 'DrukMedium', sans-serif; }
+.druk-medium-text   { font-family: 'DrukMediumText', sans-serif; }
+.druk-wide-bold     { font-family: 'DrukWideBold', sans-serif; }
+.druk-wide-medium   { font-family: 'DrukWideMedium', sans-serif; }
+.druk-wide-heavy    { font-family: 'DrukWideHeavy', sans-serif; }
+.druk-super-wide    { font-family: 'DrukSuperWide', sans-serif; }
+.druk-heavy-text    { font-family: 'DrukHeavyText', sans-serif; }
+.druk-bold          { font-family: 'DrukBold', sans-serif; }
+
 /* IntegralCF font faces */
 @font-face {
   font-family: 'IntegralCF';
@@ -800,4 +844,63 @@ html, body, #root {
   top: 0;
   left: 0;
   z-index: 10;
+}
+
+/* ===== Panel Overlays ===== */
+/* Panelist name label — used for 2/3/4-panel layouts */
+.panel_label {
+  position: absolute;
+  height: 46px;
+  width: 383px;
+  color: white;
+  z-index: 3;
+  overflow: clip;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+}
+
+/* Panelist name label — used for 5/6-panel layouts (slightly smaller) */
+.panel_label5 {
+  position: absolute;
+  height: 37px;
+  width: 341px;
+  color: white;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: clip;
+  text-transform: uppercase;
+}
+
+/* Subtitle bar on standard panel overlays (below stream title) */
+.panel-subtitle {
+  position: absolute;
+  height: 60px;
+  width: 1287px;
+  left: 560px;
+  top: 915px;
+  z-index: 3;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+}
+
+/* Stream title bar on standard panel overlays */
+.panel-streamtitle {
+  position: absolute;
+  height: 124px;
+  width: 1287px;
+  left: 560px;
+  top: 791px;
+  z-index: 3;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
 }

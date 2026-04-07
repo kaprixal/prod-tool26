@@ -9,6 +9,7 @@ import GuestOverlay from './components/overlays/GuestOverlay';
 import TwoGuestsOverlay from './components/overlays/TwoGuestsOverlay';
 import OwBanOverlay from './components/overlays/OwBanOverlay';
 import AnimateLogoOverlay from './components/overlays/AnimateLogoOverlay';
+import PanelOverlay from './components/overlays/PanelOverlay';
 
 export default function App() {
   return (
@@ -29,6 +30,18 @@ export default function App() {
       <Route path="/general/2casters" element={<CastersOverlay />} />
       <Route path="/general/1guest" element={<GuestOverlay />} />
       <Route path="/general/2guests" element={<TwoGuestsOverlay />} />
+
+      {/* Panel overlays (2–6 panelists, standard + rankdle) */}
+      <Route path="/panels/2panel" element={<PanelOverlay count={2} variant="standard" />} />
+      <Route path="/panels/2panel-rankdle" element={<PanelOverlay count={2} variant="rankdle" />} />
+      <Route path="/panels/3panel" element={<PanelOverlay count={3} variant="standard" />} />
+      <Route path="/panels/3panel-rankdle" element={<PanelOverlay count={3} variant="rankdle" />} />
+      <Route path="/panels/4panel" element={<PanelOverlay count={4} variant="standard" />} />
+      <Route path="/panels/4panel-rankdle" element={<PanelOverlay count={4} variant="rankdle" />} />
+      <Route path="/panels/5panel" element={<PanelOverlay count={5} variant="standard" />} />
+      <Route path="/panels/5panel-rankdle" element={<PanelOverlay count={5} variant="rankdle" />} />
+      <Route path="/panels/6panel" element={<PanelOverlay count={6} variant="standard" />} />
+      <Route path="/panels/6panel-rankdle" element={<PanelOverlay count={6} variant="rankdle" />} />
     </Routes>
   );
 }

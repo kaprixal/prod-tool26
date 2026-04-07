@@ -9,6 +9,12 @@ const LS_KEY = 'prodToolState';
 // Default state factories (mirrors backend defaults)
 // ---------------------------------------------------------------------------
 
+function makeDefaultPanelists(count) {
+  return Object.fromEntries(
+    Array.from({ length: count }, (_, i) => [`p${i + 1}`, { name: '', pronouns: '' }])
+  );
+}
+
 function makeDefaultPlayer() {
   return { name: '', character: '+', role: '+' };
 }
@@ -49,6 +55,13 @@ export function makeDefaultState() {
       '3': { ...makeDefaultMatch(), game: '', format: 'ft2', details: '' },
     },
     owBans: {},
+    panelists: {
+      '2': makeDefaultPanelists(2),
+      '3': makeDefaultPanelists(3),
+      '4': makeDefaultPanelists(4),
+      '5': makeDefaultPanelists(5),
+      '6': makeDefaultPanelists(6),
+    },
   };
 }
 
@@ -131,7 +144,7 @@ export function getState() {
       const parsed = JSON.parse(raw);
       // Ensure all expected keys exist (defensive merge with defaults)
       const def = makeDefaultState();
-      return { ...def, ...parsed, matches: { ...def.matches, ...parsed.matches } };
+      return { ...def, ...parsed, matches: { ...def.matches, ...parsed.matches }, panelists: { ...def.panelists, ...(parsed.panelists || {}) } };
     }
   } catch (e) {
     console.warn('[localStore] Could not read state:', e);
@@ -255,6 +268,13 @@ export function updateOwBan(hero, team) {
 
 export function resetState() {
   return saveState(makeDefaultState());
+}
+
+export function updatePanelInfo(count, panelists) {
+  const s = getState();
+  if (!s.panelists) s.panelists = {};
+  s.panelists[String(count)] = panelists;
+  return saveState(s);
 }
 
 export function restoreState(data) {

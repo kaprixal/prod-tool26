@@ -11,7 +11,7 @@ export default function ScheduleOverlay() {
   const { state } = usePolledState(1000);
   if (!state) return null;
 
-  const matchCount = parseInt(state.matchCount) || 1;
+  const matchCount = state.matchCount !== undefined ? parseInt(state.matchCount) : 1;
 
   const renderMatchBlock = (n) => {
     const match = state.matches?.[String(n)];
