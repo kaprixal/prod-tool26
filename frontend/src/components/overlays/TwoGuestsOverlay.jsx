@@ -1,5 +1,12 @@
 import { usePolledState } from '../../hooks/usePolledState';
 import { asset } from '../../api';
+import Slideshow from './Slideshow';
+
+const slideshowModules = import.meta.glob(
+  './assets/sponsor_slideshow/*.{png,jpg,jpeg,webp,gif}',
+  { eager: true }
+);
+const SLIDESHOW_IMGS = Object.values(slideshowModules).map((m) => m.default);
 
 /**
  * 2-guest interview cam overlay.
@@ -106,6 +113,8 @@ export default function TwoGuestsOverlay() {
 
       {/* Background */}
       <img className="stacked-image" src={asset('/assets/casters_and_interviews/interview2_cam_box.png')} alt="" />
+    <Slideshow images={SLIDESHOW_IMGS} top={873} left={140} width={300} height={120} interval={5000}/>
     </div>
+    
   );
 }
