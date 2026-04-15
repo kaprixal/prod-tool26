@@ -128,8 +128,8 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
   const showRoles = showChars;
   const showPlayer6 = activeGame === 'mr' || activeGame === 'dl';
   const showMapType = activeGame === 'ow2';
-  const showMapName = ['ow2', 'val', 'mr'].includes(activeGame);
-  const showMaps = ['ow2', 'val', 'mr', 'lol', 'dl'].includes(activeGame);
+  const showMapName = ['ow2', 'val', 'mr', 'cs2'].includes(activeGame);
+  const showMaps = ['ow2', 'val', 'mr', 'lol', 'dl', 'cs2'].includes(activeGame);
 
   const charOptions = getCharOptions(activeGame, gameData);
   const roleOptions = getRoleOptions(activeGame, gameData);
@@ -183,6 +183,7 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
             <option value="val">Valorant</option>
             <option value="mr">Marvel Rivals</option>
             <option value="dl">Deadlock</option>
+            <option value="cs2">CS2</option>
           </select>
         </div>
       </div>

@@ -263,6 +263,10 @@ DL_HEROES = [
 
 DL_ROLES = ["+", "Flex"]
 
+CS2_MAPS = [
+    "+", "Ancient", "Anubis", "Dust II", "Inferno", "Mirage", "Nuke", "Overpass",
+]
+
 # OW Ban heroes organized by role
 OW_BAN_TANKS = [
     "domina", "dva", "doomfist", "hazard", "junkerqueen", "mauga", "orisa",
@@ -310,5 +314,8 @@ def get_game_data():
         "dl": {
             "heroes": DL_HEROES,
             "roles": DL_ROLES,
+        },
+        "cs2": {
+            "maps": CS2_MAPS,
         },
     }

@@ -44,7 +44,7 @@ export default function MapsOverlay() {
   const format = match.format || 'ft2';
   const t1score = match.t1TotalScore ?? 0;
   const t2score = match.t2TotalScore ?? 0;
-  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' };
+  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl', cs2: 'cs2' };
   const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[game] || 'blank'}.png`);
   const t1logo = match.team1?.logo || defaultLogo;
   const t2logo = match.team2?.logo || defaultLogo;
@@ -63,10 +63,26 @@ export default function MapsOverlay() {
   const activeKey = format === 'ft1' ? 'bo1' : format === 'ft2' ? 'bo3' : 'bo5';
   const mapCount = format === 'ft1' ? 1 : format === 'ft2' ? 3 : 5;
 
+  /* ---- CS2 map images (Google Drive direct links, indexed by format) ---- */
+  const CS2_MAP_IMGS = {
+    'Ancient':  ['https://lh3.googleusercontent.com/d/1GhN3ASXQrSIopLSOIgJPfVy4vb4h9aO_', 'https://lh3.googleusercontent.com/d/1yUHmR4MzazWQTBqZymyikJuk4worlFV9', 'https://lh3.googleusercontent.com/d/1CnifWiKiLSKXJMLx9frdV0focXwhQnaM'],
+    'Anubis':   ['https://lh3.googleusercontent.com/d/1wSbrXQCfp-fFX0SpKytSS8UBny3WfxV4', 'https://lh3.googleusercontent.com/d/1D7h2uJtOcYlAOoHI_upGExNJhsIyenim', 'https://lh3.googleusercontent.com/d/1GdJ4f8BktQFYjXSHAiEJsMEeRofvXMSc'],
+    'Dust II':  ['https://lh3.googleusercontent.com/d/1bJK077qcMXwbys-h9SnZW73rD6W60vkI', 'https://lh3.googleusercontent.com/d/14pd7jac8R4pQp-fE8uWXmm3VuXRmqGy_', 'https://lh3.googleusercontent.com/d/16Zl1mrvV6mw7CciulpR7Db35OBpasMoL'],
+    'Inferno':  ['https://lh3.googleusercontent.com/d/1EzhTiwVD6gF7Mmx5ZfKIIOlhkiwhwVhB', 'https://lh3.googleusercontent.com/d/1UyBYy0qrwXP_3nYNMnbmu7aPiEgQkB7D', 'https://lh3.googleusercontent.com/d/15hKb3wtk0b4-FvuoZR9gPq-hZaTFKd3X'],
+    'Mirage':   ['https://lh3.googleusercontent.com/d/1SkORVSH3YGKJvMm-W_kcTpL7vbizjzqW', 'https://lh3.googleusercontent.com/d/1PWTBKPHyXH9PSFBYJ2ikD_tCs1G4rDwF', 'https://lh3.googleusercontent.com/d/13vlpYtwZMcQKT1i1jVMGg7kJa_ESDvC0'],
+    'Nuke':     ['https://lh3.googleusercontent.com/d/1T08X1XJhYWA0qNoIlhzLmePyKLbNzYVp', 'https://lh3.googleusercontent.com/d/11s8cqHKboOiBwCA-xpELQgyHHPVDA3IE', 'https://lh3.googleusercontent.com/d/1_9bCswdGfA6vIQiAoECYZMkd7860Xn7R'],
+    'Overpass': ['https://lh3.googleusercontent.com/d/1cF7S-xOG_Y_OybJ_983uj51GO9VSGK6e', 'https://lh3.googleusercontent.com/d/1KalujvjcgEtWn3_n0TFIASvSdruDc7Mx', 'https://lh3.googleusercontent.com/d/1Lmta4WKwEoVQvhHyZX5eKFzVXXARc6Wy'],
+  };
+  const cs2FormatIdx = format === 'ft1' ? 0 : format === 'ft2' ? 1 : 2;
+
   /* ---- Image path helpers ---- */
   const resolveMapImg = (m) => {
     const mapName = m.name === '+' ? 'undecided' : m.name;
     const clean = mapName.replace(/[\s:.'-]+/g, '');
+    if (game === 'cs2') {
+      if (m.name === '+' || !CS2_MAP_IMGS[m.name]) return asset(BLANK);
+      return CS2_MAP_IMGS[m.name][cs2FormatIdx];
+    }
     if (game === 'ow2') {
       const src = m.name === '+' ? (m.type || '+') : clean.toUpperCase();
       return asset(`/assets/maps/ow2/${format}/${src}.png`);

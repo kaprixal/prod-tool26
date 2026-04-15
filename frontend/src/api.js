@@ -11,7 +11,7 @@ export const ASSET_BASE = API_URL;
 
 /** Prefix an /assets/... path with the backend URL for production.
  *  Appends a cache-busting version param so browsers fetch fresh files. */
-const ASSET_VERSION = '3';
+const ASSET_VERSION = '4';
 export const asset = (path) => `${API_URL}${path}?v=${ASSET_VERSION}`;
 
 // ---------------------------------------------------------------------------

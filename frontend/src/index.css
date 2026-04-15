@@ -532,6 +532,85 @@ html, body, #root {
   font-size: 16px;
 }
 
+/* CS2 */
+.cs2-overlay-name-1 {
+  position: absolute;
+  /* TODO: set position */
+  height: 48px;
+  width: 233px;
+  top: 15px;
+  left: 332px;
+  text-align: left;
+  padding: 10px;
+}
+.cs2-overlay-name-2 {
+  position: absolute;
+  /* TODO: set position */
+  height: 48px;
+  width: 233px;
+  top: 15px;
+  left: 1359px;
+  text-align: right;
+  padding: 10px;
+
+}
+.cs2-overlay-logo1 {
+  position: absolute;
+  top: 100px;
+  left: 926px;
+  height: 24px;
+  width: 24px;
+  object-fit: contain;
+}
+.cs2-overlay-logo2 {
+  position: absolute;
+  top: 100px;
+  left: 969px;
+  height: 24px;
+  width: 24px;
+  object-fit: contain;
+}
+.cs2-overlay-score-1 {
+  position: absolute;
+  /* TODO: set position */
+  line-height: 55px;
+  text-align: center;
+  font-size: 24px;
+  color: black;
+  left: 560px;
+  top: 10px;
+  width: 56px;
+  height: 55px;
+}
+.cs2-overlay-score-2 {
+   position: absolute;
+  /* TODO: set position */
+  line-height: 55px;
+  text-align: center;
+  font-size: 24px;
+  color: black;
+  right: 558px;
+  top: 10px;
+  width: 56px;
+  height: 55px;
+}
+.cs2-overlay-title {
+  position: absolute;
+  /* TODO: set position */
+  display: none;
+}
+.cs2-overlay-format {
+  position: absolute;
+  /* TODO: set position */
+  top: 129px;
+  left: 926px;
+  width: 67px;
+  height: 24px;
+  text-align: center;
+  font-size: 16px;
+  color: white;
+}
+
 /* ===== Mapset Display in Overlay ===== */
 .val-bo3-mapset, .val-bo5-mapset {
   position: absolute;
