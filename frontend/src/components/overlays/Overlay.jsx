@@ -1,5 +1,29 @@
 import { usePolledState } from '../../hooks/usePolledState';
 import { asset } from '../../api';
+import Slideshow from './Slideshow';
+
+const slideshowModules = import.meta.glob(
+  './assets/sponsor_slideshow_ingame/*.{png,jpg,jpeg,webp,gif}',
+  { eager: true }
+);
+const SLIDESHOW_IMGS = Object.values(slideshowModules).map((m) => m.default);
+
+/**
+ * Per-game slideshow position/size config.
+ * Add or adjust entries here to position the sponsor slideshow for each game.
+ * Games omitted from this map will not show the slideshow.
+ *
+ * Properties mirror the Slideshow component props:
+ *   top, left, width, height, size, interval, fadeDuration
+ */
+const SLIDESHOW_CONFIG = {
+  ow2: { top: 170, left: 40, size: 100 },
+  lol: { top: 973, left: 10, width: 288 , height: 99},
+  val: { top: 0, left: 1800, size: 100 },
+  mr:  { top: 1010, left: 1190, width: 230, height: 70 },
+  dl:  { top: 812, left: 230, size: 200 },
+  cs2: { top: 1000, left: 1680, height: 80, width: 240 },
+};
 
 /**
  * In-game overlay – shows team names, logos, scores, format
@@ -284,6 +308,11 @@ export default function Overlay() {
           </div>
         )}
       </div>
+
+      {/* Sponsor slideshow — position/size configured per game above */}
+      {SLIDESHOW_CONFIG[game] && (
+        <Slideshow images={SLIDESHOW_IMGS} {...SLIDESHOW_CONFIG[game]} />
+      )}
     </div>
   );
 }

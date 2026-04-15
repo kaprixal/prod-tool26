@@ -1,5 +1,12 @@
 import { usePolledState } from '../../hooks/usePolledState';
 import { asset } from '../../api';
+import Slideshow from './Slideshow';
+
+const slideshowModules = import.meta.glob(
+  './assets/sponsor_slideshow/*.{png,jpg,jpeg,webp,gif}',
+  { eager: true }
+);
+const SLIDESHOW_IMGS = Object.values(slideshowModules).map((m) => m.default);
 
 /**
  * 2-caster cam overlay – shows caster names/tags, scores, team logos.
@@ -22,6 +29,7 @@ export default function CastersOverlay() {
   const vsSrc = isZeroZero
     ? asset('/assets/casters_and_interviews/casters_vs_1.png')
     : asset('/assets/casters_and_interviews/casters_vs_2.png');
+    
 
   return (
     <div className="stack-container text-white">
@@ -97,6 +105,8 @@ export default function CastersOverlay() {
         }}
         alt=""
       />
+      <Slideshow images={SLIDESHOW_IMGS} top={873} left={140} width={300} height={120} interval={5000}/>
     </div>
+    
   );
 }

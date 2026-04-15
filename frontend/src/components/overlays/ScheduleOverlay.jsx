@@ -1,5 +1,13 @@
 import { usePolledState } from '../../hooks/usePolledState';
 import { asset } from '../../api';
+import Slideshow from './Slideshow';
+
+/* Drop images into assets/schedule_slideshow/ — picked up at build time */
+const slideshowModules = import.meta.glob(
+  './assets/schedule_slideshow/*.{png,jpg,jpeg,webp,gif}',
+  { eager: true }
+);
+const SLIDESHOW_IMGS = Object.values(slideshowModules).map((m) => m.default);
 
 /**
  * Schedule / break screen overlay.
@@ -114,6 +122,7 @@ export default function ScheduleOverlay() {
 
         {[1, 2, 3].map((n) => (n <= matchCount ? renderMatchBlock(n) : null))}
       </div>
+      <Slideshow images={SLIDESHOW_IMGS} top={128} left={1010} />
     </div>
   );
 }
