@@ -63,6 +63,10 @@ export function updateOwBan(hero, team) {
   return store.updateOwBan(hero, team);
 }
 
+export function setPanelCount(count) {
+  return store.setPanelCount(count);
+}
+
 export function updatePanelInfo(count, panelists) {
   return store.updatePanelInfo(count, panelists);
 }

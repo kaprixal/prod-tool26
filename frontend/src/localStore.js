@@ -272,10 +272,17 @@ export function resetState() {
   return saveState(makeDefaultState());
 }
 
+export function setPanelCount(count) {
+  const s = getState();
+  s.panelCount = String(count);
+  return saveState(s);
+}
+
 export function updatePanelInfo(count, panelists) {
   const s = getState();
   if (!s.panelists) s.panelists = {};
   s.panelists[String(count)] = panelists;
+  s.panelCount = String(count);
   return saveState(s);
 }
 

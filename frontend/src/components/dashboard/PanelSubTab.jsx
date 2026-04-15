@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { updatePanelInfo } from '../../api';
+import { updatePanelInfo, setPanelCount } from '../../api';
 
 const COUNTS = [2, 3, 4, 5, 6];
 
@@ -48,7 +48,7 @@ export default function PanelSubTab({ state, onUpdate }) {
               className={`px-3 py-1 rounded transition-colors ${
                 count === n ? 'bg-blue-500 text-white' : 'bg-gray-600 hover:bg-gray-500 text-gray-200'
               }`}
-              onClick={() => setCount(n)}
+              onClick={() => { setCount(n); setPanelCount(n); }}
             >
               {n}
             </button>

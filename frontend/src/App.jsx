@@ -10,7 +10,7 @@ import TwoGuestsOverlay from './components/overlays/TwoGuestsOverlay';
 import OwBanOverlay from './components/overlays/OwBanOverlay';
 import AnimateLogoOverlay from './components/overlays/AnimateLogoOverlay';
 import PanelOverlay from './components/overlays/PanelOverlay';
-
+import PanelOverlaySchedule from './components/overlays/PanelOverlaySchedule';
 export default function App() {
   return (
     <Routes>
@@ -32,6 +32,7 @@ export default function App() {
       <Route path="/general/2guests" element={<TwoGuestsOverlay />} />
 
       {/* Panel overlays (2–6 panelists, standard + rankdle) */}
+      <Route path="/panels/schedule" element={<PanelOverlaySchedule />} />
       <Route path="/panels/2panel" element={<PanelOverlay count={2} variant="standard" />} />
       <Route path="/panels/2panel-rankdle" element={<PanelOverlay count={2} variant="rankdle" />} />
       <Route path="/panels/3panel" element={<PanelOverlay count={3} variant="standard" />} />
