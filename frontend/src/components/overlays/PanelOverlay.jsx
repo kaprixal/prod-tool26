@@ -1,5 +1,20 @@
 import { usePolledState } from '../../hooks/usePolledState';
 import { asset } from '../../api';
+import Slideshow from './Slideshow';
+
+const slideshowModules = import.meta.glob(
+  './assets/sponsor_slideshow_ingame/*.{png,jpg,jpeg,webp,gif}',
+  { eager: true }
+);
+const SLIDESHOW_IMGS = Object.values(slideshowModules).map((m) => m.default);
+
+const SLIDESHOW_CONFIG = {
+  '2': { top: 808, left: 73, width: 440, height: 100 },
+  '3': { top: 808, left: 73, width: 440, height: 100 },
+  '4': { top: 930, left: 90, width: 440, height: 110 },
+  '5':  { top: 910, left: 50, width: 440, height: 120 },
+  '6':  { top: 914, left: 50, width: 440, height: 120 },
+};
 
 /**
  * Panel overlay – shows panelist names over the panel background image.
@@ -202,6 +217,10 @@ export default function PanelOverlay({ count, variant = 'standard' }) {
       >
         {subtitle}
       </div>
+      {/* Sponsor slideshow — position/size configured per game above */}
+            {SLIDESHOW_CONFIG[String(count)] && (
+              <Slideshow images={SLIDESHOW_IMGS} {...SLIDESHOW_CONFIG[String(count)]} />
+            )}
     </div>
   );
 }
