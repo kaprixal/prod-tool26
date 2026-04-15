@@ -44,6 +44,7 @@ export function makeDefaultState() {
     currMatch: '1',
     streamTitle: '',
     subtitle: '',
+    timerMinutes: '',
     caster1: { name: '', info: '' },
     caster2: { name: '', info: '' },
     guest1: { name: '', info: '' },
@@ -175,6 +176,7 @@ export function updateGeneralInfo(data) {
   const s = getState();
   s.streamTitle = data.streamTitle;
   s.subtitle = data.subtitle;
+  s.timerMinutes = data.timerMinutes;
   s.caster1 = { name: data.caster1Name, info: data.caster1Info };
   s.caster2 = { name: data.caster2Name, info: data.caster2Info };
   s.guest1 = { name: data.guest1Name, info: data.guest1Info };

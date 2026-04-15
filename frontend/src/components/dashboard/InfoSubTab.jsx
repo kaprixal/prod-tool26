@@ -5,6 +5,7 @@ export default function InfoSubTab({ state, onUpdate }) {
   const [form, setForm] = useState({
     streamTitle: '',
     subtitle: '',
+    timerMinutes: '',
     caster1Name: '',
     caster1Info: '',
     caster2Name: '',
@@ -19,6 +20,7 @@ export default function InfoSubTab({ state, onUpdate }) {
     setForm({
       streamTitle: state.streamTitle || '',
       subtitle: state.subtitle || '',
+      timerMinutes: state.timerMinutes || '',
       caster1Name: state.caster1?.name || '',
       caster1Info: state.caster1?.info || '',
       caster2Name: state.caster2?.name || '',
@@ -44,6 +46,7 @@ export default function InfoSubTab({ state, onUpdate }) {
     { section: 'TITLE', items: [
       { label: 'Stream Title', field: 'streamTitle' },
       { label: 'Subtitle', field: 'subtitle' },
+      { label: 'Timer (mins)', field: 'timerMinutes', type: 'number', min: 0 },
     ]},
     { section: 'CASTERS INFO', items: [
       { label: 'Caster #1 Name', field: 'caster1Name' },
@@ -65,11 +68,12 @@ export default function InfoSubTab({ state, onUpdate }) {
         <div key={section} className="mb-2 p-2 bg-gray-700 rounded-lg">
           <h2 className="mb-2 text-gray-400">{section}</h2>
           <div className="space-y-2">
-            {items.map(({ label, field }) => (
+            {items.map(({ label, field, type = 'text', min }) => (
               <div key={field} className="flex flex-row items-center">
                 <label className="pr-3 w-40 text-right">{label}</label>
                 <input
-                  type="text"
+                  type={type}
+                  min={min}
                   className="w-full bg-gray-800 h-6 rounded-md p-1"
                   placeholder={label}
                   value={form[field]}
@@ -86,7 +90,7 @@ export default function InfoSubTab({ state, onUpdate }) {
           type="button"
           className="w-10 h-10 bg-gray-700 hover:bg-red-500 rounded-full flex items-center justify-center"
           onClick={() => {
-            const empty = { streamTitle: '', subtitle: '', caster1Name: '', caster1Info: '', caster2Name: '', caster2Info: '', guest1Name: '', guest1Info: '', guest2Name: '', guest2Info: '' };
+            const empty = { streamTitle: '', subtitle: '', timerMinutes: '', caster1Name: '', caster1Info: '', caster2Name: '', caster2Info: '', guest1Name: '', guest1Info: '', guest2Name: '', guest2Info: '' };
             setForm(empty);
             updateGeneralInfo(empty);
             onUpdate();

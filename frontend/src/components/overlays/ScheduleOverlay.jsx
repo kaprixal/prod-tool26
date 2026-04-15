@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react';
 import { usePolledState } from '../../hooks/usePolledState';
 import { asset } from '../../api';
 import Slideshow from './Slideshow';
@@ -8,6 +9,46 @@ const slideshowModules = import.meta.glob(
   { eager: true }
 );
 const SLIDESHOW_IMGS = Object.values(slideshowModules).map((m) => m.default);
+
+function Countdown({ totalSeconds }) {
+  const [remaining, setRemaining] = useState(totalSeconds);
+  const savedTotal = useRef(totalSeconds);
+
+  // Restart the countdown whenever the source value changes
+  useEffect(() => {
+    savedTotal.current = totalSeconds;
+    setRemaining(totalSeconds);
+  }, [totalSeconds]);
+
+  useEffect(() => {
+    if (remaining <= 0) return;
+    const id = setInterval(() => setRemaining((r) => Math.max(0, r - 1)), 1000);
+    return () => clearInterval(id);
+  }, [remaining]);
+
+  if (remaining <= 0) {
+    return (
+      <div className="font-integral-bold" style={{
+        position: 'absolute', top: 100, left: 85, height: 109,
+        display: 'flex', alignItems: 'center', color: 'white', fontSize: 85,
+      }}>
+        STARTING SOON
+      </div>
+    );
+  }
+  const hh = String(Math.floor(remaining / 3600)).padStart(2, '0');
+  const mm = String(Math.floor(remaining / 60)).padStart(2, '0');
+  const ss = String(remaining % 60).padStart(2, '0');
+
+  return (
+    <div className="font-integral-bold" style={{
+      position: 'absolute', top: 100, left: 85, height: 109,
+      display: 'flex', alignItems: 'center', color: 'white', fontSize: 140,
+    }}>
+      {hh}:{mm}:{ss}
+    </div>
+  );
+}
 
 /**
  * Schedule / break screen overlay.
@@ -121,6 +162,7 @@ export default function ScheduleOverlay() {
         </div>
 
         {[1, 2, 3].map((n) => (n <= matchCount ? renderMatchBlock(n) : null))}
+        <Countdown totalSeconds={(parseFloat(state.timerMinutes) || 0) * 60} />
       </div>
       <Slideshow images={SLIDESHOW_IMGS} top={128} left={1010} />
     </div>
