@@ -56,6 +56,7 @@ export default function Slideshow({
   if (!images.length) return null;
 
   const base = {
+    display: 'block',
     position: 'absolute',
     inset: 0,
     width: '100%',
