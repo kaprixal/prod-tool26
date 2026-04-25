@@ -34,10 +34,10 @@ export default function GuestOverlay() {
   return (
     <div className="stack-container text-white">
       {/* Caster names (inline) */}
-      <div id="caster-1-iname" className="caster-int font-built-bold text-3xl" style={{ top: 320 }}>
+      <div id="caster-1-iname" className="caster-int font-built-bold text-3xl" style={{ top: 335 }}>
         {state.caster1?.name}
       </div>
-      <div id="caster-2-iname" className="caster-int font-built-bold text-3xl" style={{ top: 670 }}>
+      <div id="caster-2-iname" className="caster-int font-built-bold text-3xl" style={{ top: 685 }}>
         {state.caster2?.name}
       </div>
 
