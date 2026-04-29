@@ -822,6 +822,26 @@ html, body, #root {
   transform: translate(0, 287px);
 }
 
+/* ===== BMO Budgeting Play Overlay ===== */
+@keyframes bmo-slide-in {
+  from { transform: translateY(-60px); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+@keyframes bmo-slide-out {
+  from { transform: translateY(0);     opacity: 1; }
+  to   { transform: translateY(-60px); opacity: 0; }
+}
+.bmo-play-enter {
+  animation: bmo-slide-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.bmo-play-hold {
+  opacity: 1;
+  transform: translateY(0);
+}
+.bmo-play-exit {
+  animation: bmo-slide-out 0.5s ease-in forwards;
+}
+
 /* ===== Roster Overlay ===== */
 .roster-team {
   color: white;

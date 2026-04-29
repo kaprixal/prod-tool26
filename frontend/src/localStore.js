@@ -55,6 +55,7 @@ export function makeDefaultState() {
       '2': { ...makeDefaultMatch(), game: '', format: 'ft2', details: '' },
       '3': { ...makeDefaultMatch(), game: '', format: 'ft2', details: '' },
     },
+    bmoPlayActive: false,
     owBans: {},
     panelists: {
       '2': makeDefaultPanelists(2),
@@ -283,6 +284,18 @@ export function updatePanelInfo(count, panelists) {
   if (!s.panelists) s.panelists = {};
   s.panelists[String(count)] = panelists;
   s.panelCount = String(count);
+  return saveState(s);
+}
+
+export function triggerBmoPlay() {
+  const s = getState();
+  s.bmoPlayActive = true;
+  return saveState(s);
+}
+
+export function clearBmoPlay() {
+  const s = getState();
+  s.bmoPlayActive = false;
   return saveState(s);
 }
 

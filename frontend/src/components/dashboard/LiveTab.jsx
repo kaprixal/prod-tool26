@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { setCurrMatch } from '../../api';
+import { setCurrMatch, triggerBmoPlay } from '../../api';
 import MatchPanel from './MatchPanel';
 
 export default function LiveTab({ state, gameData, onUpdate }) {
@@ -39,6 +39,17 @@ export default function LiveTab({ state, gameData, onUpdate }) {
         gameData={gameData}
         onUpdate={onUpdate}
       />
+
+      {matchGame === 'val' && (
+        <div className="mt-4 pt-4">
+          <button
+            className="w-full px-4 py-2 bg-blue-700 hover:bg-blue-600 active:bg-blue-800 text-white text-sm rounded transition-colors font-bold"
+            onClick={() => triggerBmoPlay()}
+          >
+            BMO Budgeting Play
+          </button>
+        </div>
+      )}
     </>
   );
 }

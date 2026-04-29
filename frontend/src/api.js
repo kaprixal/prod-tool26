@@ -78,3 +78,11 @@ export function resetState() {
 export function restoreState(data) {
   return store.restoreState(data);
 }
+
+export function triggerBmoPlay() {
+  return store.triggerBmoPlay();
+}
+
+export function clearBmoPlay() {
+  return store.clearBmoPlay();
+}

@@ -1,6 +1,7 @@
 import { usePolledState } from '../../hooks/usePolledState';
 import { asset } from '../../api';
 import Slideshow from './Slideshow';
+import BmoBudgetingPlay from './BmoBudgetingPlay';
 
 const slideshowModules = import.meta.glob(
   './assets/sponsor_slideshow_ingame/*.{png,jpg,jpeg,webp,gif}',
@@ -313,6 +314,9 @@ export default function Overlay() {
       {SLIDESHOW_CONFIG[game] && (
         <Slideshow images={SLIDESHOW_IMGS} {...SLIDESHOW_CONFIG[game]} />
       )}
+
+      {/* BMO Budgeting Play — VALORANT only */}
+      {game === 'val' && <BmoBudgetingPlay />}
     </div>
   );
 }
