@@ -118,6 +118,8 @@ export default function PanelOverlaySchedule() {
           color:    'white',
           fontSize: 20,   /* TODO */
           zIndex:   2,
+          width:    '40vw',
+          wordWrap: 'break-word',
         }}
       >
         Featuring: {panelistNames}
