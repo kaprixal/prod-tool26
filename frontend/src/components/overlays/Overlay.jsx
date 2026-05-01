@@ -9,6 +9,8 @@ const slideshowModules = import.meta.glob(
 );
 const SLIDESHOW_IMGS = Object.values(slideshowModules).map((m) => m.default);
 
+const isLolNameLong = (name) => name && name.length > 5;
+
 /**
  * Per-game slideshow position/size config.
  * Add or adjust entries here to position the sponsor slideshow for each game.
@@ -154,32 +156,46 @@ export default function Overlay() {
         <img className="stacked-image" src={overlayImg} style={{ zIndex: 0 }} alt="" />
 
         {/* Team logos */}
-        <img
-          className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo1' : game === 'lol' ? 'lol-overlay-logo1' : game === 'val' ? 'val-overlay-logo1' : game === 'mr' ? 'rivals-overlay-logo1' : game === 'dl' ? 'dl-overlay-logo1' : game === 'cs2' ? 'cs2-overlay-logo1' : ''}`}
-          src={t1logo}
-          onError={(e) => { e.target.src = defaultLogo; }}
-          alt=""
-        />
-        <img
-          className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo2' : game === 'lol' ? 'lol-overlay-logo2' : game === 'val' ? 'val-overlay-logo2' : game === 'mr' ? 'rivals-overlay-logo2' : game === 'dl' ? 'dl-overlay-logo2' : game === 'cs2' ? 'cs2-overlay-logo2' : ''}`}
-          src={t2logo}
-          onError={(e) => { e.target.src = defaultLogo; }}
-          alt=""
-        />
+        {/* eslint-disable-next-line no-extra-parens */}
+        {(() => {
+          const hideLolNames = game === 'lol' && (isLolNameLong(t1name) || isLolNameLong(t2name));
+          return (
+            <>
+              <img
+                className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo1' : game === 'lol' ? 'lol-overlay-logo1' : game === 'val' ? 'val-overlay-logo1' : game === 'mr' ? 'rivals-overlay-logo1' : game === 'dl' ? 'dl-overlay-logo1' : game === 'cs2' ? 'cs2-overlay-logo1' : ''}`}
+                style={hideLolNames ? { left: '255px' } : {}}
+                src={t1logo}
+                onError={(e) => { e.target.src = defaultLogo; }}
+                alt=""
+              />
+              <img
+                className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo2' : game === 'lol' ? 'lol-overlay-logo2' : game === 'val' ? 'val-overlay-logo2' : game === 'mr' ? 'rivals-overlay-logo2' : game === 'dl' ? 'dl-overlay-logo2' : game === 'cs2' ? 'cs2-overlay-logo2' : ''}`}
+                style={hideLolNames ? { left: '1628px', right: 'unset' } : {}}
+                src={t2logo}
+                onError={(e) => { e.target.src = defaultLogo; }}
+                alt=""
+              />
 
-        {/* Team names */}
-        <div
-          className={`font-integral-bold text-white ${game === 'ow2' ? 'ow-overlay-name-1' : game === 'lol' ? 'lol-overlay-name-1' : game === 'val' ? 'val-overlay-name-1' : game === 'mr' ? 'rivals-overlay-name-1' : game === 'dl' ? 'dl-overlay-name-1' : game === 'cs2' ? 'cs2-overlay-name-1' : ''}`}
-          style={{ zIndex: 2 }}
-        >
-          {t1name}
-        </div>
-        <div
-          className={`font-integral-bold text-white ${game === 'ow2' ? 'ow-overlay-name-2' : game === 'lol' ? 'lol-overlay-name-2' : game === 'val' ? 'val-overlay-name-2' : game === 'mr' ? 'rivals-overlay-name-2' : game === 'dl' ? 'dl-overlay-name-2' : game === 'cs2' ? 'cs2-overlay-name-2' : ''}`}
-          style={{ zIndex: 2 }}
-        >
-          {t2name}
-        </div>
+              {/* Team names */}
+              {!hideLolNames && (
+                <div
+                  className={`font-integral-bold text-white ${game === 'ow2' ? 'ow-overlay-name-1' : game === 'lol' ? 'lol-overlay-name-1' : game === 'val' ? 'val-overlay-name-1' : game === 'mr' ? 'rivals-overlay-name-1' : game === 'dl' ? 'dl-overlay-name-1' : game === 'cs2' ? 'cs2-overlay-name-1' : ''}`}
+                  style={{ zIndex: 2 }}
+                >
+                  {t1name}
+                </div>
+              )}
+              {!hideLolNames && (
+                <div
+                  className={`font-integral-bold text-white ${game === 'ow2' ? 'ow-overlay-name-2' : game === 'lol' ? 'lol-overlay-name-2' : game === 'val' ? 'val-overlay-name-2' : game === 'mr' ? 'rivals-overlay-name-2' : game === 'dl' ? 'dl-overlay-name-2' : game === 'cs2' ? 'cs2-overlay-name-2' : ''}`}
+                  style={{ zIndex: 2 }}
+                >
+                  {t2name}
+                </div>
+              )}
+            </>
+          );
+        })()}
 
         {/* OW scores (only visible for OW) */}
         {game === 'ow2' && (
