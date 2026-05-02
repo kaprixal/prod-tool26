@@ -162,7 +162,7 @@ export default function ScheduleOverlay() {
         </div>
 
         {[1, 2, 3].map((n) => (n <= matchCount ? renderMatchBlock(n) : null))}
-        <Countdown totalSeconds={(parseFloat(state.timerMinutes) || 0) * 60} />
+        <Countdown key={state.timerResetAt} totalSeconds={(parseFloat(state.timerMinutes) || 0) * 60} />
       </div>
       <Slideshow images={SLIDESHOW_IMGS} top={128} left={1010} />
     </div>
