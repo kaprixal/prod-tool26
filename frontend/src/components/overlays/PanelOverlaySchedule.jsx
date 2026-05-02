@@ -88,6 +88,8 @@ export default function PanelOverlaySchedule() {
           color:    'white',
           fontSize: 54,   /* TODO */
           zIndex:   2,
+          width:    '40vw',
+          wordWrap: 'break-word',
         }}
       >
         {title}
@@ -103,6 +105,8 @@ export default function PanelOverlaySchedule() {
           color:    'white',
           fontSize: 24,   /* TODO */
           zIndex:   2,
+          width:    '40vw',
+          wordWrap: 'break-word',
         }}
       >
         {subtitle}
