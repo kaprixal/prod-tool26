@@ -246,7 +246,7 @@ MR_HEROES = [
     "Black Widow", "Cloak & Dagger", "Wolverine", "Mister Fantastic",
     "Invisible Woman", "Human Torch", "The Thing", "Emma Frost", "Ultron",
     "Angela", "Blade", "Daredevil", "Deadpool", "Elsa Bloodstone",
-    "Gambit", "Rogue",
+    "Gambit", "Rogue", "Black Cat",
 ]
 
 MR_ROLES = ["+", "Vanguard", "Duelist", "Strategist", "Flex"]
