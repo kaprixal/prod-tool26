@@ -4,12 +4,15 @@ Now only serves static assets and read-only game data.
 All mutable state lives in the browser's localStorage.
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
+import urllib.error
 
 from game_data import get_game_data
+from style_presets import get_style_presets
+from tft_stats import fetch_player_tft_stats
 
 app = FastAPI(title="Prod Tool API")
 
@@ -51,6 +54,26 @@ else:
 def get_game_data_endpoint():
     """Get all game constants (heroes, maps, roles, etc.)."""
     return get_game_data()
+
+
+@app.get("/api/style-presets")
+def get_style_presets_endpoint():
+    """Get all overlay style presets (fonts, asset folders, position overrides)."""
+    return get_style_presets()
+
+
+@app.get("/api/tft-stats")
+def get_tft_stats_endpoint(riotId: str = Query(...), region: str = "na1"):
+    """Rank, average placement, and top traits for a TFT player, scraped from
+    tactics.tools and cached in-memory. riotId must be 'gameName#tagLine'."""
+    try:
+        return fetch_player_tft_stats(riotId, region)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except urllib.error.HTTPError as e:
+        raise HTTPException(status_code=502, detail=f"tactics.tools lookup failed ({e.code}) for '{riotId}'")
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Couldn't fetch TFT stats for '{riotId}': {e}")
 
 
 if __name__ == "__main__":

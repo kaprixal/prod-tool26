@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { usePolledState } from '../../hooks/usePolledState';
-import { asset } from '../../api';
+import { asset, presetAsset } from '../../api';
 import Slideshow from './Slideshow';
 
 /* Drop images into assets/schedule_slideshow/ — picked up at build time */
@@ -29,7 +29,7 @@ function Countdown({ totalSeconds }) {
   if (remaining <= 0) {
     return (
       <div className="font-integral-bold" style={{
-        position: 'absolute', top: 100, left: 85, height: 109,
+        position: 'absolute', top: 190, left: 85, height: 109,
         display: 'flex', alignItems: 'center', color: 'white', fontSize: 85,
       }}>
         STARTING SOON
@@ -42,7 +42,7 @@ function Countdown({ totalSeconds }) {
 
   return (
     <div className="font-integral-bold" style={{
-      position: 'absolute', top: 100, left: 85, height: 109,
+      position: 'absolute', top: 190, left: 85, height: 109,
       display: 'flex', alignItems: 'center', color: 'white', fontSize: 140,
     }}>
       {hh}:{mm}:{ss}
@@ -68,7 +68,7 @@ export default function ScheduleOverlay() {
 
     const t1name = match.team1?.name || '';
     const t2name = match.team2?.name || '';
-    const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' };
+    const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl', cs2: 'cs2', tft: 'tft' };
     const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[match?.game] || 'blank'}.png`);
     const t1logo = match.team1?.logo || defaultLogo;
     const t2logo = match.team2?.logo || defaultLogo;
@@ -90,13 +90,14 @@ export default function ScheduleOverlay() {
     const t1GrayOut = winner === 't2' ? 'gray-out' : '';
     const t2GrayOut = winner === 't1' ? 'gray-out' : '';
 
-    /* Vertical offsets per block based on legacy CSS (approximate) */
-    const blockTopOffsets = [306, 534.15, 762.3];
-    const nameTopOffsets = [439.4, 667.45, 895.6];
-    const logoTopOffsets = [328, 556, 784];
-    const scoreTopOffsets = [350, 573.73, 806];
-    const dateTopOffsets = [420, 653.73, 886];
-    const gameTopOffsets = [379, 607, 835];
+    /* Vertical offsets per block based on legacy CSS (approximate), shifted down
+       90px to make room for the event logo above the countdown timer. */
+    const blockTopOffsets = [396, 624.15, 852.3];
+    const nameTopOffsets = [529.4, 757.45, 985.6];
+    const logoTopOffsets = [418, 646, 874];
+    const scoreTopOffsets = [440, 663.73, 896];
+    const dateTopOffsets = [510, 743.73, 976];
+    const gameTopOffsets = [469, 697, 925];
     const idx = n - 1;
 
     return (
@@ -145,13 +146,21 @@ export default function ScheduleOverlay() {
     <div className="stack-container">
       <div style={{ color: 'white' }}>
         <img className="stacked-image" src={asset('/assets/break/starting_displaybox.png')} alt="" />
+
+        {/* Event/tournament logo — sits above the countdown timer */}
+        <img
+          src={presetAsset('break', 'schedule_logo.png')}
+          style={{ position: 'absolute', top: 30, left: 85, height: 140, width: 'auto', objectFit: 'contain' }}
+          alt=""
+        />
+
         <div
           className="font-integral-bold"
           style={{
             position: 'absolute',
             width: 762,
             height: 24,
-            top: 244,
+            top: 334,
             left: 86,
             fontSize: 20,
             color: 'white',

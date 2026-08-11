@@ -86,12 +86,12 @@ function TeamSection({ label, teamName, teamLogo, onNameChange, onLogoChange, pl
   );
 }
 
-function MapColumn({ index, mapData, showMapType, showMapName, mapTypeOptions, mapOptions, onUpdate }) {
+function MapColumn({ index, mapData, showMapType, showMapName, mapTypeOptions, mapOptions, onUpdate, label = 'Map' }) {
   const mapKey = `map${index}`;
   const data = mapData[mapKey] || { type: '+', name: '+', t1: '', t2: '', done: false };
   return (
     <div className="flex flex-col items-center px-1">
-      <label className="text-xs">Map {index}</label>
+      <label className="text-xs">{label} {index}</label>
       {showMapType && (
         <select className="w-20 bg-gray-800 h-6 rounded-md text-xs" value={data.type} onChange={(e) => onUpdate(mapKey, 'type', e.target.value)}>
           {mapTypeOptions.map((t) => <option key={t} value={t}>{t}</option>)}
@@ -129,7 +129,8 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
   const showPlayer6 = activeGame === 'mr' || activeGame === 'dl';
   const showMapType = activeGame === 'ow2';
   const showMapName = ['ow2', 'val', 'mr', 'cs2'].includes(activeGame);
-  const showMaps = ['ow2', 'val', 'mr', 'lol', 'dl', 'cs2'].includes(activeGame);
+  const showMaps = ['ow2', 'val', 'mr', 'lol', 'dl', 'cs2', 'tft'].includes(activeGame);
+  const mapColumnLabel = activeGame === 'tft' ? 'Game' : 'Map';
 
   const charOptions = getCharOptions(activeGame, gameData);
   const roleOptions = getRoleOptions(activeGame, gameData);
@@ -162,9 +163,11 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
   const handleSwap = async () => { await swapTeams(matchNumber); onUpdate(); };
   const handleClear = async () => { await clearMatch(matchNumber); onUpdate(); };
 
-  /* Player key lists for each team */
-  const team1Players = [1, 2, 3, 4, 5].map((i) => ({ key: `p${i}`, placeholder: `P${i} IGN` }));
-  const team2Players = [6, 7, 8, 9, 10].map((i) => ({ key: `p${i}`, placeholder: `P${i - 5} IGN` }));
+  /* Player key lists for each team — TFT only fields 4 players per team */
+  const team1Indices = activeGame === 'tft' ? [1, 2, 3, 4] : [1, 2, 3, 4, 5];
+  const team2Indices = activeGame === 'tft' ? [6, 7, 8, 9] : [6, 7, 8, 9, 10];
+  const team1Players = team1Indices.map((i) => ({ key: `p${i}`, placeholder: `P${i} IGN` }));
+  const team2Players = team2Indices.map((i) => ({ key: `p${i}`, placeholder: `P${i - 5} IGN` }));
 
   return (
     <form onSubmit={handleSubmit} className="text-sm">
@@ -184,6 +187,7 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
             <option value="mr">Marvel Rivals</option>
             <option value="dl">Deadlock</option>
             <option value="cs2">CS2</option>
+            <option value="tft">Teamfight Tactics</option>
           </select>
         </div>
       </div>
@@ -222,7 +226,7 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
               key={i} index={i} mapData={maps}
               showMapType={showMapType} showMapName={showMapName}
               mapTypeOptions={mapTypeOptions} mapOptions={mapOptions}
-              onUpdate={updateMap}
+              onUpdate={updateMap} label={mapColumnLabel}
             />
           ))}
         </div>

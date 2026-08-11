@@ -318,4 +318,5 @@ def get_game_data():
         "cs2": {
             "maps": CS2_MAPS,
         },
+        "tft": {},
     }

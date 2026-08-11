@@ -1,5 +1,5 @@
 import { usePolledState } from '../../hooks/usePolledState';
-import { asset } from '../../api';
+import { asset, presetAsset } from '../../api';
 import Slideshow from './Slideshow';
 
 const slideshowModules = import.meta.glob(
@@ -20,15 +20,15 @@ export default function CastersOverlay() {
   const match = state.matches?.[cm];
   const t1score = match?.t1TotalScore ?? 0;
   const t2score = match?.t2TotalScore ?? 0;
-  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' };
+  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl', cs2: 'cs2', tft: 'tft' };
   const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[match?.game] || 'blank'}.png`);
   const t1logo = match?.team1?.logo || defaultLogo;
   const t2logo = match?.team2?.logo || defaultLogo;
 
   const isZeroZero = t1score === 0 && t2score === 0;
   const vsSrc = isZeroZero
-    ? asset('/assets/casters_and_interviews/casters_vs_1.png')
-    : asset('/assets/casters_and_interviews/casters_vs_2.png');
+    ? presetAsset('casters_and_interviews', 'casters_vs_1.png')
+    : presetAsset('casters_and_interviews', 'casters_vs_2.png');
     
 
   return (
@@ -50,7 +50,7 @@ export default function CastersOverlay() {
       <div id="divider" />
 
       {/* Background */}
-      <img className="stacked-image" src={asset('/assets/casters_and_interviews/casters_cam_box.png')} alt="" />
+      <img className="stacked-image" src={presetAsset('casters_and_interviews', 'casters_cam_box.png')} alt="" />
 
       {/* VS asset */}
       <img className="stacked-image" src={vsSrc} style={{ zIndex: 2 }} alt="" />

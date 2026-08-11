@@ -44,7 +44,7 @@ export default function MapsOverlay() {
   const format = match.format || 'ft2';
   const t1score = match.t1TotalScore ?? 0;
   const t2score = match.t2TotalScore ?? 0;
-  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl', cs2: 'cs2' };
+  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl', cs2: 'cs2', tft: 'tft' };
   const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[game] || 'blank'}.png`);
   const t1logo = match.team1?.logo || defaultLogo;
   const t2logo = match.team2?.logo || defaultLogo;

@@ -42,6 +42,7 @@ function makeDefaultMatch() {
 export function makeDefaultState() {
   return {
     currMatch: '1',
+    stylePreset: 'CIE2026',
     streamTitle: '',
     subtitle: '',
     timerMinutes: '',
@@ -312,6 +313,12 @@ export function triggerBmoPlay() {
 export function clearBmoPlay() {
   const s = getState();
   s.bmoPlayActive = false;
+  return saveState(s);
+}
+
+export function setStylePreset(presetId) {
+  const s = getState();
+  s.stylePreset = presetId;
   return saveState(s);
 }
 

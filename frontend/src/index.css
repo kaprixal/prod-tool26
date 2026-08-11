@@ -98,12 +98,27 @@ html, body, #root {
   font-style: normal;
 }
 
+/* Style preset font variables — each preset maps these to its own font-family.
+   Add a font-face + a new :root[data-style="..."] block to introduce a new preset. */
+:root {
+  --font-built: 'BuiltTilting';
+  --font-integral: 'IntegralCF';
+}
+:root[data-style="CIE2026"] {
+  --font-built: 'BuiltTilting';
+  --font-integral: 'IntegralCF';
+}
+:root[data-style="UTES2026"] {
+  --font-built: 'BuiltTilting';
+  --font-integral: 'IntegralCF';
+}
+
 /* Font utility classes */
-.font-built-bold { font-family: 'BuiltTilting'; font-weight: bold; }
-.font-built-regular { font-family: 'BuiltTilting'; font-weight: normal; }
-.font-integral-bolder { text-transform: uppercase; font-family: 'IntegralCF'; font-weight: 900; font-style: normal; }
-.font-integral-bold { text-transform: uppercase; font-family: 'IntegralCF'; font-weight: bold; font-style: normal; }
-.font-integral-regular { text-transform: uppercase; font-family: 'IntegralCF'; font-weight: normal; font-style: normal; }
+.font-built-bold { font-family: var(--font-built); font-weight: bold; }
+.font-built-regular { font-family: var(--font-built); font-weight: normal; }
+.font-integral-bolder { text-transform: uppercase; font-family: var(--font-integral); font-weight: 900; font-style: normal; }
+.font-integral-bold { text-transform: uppercase; font-family: var(--font-integral); font-weight: bold; font-style: normal; }
+.font-integral-regular { text-transform: uppercase; font-family: var(--font-integral); font-weight: normal; font-style: normal; }
 
 /* ===== Base Layout ===== */
 .stacked-image {
@@ -609,6 +624,86 @@ html, body, #root {
   text-align: center;
   font-size: 16px;
   color: white;
+}
+
+/* TFT — positions matched to ingame_tft_main.png (blue box = team1, red box = team2, gray bar = subtitle).
+   Player rows sit as a horizontal row directly under each colored box; nudge these to taste. */
+.tft-overlay-name-1 {
+  position: absolute;
+  top: 0px;
+  left: 55px;
+  width: 548px;
+  height: 55px;
+  text-align: center;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 100;
+}
+.tft-overlay-name-2 {
+  position: absolute;
+  top: 0px;
+  right: 55px;
+  width: 548px;
+  height: 55px;
+  text-align: center;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 100;
+}
+.tft-overlay-logo1 {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 55px;
+  width: 55px;
+  padding: 3px;
+  object-fit: contain;
+}
+.tft-overlay-logo2 {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 55px;
+  width: 55px;
+  padding: 3px;
+  object-fit: contain;
+}
+.tft-overlay-subtitle {
+  position: absolute;
+  top: 70px;
+  left: 782px;
+  width: 361px;
+  height: 30px;
+  text-align: center;
+  font-size: 20px;
+  color: white;
+}
+.tft-overlay-players {
+  position: absolute;
+  top: 37px;
+  width: 545px;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  z-index: 2;
+}
+.tft-overlay-players-t1 {
+  left: 60px;
+}
+.tft-overlay-players-t2 {
+  right: 58px;
+}
+.tft-player-name {
+  font-size: 11px;
+  color: #fff;
+  font-family: 'Integral CF', sans-serif;
+  font-weight: 100;
+  width: 125px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
 }
 
 /* ===== Mapset Display in Overlay ===== */

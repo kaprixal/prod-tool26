@@ -18,6 +18,7 @@ export function usePolledState(intervalMs = 1000) {
         if (!cancelled) {
           setState(data);
           setError(null);
+          document.documentElement.dataset.style = data.stylePreset || 'CIE2026';
         }
       } catch (err) {
         if (!cancelled) setError(err.message);

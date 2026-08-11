@@ -94,7 +94,7 @@ export default function Overlay() {
 
   const t1name = match.team1?.name || '';
   const t2name = match.team2?.name || '';
-  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl', cs2: 'cs2' };
+  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl', cs2: 'cs2', tft: 'tft' };
   const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[game] || 'blank'}.png`);
   const t1logo = match.team1?.logo || defaultLogo;
   const t2logo = match.team2?.logo || defaultLogo;
@@ -132,6 +132,7 @@ export default function Overlay() {
     mr: asset('/assets/in_game_overlay/ingame_rivals_main.png'),
     dl: asset('/assets/in_game_overlay/ingame_deadlock_main.png'),
     cs2: asset('/assets/in_game_overlay/ingame_cs2_main.png'),
+    tft: asset('/assets/in_game_overlay/ingame_tft_main.png'),
   };
   const overlayImg = overlayImgMap[game] || '';
 
@@ -162,14 +163,14 @@ export default function Overlay() {
           return (
             <>
               <img
-                className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo1' : game === 'lol' ? 'lol-overlay-logo1' : game === 'val' ? 'val-overlay-logo1' : game === 'mr' ? 'rivals-overlay-logo1' : game === 'dl' ? 'dl-overlay-logo1' : game === 'cs2' ? 'cs2-overlay-logo1' : ''}`}
+                className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo1' : game === 'lol' ? 'lol-overlay-logo1' : game === 'val' ? 'val-overlay-logo1' : game === 'mr' ? 'rivals-overlay-logo1' : game === 'dl' ? 'dl-overlay-logo1' : game === 'cs2' ? 'cs2-overlay-logo1' : game === 'tft' ? 'tft-overlay-logo1' : ''}`}
                 style={hideLolNames ? { left: '255px' } : {}}
                 src={t1logo}
                 onError={(e) => { e.target.src = defaultLogo; }}
                 alt=""
               />
               <img
-                className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo2' : game === 'lol' ? 'lol-overlay-logo2' : game === 'val' ? 'val-overlay-logo2' : game === 'mr' ? 'rivals-overlay-logo2' : game === 'dl' ? 'dl-overlay-logo2' : game === 'cs2' ? 'cs2-overlay-logo2' : ''}`}
+                className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo2' : game === 'lol' ? 'lol-overlay-logo2' : game === 'val' ? 'val-overlay-logo2' : game === 'mr' ? 'rivals-overlay-logo2' : game === 'dl' ? 'dl-overlay-logo2' : game === 'cs2' ? 'cs2-overlay-logo2' : game === 'tft' ? 'tft-overlay-logo2' : ''}`}
                 style={hideLolNames ? { left: '1628px', right: 'unset' } : {}}
                 src={t2logo}
                 onError={(e) => { e.target.src = defaultLogo; }}
@@ -179,7 +180,7 @@ export default function Overlay() {
               {/* Team names */}
               {!hideLolNames && (
                 <div
-                  className={`font-integral-bold text-white ${game === 'ow2' ? 'ow-overlay-name-1' : game === 'lol' ? 'lol-overlay-name-1' : game === 'val' ? 'val-overlay-name-1' : game === 'mr' ? 'rivals-overlay-name-1' : game === 'dl' ? 'dl-overlay-name-1' : game === 'cs2' ? 'cs2-overlay-name-1' : ''}`}
+                  className={`font-integral-bold text-white ${game === 'ow2' ? 'ow-overlay-name-1' : game === 'lol' ? 'lol-overlay-name-1' : game === 'val' ? 'val-overlay-name-1' : game === 'mr' ? 'rivals-overlay-name-1' : game === 'dl' ? 'dl-overlay-name-1' : game === 'cs2' ? 'cs2-overlay-name-1' : game === 'tft' ? 'tft-overlay-name-1' : ''}`}
                   style={{ zIndex: 2 }}
                 >
                   {t1name}
@@ -187,7 +188,7 @@ export default function Overlay() {
               )}
               {!hideLolNames && (
                 <div
-                  className={`font-integral-bold text-white ${game === 'ow2' ? 'ow-overlay-name-2' : game === 'lol' ? 'lol-overlay-name-2' : game === 'val' ? 'val-overlay-name-2' : game === 'mr' ? 'rivals-overlay-name-2' : game === 'dl' ? 'dl-overlay-name-2' : game === 'cs2' ? 'cs2-overlay-name-2' : ''}`}
+                  className={`font-integral-bold text-white ${game === 'ow2' ? 'ow-overlay-name-2' : game === 'lol' ? 'lol-overlay-name-2' : game === 'val' ? 'val-overlay-name-2' : game === 'mr' ? 'rivals-overlay-name-2' : game === 'dl' ? 'dl-overlay-name-2' : game === 'cs2' ? 'cs2-overlay-name-2' : game === 'tft' ? 'tft-overlay-name-2' : ''}`}
                   style={{ zIndex: 2 }}
                 >
                   {t2name}
@@ -228,6 +229,24 @@ export default function Overlay() {
             <div className="font-integral-bold cs2-overlay-title capitalize" style={{ zIndex: 2 }}>{streamTitle}</div>
             {/* TODO: position format label */}
             <div className="font-integral-bold cs2-overlay-format capitalize" style={{ zIndex: 2 }}>{formatLabelcs2}</div>
+          </>
+        )}
+
+        {/* ---- TFT overlay data: logo + team name (above, generic) + subtitle + 4 players per team ---- */}
+        {game === 'tft' && (
+          <>
+            {/* TODO: position subtitle */}
+            <div className="font-integral-bold tft-overlay-subtitle capitalize" style={{ zIndex: 2 }}>{state.subtitle || ''}</div>
+            <div className="tft-overlay-players tft-overlay-players-t1" style={{ zIndex: 2 }}>
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="tft-player-name">{players[`p${i}`]?.name || ''}</div>
+              ))}
+            </div>
+            <div className="tft-overlay-players tft-overlay-players-t2" style={{ zIndex: 2 }}>
+              {[6, 7, 8, 9].map((i) => (
+                <div key={i} className="tft-player-name">{players[`p${i}`]?.name || ''}</div>
+              ))}
+            </div>
           </>
         )}
 
