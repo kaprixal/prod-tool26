@@ -38,7 +38,6 @@ _stats_cache = {}
 _STATS_CACHE_TTL = 600
 
 RANK_ICON_BASE = "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests"
-TRAIT_ICON_BASE = "https://raw.communitydragon.org/latest/game/assets/ux/traiticons"
 
 
 def _http_get_json(url, headers=None, timeout=10):
@@ -53,6 +52,46 @@ def _http_get_text(url, headers=None):
         return resp.read().decode("utf-8")
 
 
+def _cdragon_asset_url(tex_path):
+    """'ASSETS/Characters/TFT17_Gwen/HUD/TFT17_Gwen_Square.tex' -> raw.communitydragon.org URL."""
+    if not tex_path:
+        return None
+    return f"https://raw.communitydragon.org/latest/game/{tex_path.lower().replace('.tex', '.png')}"
+
+
+_cdragon_cache = {"set_entry": None, "items": None, "ts": 0}
+_CDRAGON_SET_CACHE_TTL = 6 * 3600
+
+
+def _load_cdragon_data():
+    """Raw Community Dragon set entry (traits + champions) and the full item
+    list, cached together — shared by the trait/unit/item icon tables so the
+    ~25MB cdragon file is only fetched once per cache window, not three times.
+    Items aren't scoped per-set in cdragon's data, hence loading them here
+    rather than off the set entry."""
+    now = time.time()
+    if _cdragon_cache["set_entry"] and now - _cdragon_cache["ts"] < _CDRAGON_SET_CACHE_TTL:
+        return _cdragon_cache["set_entry"], _cdragon_cache["items"]
+    try:
+        cdragon = _http_get_json("https://raw.communitydragon.org/latest/cdragon/tft/en_us.json", _HEADERS, timeout=30)
+        set_num = int(TFT_SET_TAG.lstrip("s"))
+        set_entry = next(
+            (s for s in cdragon.get("setData", []) if s.get("number") == set_num and s.get("mutator") == f"TFTSet{set_num}"),
+            None,
+        )
+        items = cdragon.get("items") or []
+    except Exception:
+        set_entry, items = None, None
+    _cdragon_cache["set_entry"] = set_entry
+    _cdragon_cache["items"] = items
+    _cdragon_cache["ts"] = now
+    return set_entry, items
+
+
+def _load_cdragon_set_entry():
+    return _load_cdragon_data()[0]
+
+
 def _load_trait_table():
     """trait apiName -> {name, icon}, cached for TFT_SET_TAG."""
     now = time.time()
@@ -64,25 +103,62 @@ def _load_trait_table():
     names = json.loads(m.group(1)) if m else {}
 
     icons = {}
-    try:
-        cdragon = _http_get_json("https://raw.communitydragon.org/latest/cdragon/tft/en_us.json", _HEADERS, timeout=30)
-        set_num = int(TFT_SET_TAG.lstrip("s"))
-        set_entry = next(
-            (s for s in cdragon.get("setData", []) if s.get("number") == set_num and s.get("mutator") == f"TFTSet{set_num}"),
-            None,
-        )
-        if set_entry:
-            for t in set_entry.get("traits", []):
-                icon_path = t.get("icon", "")
-                if icon_path:
-                    slug = icon_path.rsplit("/", 1)[-1].replace(".tex", "").lower()
-                    icons[t["apiName"]] = f"{TRAIT_ICON_BASE}/{slug}.png"
-    except Exception:
-        pass  # icons are a nice-to-have; names alone are still useful
+    set_entry = _load_cdragon_set_entry()
+    if set_entry:
+        for t in set_entry.get("traits", []):
+            icons[t["apiName"]] = _cdragon_asset_url(t.get("icon"))
 
     table = {trait_id: {"name": name, "icon": icons.get(trait_id)} for trait_id, name in names.items() if trait_id.startswith("TFT")}
     _trait_cache["data"] = table
     _trait_cache["ts"] = now
+    return table
+
+
+_unit_cache = {"data": None, "ts": 0}
+_UNIT_CACHE_TTL = 6 * 3600
+
+
+def _load_unit_table():
+    """unit apiName (character_id) -> {name, icon}, cached for TFT_SET_TAG.
+    Uses each champion's square HUD icon — the small portrait shown on the
+    board, not their splash art."""
+    now = time.time()
+    if _unit_cache["data"] and now - _unit_cache["ts"] < _UNIT_CACHE_TTL:
+        return _unit_cache["data"]
+
+    set_entry = _load_cdragon_set_entry()
+    table = {}
+    if set_entry:
+        for c in set_entry.get("champions", []):
+            table[c["apiName"]] = {"name": c.get("name", c["apiName"]), "icon": _cdragon_asset_url(c.get("tileIcon"))}
+
+    _unit_cache["data"] = table
+    _unit_cache["ts"] = now
+    return table
+
+
+_item_cache = {"data": None, "ts": 0}
+_ITEM_CACHE_TTL = 6 * 3600
+
+
+def _load_item_table():
+    """item apiName -> {name, icon}, cached. Items aren't set-scoped in
+    cdragon's data (unlike traits/units) — completed items, component items,
+    and set-specific trait emblems all live in one global list."""
+    now = time.time()
+    if _item_cache["data"] and now - _item_cache["ts"] < _ITEM_CACHE_TTL:
+        return _item_cache["data"]
+
+    _, items = _load_cdragon_data()
+    table = {}
+    for it in items or []:
+        api_name = it.get("apiName")
+        if not api_name:
+            continue
+        table[api_name] = {"name": it.get("name", api_name), "icon": _cdragon_asset_url(it.get("icon"))}
+
+    _item_cache["data"] = table
+    _item_cache["ts"] = now
     return table
 
 
@@ -153,7 +229,9 @@ def _fetch_previous_set_summary(game_name, tag_line, region):
     candidates = [(entry[1], entry[2]) for entry in rank_history] + [(final_ranked[1], final_ranked[2])]
     peak_tier, peak_lp = max(candidates, key=lambda c: _tier_lp_sort_key(*c), default=(None, None))
 
-    avg_place = (raw.get("seasonStats") or {}).get("avgPlace")
+    # Ranked queue only (1100) — seasonStats mixes in normals/double-up/etc.
+    ranked_stats = (raw.get("queueSeasonStats") or {}).get("1100") or {}
+    avg_place = ranked_stats.get("avgPlace")
 
     return {
         "setNumber": PREVIOUS_TFT_SET_ID // 10,
@@ -184,7 +262,10 @@ def fetch_player_tft_stats(riot_id, region="na1", match_count=50):
     raw = _http_get_json(url, _HEADERS)
 
     player_info = raw.get("playerInfo") or {}
-    season = raw.get("seasonStats") or {}
+    # Ranked queue only (1100) — the top-level seasonStats mixes in
+    # normals/double-up/hyper roll, which skews AVP for a "how good are they
+    # at ranked" stat.
+    ranked_stats = (raw.get("queueSeasonStats") or {}).get("1100") or {}
     ranked_league = player_info.get("rankedLeague") or [None, None]
 
     trait_table = _load_trait_table()
@@ -201,8 +282,8 @@ def fetch_player_tft_stats(riot_id, region="na1", match_count=50):
         "riotId": f"{game_name}#{tag_line}",
         "region": region,
         "rank": _format_rank(ranked_league[0], ranked_league[1]),
-        "avgPlace": round(season["avgPlace"], 2) if season.get("avgPlace") is not None else None,
-        "games": season.get("games"),
+        "avgPlace": round(ranked_stats["avgPlace"], 2) if ranked_stats.get("avgPlace") is not None else None,
+        "games": ranked_stats.get("games"),
         "previousSet": previous_set,
         "topTraits": [
             {

@@ -55,6 +55,17 @@ export async function fetchTftStats(riotId, region = 'na1') {
   return res.json();
 }
 
+/** Full 8-player lobby breakdown for a player's last `count` (1-5) games.
+ *  riotId must be 'gameName#tagLine'. Throws with the backend's error detail on failure. */
+export async function fetchTftMatchHistory(riotId, region = 'na1', count = 3) {
+  const res = await fetch(`${API_BASE}/tft-match-history?${new URLSearchParams({ riotId, region, count })}`);
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.detail || `TFT match history lookup failed (${res.status})`);
+  }
+  return res.json();
+}
+
 // ---------------------------------------------------------------------------
 // Mutations — all local, synchronous (return the updated state)
 // ---------------------------------------------------------------------------
@@ -113,4 +124,8 @@ export function clearBmoPlay() {
 
 export function setStylePreset(presetId) {
   return store.setStylePreset(presetId);
+}
+
+export function setTftLobbyHistoryPlayerKey(playerKey) {
+  return store.setTftLobbyHistoryPlayerKey(playerKey);
 }

@@ -13,6 +13,7 @@ import urllib.error
 from game_data import get_game_data
 from style_presets import get_style_presets
 from tft_stats import fetch_player_tft_stats
+from tft_match_history import fetch_recent_lobbies
 
 app = FastAPI(title="Prod Tool API")
 
@@ -74,6 +75,25 @@ def get_tft_stats_endpoint(riotId: str = Query(...), region: str = "na1"):
         raise HTTPException(status_code=502, detail=f"tactics.tools lookup failed ({e.code}) for '{riotId}'")
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"Couldn't fetch TFT stats for '{riotId}': {e}")
+
+
+@app.get("/api/tft-match-history")
+def get_tft_match_history_endpoint(riotId: str = Query(...), region: str = "na1", count: int = 1):
+    """Full 8-player lobby breakdown for a player's last `count` (1-2, though
+    the frontend only ever requests 1 now — the lobby history page shows just
+    the most recent game) games —
+    placement, level, gold left, damage, traits, units for everyone in each
+    lobby. Sourced from metatft.com's public match-file mirror of Riot's
+    official match data, cached in-memory (per-match cache is long-lived
+    since finished matches never change)."""
+    try:
+        return {"riotId": riotId, "region": region, "matches": fetch_recent_lobbies(riotId, region, count)}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except urllib.error.HTTPError as e:
+        raise HTTPException(status_code=502, detail=f"metatft lookup failed ({e.code}) for '{riotId}'")
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Couldn't fetch match history for '{riotId}': {e}")
 
 
 if __name__ == "__main__":

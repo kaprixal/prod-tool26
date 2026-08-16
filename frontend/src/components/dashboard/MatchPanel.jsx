@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { updateMatch, swapTeams, clearMatch } from '../../api';
+import { updateMatch, swapTeams, clearMatch, setTftLobbyHistoryPlayerKey } from '../../api';
+
+const TFT_LOBBY_HISTORY_KEYS = ['p1', 'p2', 'p3', 'p4', 'p6', 'p7', 'p8', 'p9'];
 
 /* ── Shared styles ── */
 const INPUT = 'flex-1 min-w-0 w-16 bg-gray-800 h-6 rounded-md p-1';
@@ -114,7 +116,7 @@ function MapColumn({ index, mapData, showMapType, showMapName, mapTypeOptions, m
 }
 
 /* ── Main component ── */
-export default function MatchPanel({ matchNumber, matchData, game, gameData, onUpdate }) {
+export default function MatchPanel({ matchNumber, matchData, game, gameData, tftLobbyHistoryPlayerKey, onUpdate }) {
   const [selectedGame, setSelectedGame] = useState(game || '');
   const [team1Name, setTeam1Name] = useState('');
   const [team1Logo, setTeam1Logo] = useState('');
@@ -162,6 +164,7 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
 
   const handleSwap = async () => { await swapTeams(matchNumber); onUpdate(); };
   const handleClear = async () => { await clearMatch(matchNumber); onUpdate(); };
+  const handleLobbyHistoryPlayerChange = (key) => { setTftLobbyHistoryPlayerKey(key); onUpdate(); };
 
   /* Player key lists for each team — TFT only fields 4 players per team */
   const team1Indices = activeGame === 'tft' ? [1, 2, 3, 4] : [1, 2, 3, 4, 5];
@@ -213,9 +216,24 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, onU
         />
       </div>
 
-      <button type="button" onClick={handleSwap} className="bg-gray-500 hover:bg-gray-400 px-6 py-2 rounded-lg text-white w-full">
-        SWAP
-      </button>
+      {activeGame === 'tft' ? (
+        <div className="flex flex-row items-center gap-2 bg-gray-700 rounded-lg px-3 py-2">
+          <label className="text-xs shrink-0">Lobby History Player</label>
+          <select
+            className="w-full bg-gray-800 h-6 rounded-md px-1"
+            value={tftLobbyHistoryPlayerKey || 'p1'}
+            onChange={(e) => handleLobbyHistoryPlayerChange(e.target.value)}
+          >
+            {TFT_LOBBY_HISTORY_KEYS.map((key) => (
+              <option key={key} value={key}>{players[key]?.name || key.toUpperCase()}</option>
+            ))}
+          </select>
+        </div>
+      ) : (
+        <button type="button" onClick={handleSwap} className="bg-gray-500 hover:bg-gray-400 px-6 py-2 rounded-lg text-white w-full">
+          SWAP
+        </button>
+      )}
 
       <div className="h-4" />
 

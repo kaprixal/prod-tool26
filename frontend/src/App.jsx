@@ -12,6 +12,7 @@ import AnimateLogoOverlay from './components/overlays/AnimateLogoOverlay';
 import PanelOverlay from './components/overlays/PanelOverlay';
 import PanelOverlaySchedule from './components/overlays/PanelOverlaySchedule';
 import TFTTeamScreen from './components/overlays/TFTTeamScreen';
+import TFTLobbyHistory from './components/dashboard/TFTLobbyHistory';
 export default function App() {
   return (
     <Routes>
@@ -26,6 +27,7 @@ export default function App() {
       <Route path="/live/team2" element={<TeamRoster team={2} />} />
       <Route path="/live/owban" element={<OwBanOverlay />} />
       <Route path="/live/tft-teams" element={<TFTTeamScreen />} />
+      <Route path="/tools/tft-lobby-history" element={<TFTLobbyHistory />} />
 
       {/* General overlay pages */}
       <Route path="/general/schedule" element={<ScheduleOverlay />} />
