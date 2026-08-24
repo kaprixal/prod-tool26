@@ -34,18 +34,18 @@ export default function TwoGuestsOverlay() {
   return (
     <div className="stack-container text-white">
       {/* Caster names (inline, left side) */}
-      <div id="caster-1-iname" className="caster-int font-built-bold text-4xl" style={{ top: 315 }}>
+      <div id="caster-1-iname" className="caster-int font-built-bold text-4xl" style={{ top: 327 }}>
         {state.caster1?.name}
       </div>
-      <div id="caster-2-iname" className="caster-int font-built-bold text-4xl" style={{ top: 663 }}>
+      <div id="caster-2-iname" className="caster-int font-built-bold text-4xl" style={{ top: 675 }}>
         {state.caster2?.name}
       </div>
 
       {/* Guest names (inline, right side) */}
-      <div id="guest-1-name" className="caster-int font-built-bold text-4xl" style={{ left: 970, top: 315 }}>
+      <div id="guest-1-name" className="caster-int font-built-bold text-4xl" style={{ left: 970, top: 327 }}>
         {state.guest1?.name}
       </div>
-      <div id="guest-2-name" className="caster-int font-built-bold text-4xl" style={{ left: 970, top: 663 }}>
+      <div id="guest-2-name" className="caster-int font-built-bold text-4xl" style={{ left: 970, top: 675 }}>
         {state.guest2?.name}
       </div>
 
