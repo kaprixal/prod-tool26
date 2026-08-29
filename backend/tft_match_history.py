@@ -122,10 +122,10 @@ def fetch_recent_lobbies(riot_id, region="na1", count=1):
         raise ValueError(f"'{riot_id}' isn't a valid Riot ID (expected format: Name#Tag)")
     count = max(1, min(2, count))
 
-    # Ranked (1100) and Normal (1090) only — excludes Hyper Roll/Choncc's Treasure etc.
-    RANKED_AND_NORMAL_QUEUES = {1090, 1100}
+    # Normal (1090) only — excludes Ranked, Hyper Roll/Choncc's Treasure, etc.
+    NORMAL_QUEUES = {1090}
     all_matches = _fetch_profile_matches(game_name, tag_line, region)
-    matches_meta = [m for m in all_matches if m.get("queue_id") in RANKED_AND_NORMAL_QUEUES][:count]
+    matches_meta = [m for m in all_matches if m.get("queue_id") in NORMAL_QUEUES][:count]
     trait_table = _load_trait_table()
     unit_table = _load_unit_table()
     item_table = _load_item_table()

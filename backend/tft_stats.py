@@ -18,11 +18,11 @@ import time
 import urllib.parse
 import urllib.request
 
-# TFT Set 17.0 — bump this (and TFT_SET_TAG below) when tactics.tools moves to
+# TFT Set 18.0 — bump this (and TFT_SET_TAG below) when tactics.tools moves to
 # a new set. Find the current numeric id by watching the network tab on a
 # tactics.tools player page for a call to /player/stats2/<region>/.../<setId>/...
-TFT_SET_ID = 170
-TFT_SET_TAG = "s17"
+TFT_SET_ID = 180
+TFT_SET_TAG = "s18"
 # tactics.tools numbers sets as (set * 10), e.g. 170 = Set 17.0 — so the prior
 # set is just -10. Holds even across .5 revisions (170 -> 160, not 165).
 PREVIOUS_TFT_SET_ID = TFT_SET_ID - 10
@@ -108,7 +108,7 @@ def _load_trait_table():
         for t in set_entry.get("traits", []):
             icons[t["apiName"]] = _cdragon_asset_url(t.get("icon"))
 
-    table = {trait_id: {"name": name, "icon": icons.get(trait_id)} for trait_id, name in names.items() if trait_id.startswith("TFT")}
+    table = {trait_id: {"name": name, "icon": icons.get(trait_id)} for trait_id, name in names.items() if not trait_id.endswith("_desc")}
     _trait_cache["data"] = table
     _trait_cache["ts"] = now
     return table

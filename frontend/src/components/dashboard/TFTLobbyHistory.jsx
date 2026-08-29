@@ -20,7 +20,7 @@ const TRAIT_ICON_SIZE = 24;
 const TRAIT_GAP = 8;
 const MAX_UNITS = 11; // TFT board can exceed 10 with certain mechanics (e.g. summons)
 
-const COL = { placement: 28, name: 260, level: 48, gold: 52, damage: 64 };
+const COL = { placement: 28, name: 260, level: 48, gold: 52 };
 const ROW_GAP = 20;
 const TRAITS_W = 6 * TRAIT_ICON_SIZE + 5 * TRAIT_GAP;
 const UNITS_MIN_W = MAX_UNITS * UNIT_ICON_SIZE + (MAX_UNITS - 1) * UNIT_GAP;
@@ -89,7 +89,6 @@ function ColumnHeader() {
       <div className="shrink-0" style={{ width: COL.name }}>Player</div>
       <div className="shrink-0 text-center" style={{ width: COL.level }}>Lvl</div>
       <div className="shrink-0 text-center" style={{ width: COL.gold }}>Gold</div>
-      <div className="shrink-0 text-center" style={{ width: COL.damage }}>Dmg</div>
       <div className="flex-1" style={{ minWidth: UNITS_MIN_W }}>Units</div>
       <div className="shrink-0" style={{ width: TRAITS_W }}>Traits</div>
     </div>
@@ -106,7 +105,6 @@ function ParticipantRow({ p, highlighted }) {
       <div className="font-integral-regular text-white shrink-0 truncate text-lg" style={{ width: COL.name }}>{p.riotId}</div>
       <div className="font-integral-regular text-white/70 shrink-0 text-center text-base" style={{ width: COL.level }}>{p.level}</div>
       <div className="font-integral-regular text-white/70 shrink-0 text-center text-base" style={{ width: COL.gold }}>{p.goldLeft}g</div>
-      <div className="font-integral-regular text-white/70 shrink-0 text-center text-base" style={{ width: COL.damage }}>{p.totalDamageToPlayers}</div>
       <div className="flex flex-row items-center flex-1 overflow-hidden" style={{ gap: UNIT_GAP, minWidth: UNITS_MIN_W }}>
         {p.units.map((u) => (
           <UnitIcon key={u.id} u={u} />
@@ -142,8 +140,8 @@ function LobbyCard({ match, highlightRiotId }) {
 
 /**
  * Lobby review page — shows the full 8-player lobby breakdown (placement,
- * level, gold left, damage, units + star levels, traits) for a player's
- * most recent ranked/normal game. Which player is controlled from the
+ * level, gold left, units + star levels, traits) for a player's
+ * most recent normal game. Which player is controlled from the
  * dashboard's Live tab (per-match "Lobby History Player" selector, replacing
  * the SWAP button for TFT matches), not here, so this page stays a clean
  * display when pulled up as an OBS source.
@@ -196,7 +194,7 @@ export default function TFTLobbyHistory() {
         {loading && <div className="font-integral-regular text-white/60 px-2">Loading…</div>}
         {!loading && error && <div className="font-integral-regular text-red-400 px-2">{error}</div>}
         {!loading && !error && !lastGame && (
-          <div className="font-integral-regular text-white/60 px-2">No recent ranked/normal games found.</div>
+          <div className="font-integral-regular text-white/60 px-2">No recent normal games found.</div>
         )}
         {!loading && !error && lastGame && (
           <LobbyCard match={lastGame} highlightRiotId={selectedRiotId} />
