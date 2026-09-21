@@ -78,16 +78,19 @@ def get_tft_stats_endpoint(riotId: str = Query(...), region: str = "na1"):
 
 
 @app.get("/api/tft-match-history")
-def get_tft_match_history_endpoint(riotId: str = Query(...), region: str = "na1", count: int = 1):
+def get_tft_match_history_endpoint(riotId: str = Query(...), region: str = "na1", count: int = 1, queue: str = "both"):
     """Full 8-player lobby breakdown for a player's last `count` (1-2, though
     the frontend only ever requests 1 now — the lobby history page shows just
     the most recent game) games —
     placement, level, gold left, damage, traits, units for everyone in each
-    lobby. Sourced from metatft.com's public match-file mirror of Riot's
-    official match data, cached in-memory (per-match cache is long-lived
-    since finished matches never change)."""
+    lobby. `queue` filters to 'both' (default), 'ranked', or 'normal' —
+    scans the player's whole recent-match window, so 'normal' finds their
+    last normal game even if they've since queued ranked. Sourced from
+    metatft.com's public match-file mirror of Riot's official match data,
+    cached in-memory (per-match cache is long-lived since finished matches
+    never change)."""
     try:
-        return {"riotId": riotId, "region": region, "matches": fetch_recent_lobbies(riotId, region, count)}
+        return {"riotId": riotId, "region": region, "matches": fetch_recent_lobbies(riotId, region, count, queue)}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except urllib.error.HTTPError as e:

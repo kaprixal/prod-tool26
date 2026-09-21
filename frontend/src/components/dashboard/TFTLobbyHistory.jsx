@@ -141,7 +141,7 @@ function LobbyCard({ match, highlightRiotId }) {
 /**
  * Lobby review page — shows the full 8-player lobby breakdown (placement,
  * level, gold left, units + star levels, traits) for a player's
- * most recent normal game. Which player is controlled from the
+ * most recent ranked/normal game. Which player is controlled from the
  * dashboard's Live tab (per-match "Lobby History Player" selector, replacing
  * the SWAP button for TFT matches), not here, so this page stays a clean
  * display when pulled up as an OBS source.
@@ -159,6 +159,7 @@ export default function TFTLobbyHistory() {
 
   const selectedKey = state?.tftLobbyHistoryPlayerKey || 'p1';
   const selectedRiotId = players[selectedKey]?.name || '';
+  const selectedQueue = state?.tftLobbyHistoryQueue || 'both';
 
   useEffect(() => {
     if (!selectedRiotId || !selectedRiotId.includes('#')) {
@@ -169,12 +170,12 @@ export default function TFTLobbyHistory() {
     let cancelled = false;
     setLoading(true);
     setError(null);
-    fetchTftMatchHistory(selectedRiotId, TFT_REGION, 1)
+    fetchTftMatchHistory(selectedRiotId, TFT_REGION, 1, selectedQueue)
       .then((data) => { if (!cancelled) setMatches(data.matches || []); })
       .catch((err) => { if (!cancelled) setError(err.message); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [selectedRiotId]);
+  }, [selectedRiotId, selectedQueue]);
 
   if (!state) return null;
 
@@ -194,7 +195,13 @@ export default function TFTLobbyHistory() {
         {loading && <div className="font-integral-regular text-white/60 px-2">Loading…</div>}
         {!loading && error && <div className="font-integral-regular text-red-400 px-2">{error}</div>}
         {!loading && !error && !lastGame && (
-          <div className="font-integral-regular text-white/60 px-2">No recent normal games found.</div>
+          <div className="font-integral-regular text-white/60 px-2">
+            {selectedQueue === 'ranked'
+              ? 'No recent ranked games found.'
+              : selectedQueue === 'normal'
+                ? 'No recent normal games found.'
+                : 'No recent ranked/normal games found.'}
+          </div>
         )}
         {!loading && !error && lastGame && (
           <LobbyCard match={lastGame} highlightRiotId={selectedRiotId} />

@@ -109,23 +109,32 @@ def _summarize_participant(p, trait_table, unit_table, item_table):
     }
 
 
-def fetch_recent_lobbies(riot_id, region="na1", count=1):
+_QUEUE_FILTERS = {
+    "both": {1090, 1100},
+    "ranked": {1100},
+    "normal": {1090},
+}
+
+
+def fetch_recent_lobbies(riot_id, region="na1", count=1, queue="both"):
     """riot_id must be 'gameName#tagLine'. Returns up to `count` (clamped
     1-2 — the lobby history page's rows are sized large enough that more
     than 2 games won't fit on one screen) most recent games, each with the
-    full 8-player lobby breakdown, newest first. Raises ValueError on bad
-    input."""
+    full 8-player lobby breakdown, newest first. `queue` is 'both' (default,
+    ranked + normal), 'ranked', or 'normal' — scans the player's full
+    recent-match window (not just their latest game) to find matches of the
+    requested type, so e.g. 'normal' still finds their last normal game even
+    if they've queued ranked since. Raises ValueError on bad input."""
     if "#" not in riot_id:
         raise ValueError(f"'{riot_id}' isn't a Riot ID (expected format: Name#Tag)")
     game_name, tag_line = (part.strip() for part in riot_id.split("#", 1))
     if not game_name or not tag_line:
         raise ValueError(f"'{riot_id}' isn't a valid Riot ID (expected format: Name#Tag)")
     count = max(1, min(2, count))
+    queue_ids = _QUEUE_FILTERS.get(queue, _QUEUE_FILTERS["both"])
 
-    # Normal (1090) only — excludes Ranked, Hyper Roll/Choncc's Treasure, etc.
-    NORMAL_QUEUES = {1090}
     all_matches = _fetch_profile_matches(game_name, tag_line, region)
-    matches_meta = [m for m in all_matches if m.get("queue_id") in NORMAL_QUEUES][:count]
+    matches_meta = [m for m in all_matches if m.get("queue_id") in queue_ids][:count]
     trait_table = _load_trait_table()
     unit_table = _load_unit_table()
     item_table = _load_item_table()

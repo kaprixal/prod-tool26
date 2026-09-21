@@ -57,8 +57,8 @@ export async function fetchTftStats(riotId, region = 'na1') {
 
 /** Full 8-player lobby breakdown for a player's last `count` (1-5) games.
  *  riotId must be 'gameName#tagLine'. Throws with the backend's error detail on failure. */
-export async function fetchTftMatchHistory(riotId, region = 'na1', count = 3) {
-  const res = await fetch(`${API_BASE}/tft-match-history?${new URLSearchParams({ riotId, region, count })}`);
+export async function fetchTftMatchHistory(riotId, region = 'na1', count = 3, queue = 'both') {
+  const res = await fetch(`${API_BASE}/tft-match-history?${new URLSearchParams({ riotId, region, count, queue })}`);
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
     throw new Error(body.detail || `TFT match history lookup failed (${res.status})`);
@@ -128,4 +128,8 @@ export function setStylePreset(presetId) {
 
 export function setTftLobbyHistoryPlayerKey(playerKey) {
   return store.setTftLobbyHistoryPlayerKey(playerKey);
+}
+
+export function setTftLobbyHistoryQueue(queue) {
+  return store.setTftLobbyHistoryQueue(queue);
 }

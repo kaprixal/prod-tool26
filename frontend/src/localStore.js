@@ -44,6 +44,7 @@ export function makeDefaultState() {
     currMatch: '1',
     stylePreset: 'CIE2026',
     tftLobbyHistoryPlayerKey: 'p1',
+    tftLobbyHistoryQueue: 'both',
     streamTitle: '',
     subtitle: '',
     timerMinutes: '',
@@ -326,6 +327,12 @@ export function setStylePreset(presetId) {
 export function setTftLobbyHistoryPlayerKey(playerKey) {
   const s = getState();
   s.tftLobbyHistoryPlayerKey = playerKey;
+  return saveState(s);
+}
+
+export function setTftLobbyHistoryQueue(queue) {
+  const s = getState();
+  s.tftLobbyHistoryQueue = queue;
   return saveState(s);
 }
 

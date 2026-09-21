@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
-import { updateMatch, swapTeams, clearMatch, setTftLobbyHistoryPlayerKey } from '../../api';
+import { updateMatch, swapTeams, clearMatch, setTftLobbyHistoryPlayerKey, setTftLobbyHistoryQueue } from '../../api';
 
 const TFT_LOBBY_HISTORY_KEYS = ['p1', 'p2', 'p3', 'p4', 'p6', 'p7', 'p8', 'p9'];
+const TFT_LOBBY_HISTORY_QUEUES = [
+  { value: 'both', label: 'Ranked + Normal' },
+  { value: 'ranked', label: 'Ranked only' },
+  { value: 'normal', label: 'Normal only' },
+];
 
 /* ── Shared styles ── */
 const INPUT = 'flex-1 min-w-0 w-16 bg-gray-800 h-6 rounded-md p-1';
@@ -116,7 +121,7 @@ function MapColumn({ index, mapData, showMapType, showMapName, mapTypeOptions, m
 }
 
 /* ── Main component ── */
-export default function MatchPanel({ matchNumber, matchData, game, gameData, tftLobbyHistoryPlayerKey, onUpdate }) {
+export default function MatchPanel({ matchNumber, matchData, game, gameData, tftLobbyHistoryPlayerKey, tftLobbyHistoryQueue, onUpdate }) {
   const [selectedGame, setSelectedGame] = useState(game || '');
   const [team1Name, setTeam1Name] = useState('');
   const [team1Logo, setTeam1Logo] = useState('');
@@ -165,6 +170,7 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, tft
   const handleSwap = async () => { await swapTeams(matchNumber); onUpdate(); };
   const handleClear = async () => { await clearMatch(matchNumber); onUpdate(); };
   const handleLobbyHistoryPlayerChange = (key) => { setTftLobbyHistoryPlayerKey(key); onUpdate(); };
+  const handleLobbyHistoryQueueChange = (queue) => { setTftLobbyHistoryQueue(queue); onUpdate(); };
 
   /* Player key lists for each team — TFT only fields 4 players per team */
   const team1Indices = activeGame === 'tft' ? [1, 2, 3, 4] : [1, 2, 3, 4, 5];
@@ -217,17 +223,31 @@ export default function MatchPanel({ matchNumber, matchData, game, gameData, tft
       </div>
 
       {activeGame === 'tft' ? (
-        <div className="flex flex-row items-center gap-2 bg-gray-700 rounded-lg px-3 py-2">
-          <label className="text-xs shrink-0">Lobby History Player</label>
-          <select
-            className="w-full bg-gray-800 h-6 rounded-md px-1"
-            value={tftLobbyHistoryPlayerKey || 'p1'}
-            onChange={(e) => handleLobbyHistoryPlayerChange(e.target.value)}
-          >
-            {TFT_LOBBY_HISTORY_KEYS.map((key) => (
-              <option key={key} value={key}>{players[key]?.name || key.toUpperCase()}</option>
-            ))}
-          </select>
+        <div className="space-y-2">
+          <div className="flex flex-row items-center gap-2 bg-gray-700 rounded-lg px-3 py-2">
+            <label className="text-xs shrink-0">Lobby History Player</label>
+            <select
+              className="w-full bg-gray-800 h-6 rounded-md px-1"
+              value={tftLobbyHistoryPlayerKey || 'p1'}
+              onChange={(e) => handleLobbyHistoryPlayerChange(e.target.value)}
+            >
+              {TFT_LOBBY_HISTORY_KEYS.map((key) => (
+                <option key={key} value={key}>{players[key]?.name || key.toUpperCase()}</option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-row items-center gap-2 bg-gray-700 rounded-lg px-3 py-2">
+            <label className="text-xs shrink-0">Lobby History Queue</label>
+            <select
+              className="w-full bg-gray-800 h-6 rounded-md px-1"
+              value={tftLobbyHistoryQueue || 'both'}
+              onChange={(e) => handleLobbyHistoryQueueChange(e.target.value)}
+            >
+              {TFT_LOBBY_HISTORY_QUEUES.map((q) => (
+                <option key={q.value} value={q.value}>{q.label}</option>
+              ))}
+            </select>
+          </div>
         </div>
       ) : (
         <button type="button" onClick={handleSwap} className="bg-gray-500 hover:bg-gray-400 px-6 py-2 rounded-lg text-white w-full">

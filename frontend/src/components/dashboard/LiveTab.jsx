@@ -58,6 +58,7 @@ export default function LiveTab({ state, gameData, onUpdate }) {
         game={matchGame}
         gameData={gameData}
         tftLobbyHistoryPlayerKey={state.tftLobbyHistoryPlayerKey}
+        tftLobbyHistoryQueue={state.tftLobbyHistoryQueue}
         onUpdate={onUpdate}
       />
 
