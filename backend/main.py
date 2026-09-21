@@ -4,12 +4,16 @@ Now only serves static assets and read-only game data.
 All mutable state lives in the browser's localStorage.
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
+import urllib.error
 
 from game_data import get_game_data
+from style_presets import get_style_presets
+from tft_stats import fetch_player_tft_stats
+from tft_match_history import fetch_recent_lobbies
 
 app = FastAPI(title="Prod Tool API")
 
@@ -51,6 +55,48 @@ else:
 def get_game_data_endpoint():
     """Get all game constants (heroes, maps, roles, etc.)."""
     return get_game_data()
+
+
+@app.get("/api/style-presets")
+def get_style_presets_endpoint():
+    """Get all overlay style presets (fonts, asset folders, position overrides)."""
+    return get_style_presets()
+
+
+@app.get("/api/tft-stats")
+def get_tft_stats_endpoint(riotId: str = Query(...), region: str = "na1"):
+    """Rank, average placement, and top traits for a TFT player, scraped from
+    tactics.tools and cached in-memory. riotId must be 'gameName#tagLine'."""
+    try:
+        return fetch_player_tft_stats(riotId, region)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except urllib.error.HTTPError as e:
+        raise HTTPException(status_code=502, detail=f"tactics.tools lookup failed ({e.code}) for '{riotId}'")
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Couldn't fetch TFT stats for '{riotId}': {e}")
+
+
+@app.get("/api/tft-match-history")
+def get_tft_match_history_endpoint(riotId: str = Query(...), region: str = "na1", count: int = 1, queue: str = "both"):
+    """Full 8-player lobby breakdown for a player's last `count` (1-2, though
+    the frontend only ever requests 1 now — the lobby history page shows just
+    the most recent game) games —
+    placement, level, gold left, damage, traits, units for everyone in each
+    lobby. `queue` filters to 'both' (default), 'ranked', or 'normal' —
+    scans the player's whole recent-match window, so 'normal' finds their
+    last normal game even if they've since queued ranked. Sourced from
+    metatft.com's public match-file mirror of Riot's official match data,
+    cached in-memory (per-match cache is long-lived since finished matches
+    never change)."""
+    try:
+        return {"riotId": riotId, "region": region, "matches": fetch_recent_lobbies(riotId, region, count, queue)}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except urllib.error.HTTPError as e:
+        raise HTTPException(status_code=502, detail=f"metatft lookup failed ({e.code}) for '{riotId}'")
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Couldn't fetch match history for '{riotId}': {e}")
 
 
 if __name__ == "__main__":

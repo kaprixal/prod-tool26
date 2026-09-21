@@ -1,5 +1,32 @@
 import { usePolledState } from '../../hooks/usePolledState';
 import { asset } from '../../api';
+import Slideshow from './Slideshow';
+import BmoBudgetingPlay from './BmoBudgetingPlay';
+
+const slideshowModules = import.meta.glob(
+  './assets/sponsor_slideshow_ingame/*.{png,jpg,jpeg,webp,gif}',
+  { eager: true }
+);
+const SLIDESHOW_IMGS = Object.values(slideshowModules).map((m) => m.default);
+
+const isLolNameLong = (name) => name && name.length > 5;
+
+/**
+ * Per-game slideshow position/size config.
+ * Add or adjust entries here to position the sponsor slideshow for each game.
+ * Games omitted from this map will not show the slideshow.
+ *
+ * Properties mirror the Slideshow component props:
+ *   top, left, width, height, size, interval, fadeDuration
+ */
+const SLIDESHOW_CONFIG = {
+  ow2: { top: 170, left: 40, size: 100 },
+  lol: { top: 973, left: 10, width: 288 , height: 99},
+  val: { top: 0, left: 1800, size: 100 },
+  mr:  { top: 1010, left: 1190, width: 230, height: 70 },
+  dl:  { top: 812, left: 230, size: 200 },
+  cs2: { top: 1000, left: 1680, height: 80, width: 240 },
+};
 
 /**
  * In-game overlay – shows team names, logos, scores, format
@@ -67,7 +94,7 @@ export default function Overlay() {
 
   const t1name = match.team1?.name || '';
   const t2name = match.team2?.name || '';
-  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' };
+  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl', cs2: 'cs2', tft: 'tft' };
   const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[game] || 'blank'}.png`);
   const t1logo = match.team1?.logo || defaultLogo;
   const t2logo = match.team2?.logo || defaultLogo;
@@ -104,6 +131,8 @@ export default function Overlay() {
     val: asset('/assets/in_game_overlay/ingame_valo_main.png'),
     mr: asset('/assets/in_game_overlay/ingame_rivals_main.png'),
     dl: asset('/assets/in_game_overlay/ingame_deadlock_main.png'),
+    cs2: asset('/assets/in_game_overlay/ingame_cs2_main.png'),
+    tft: asset('/assets/in_game_overlay/ingame_tft_main.png'),
   };
   const overlayImg = overlayImgMap[game] || '';
 
@@ -112,6 +141,7 @@ export default function Overlay() {
 
   /* ---- Format text for OW ---- */
   const formatLabel = format === 'ft3' ? 'Best of 5' : format === 'ft2' ? 'Best of 3' : 'Best of 1';
+  const formatLabelcs2 = format === 'ft3' ? 'bo5' : format === 'ft2' ? 'bo3' : 'bo1';
 
   /* ---- OW map-type icon path ---- */
   const owTypeIcon = (type) =>
@@ -127,32 +157,46 @@ export default function Overlay() {
         <img className="stacked-image" src={overlayImg} style={{ zIndex: 0 }} alt="" />
 
         {/* Team logos */}
-        <img
-          className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo1' : game === 'lol' ? 'lol-overlay-logo1' : game === 'val' ? 'val-overlay-logo1' : game === 'mr' ? 'rivals-overlay-logo1' : game === 'dl' ? 'dl-overlay-logo1' : ''}`}
-          src={t1logo}
-          onError={(e) => { e.target.src = defaultLogo; }}
-          alt=""
-        />
-        <img
-          className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo2' : game === 'lol' ? 'lol-overlay-logo2' : game === 'val' ? 'val-overlay-logo2' : game === 'mr' ? 'rivals-overlay-logo2' : game === 'dl' ? 'dl-overlay-logo2' : ''}`}
-          src={t2logo}
-          onError={(e) => { e.target.src = defaultLogo; }}
-          alt=""
-        />
+        {/* eslint-disable-next-line no-extra-parens */}
+        {(() => {
+          const hideLolNames = game === 'lol' && (isLolNameLong(t1name) || isLolNameLong(t2name));
+          return (
+            <>
+              <img
+                className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo1' : game === 'lol' ? 'lol-overlay-logo1' : game === 'val' ? 'val-overlay-logo1' : game === 'mr' ? 'rivals-overlay-logo1' : game === 'dl' ? 'dl-overlay-logo1' : game === 'cs2' ? 'cs2-overlay-logo1' : game === 'tft' ? 'tft-overlay-logo1' : ''}`}
+                style={hideLolNames ? { left: '255px' } : {}}
+                src={t1logo}
+                onError={(e) => { e.target.src = defaultLogo; }}
+                alt=""
+              />
+              <img
+                className={`overlay-logo ${game === 'ow2' ? 'ow-overlay-logo2' : game === 'lol' ? 'lol-overlay-logo2' : game === 'val' ? 'val-overlay-logo2' : game === 'mr' ? 'rivals-overlay-logo2' : game === 'dl' ? 'dl-overlay-logo2' : game === 'cs2' ? 'cs2-overlay-logo2' : game === 'tft' ? 'tft-overlay-logo2' : ''}`}
+                style={hideLolNames ? { left: '1628px', right: 'unset' } : {}}
+                src={t2logo}
+                onError={(e) => { e.target.src = defaultLogo; }}
+                alt=""
+              />
 
-        {/* Team names */}
-        <div
-          className={`font-integral-bold text-white ${game === 'ow2' ? 'ow-overlay-name-1' : game === 'lol' ? 'lol-overlay-name-1' : game === 'val' ? 'val-overlay-name-1' : game === 'mr' ? 'rivals-overlay-name-1' : game === 'dl' ? 'dl-overlay-name-1' : ''}`}
-          style={{ zIndex: 2 }}
-        >
-          {t1name}
-        </div>
-        <div
-          className={`font-integral-bold text-white ${game === 'ow2' ? 'ow-overlay-name-2' : game === 'lol' ? 'lol-overlay-name-2' : game === 'val' ? 'val-overlay-name-2' : game === 'mr' ? 'rivals-overlay-name-2' : game === 'dl' ? 'dl-overlay-name-2' : ''}`}
-          style={{ zIndex: 2 }}
-        >
-          {t2name}
-        </div>
+              {/* Team names */}
+              {!hideLolNames && (
+                <div
+                  className={`font-integral-bold text-white ${game === 'ow2' ? 'ow-overlay-name-1' : game === 'lol' ? 'lol-overlay-name-1' : game === 'val' ? 'val-overlay-name-1' : game === 'mr' ? 'rivals-overlay-name-1' : game === 'dl' ? 'dl-overlay-name-1' : game === 'cs2' ? 'cs2-overlay-name-1' : game === 'tft' ? 'tft-overlay-name-1' : ''}`}
+                  style={{ zIndex: 2 }}
+                >
+                  {t1name}
+                </div>
+              )}
+              {!hideLolNames && (
+                <div
+                  className={`font-integral-bold text-white ${game === 'ow2' ? 'ow-overlay-name-2' : game === 'lol' ? 'lol-overlay-name-2' : game === 'val' ? 'val-overlay-name-2' : game === 'mr' ? 'rivals-overlay-name-2' : game === 'dl' ? 'dl-overlay-name-2' : game === 'cs2' ? 'cs2-overlay-name-2' : game === 'tft' ? 'tft-overlay-name-2' : ''}`}
+                  style={{ zIndex: 2 }}
+                >
+                  {t2name}
+                </div>
+              )}
+            </>
+          );
+        })()}
 
         {/* OW scores (only visible for OW) */}
         {game === 'ow2' && (
@@ -173,6 +217,37 @@ export default function Overlay() {
         {/* VAL title */}
         {game === 'val' && (
           <div className="font-integral-bold val-overlay-title capitalize" style={{ marginTop: 4 }}>{streamTitle}</div>
+        )}
+
+        {/* ---- CS2 overlay data ---- */}
+        {game === 'cs2' && (
+          <>
+            {/* TODO: position scores */}
+            <div className="font-integral-bold cs2-overlay-score-1" style={{ zIndex: 2 }}>{t1score}</div>
+            <div className="font-integral-bold cs2-overlay-score-2" style={{ zIndex: 2 }}>{t2score}</div>
+            {/* TODO: position match title */}
+            <div className="font-integral-bold cs2-overlay-title capitalize" style={{ zIndex: 2 }}>{streamTitle}</div>
+            {/* TODO: position format label */}
+            <div className="font-integral-bold cs2-overlay-format capitalize" style={{ zIndex: 2 }}>{formatLabelcs2}</div>
+          </>
+        )}
+
+        {/* ---- TFT overlay data: logo + team name (above, generic) + subtitle + 4 players per team ---- */}
+        {game === 'tft' && (
+          <>
+            {/* TODO: position subtitle */}
+            <div className="font-integral-bold tft-overlay-subtitle capitalize" style={{ zIndex: 2 }}>{state.subtitle || ''}</div>
+            <div className="tft-overlay-players tft-overlay-players-t1" style={{ zIndex: 2 }}>
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="tft-player-name">{players[`p${i}`]?.name || ''}</div>
+              ))}
+            </div>
+            <div className="tft-overlay-players tft-overlay-players-t2" style={{ zIndex: 2 }}>
+              {[6, 7, 8, 9].map((i) => (
+                <div key={i} className="tft-player-name">{players[`p${i}`]?.name || ''}</div>
+              ))}
+            </div>
+          </>
         )}
 
         {/* ---- Deadlock overlay data ---- */}
@@ -269,6 +344,14 @@ export default function Overlay() {
           </div>
         )}
       </div>
+
+      {/* Sponsor slideshow — position/size configured per game above */}
+      {SLIDESHOW_CONFIG[game] && (
+        <Slideshow images={SLIDESHOW_IMGS} {...SLIDESHOW_CONFIG[game]} />
+      )}
+
+      {/* BMO Budgeting Play — VALORANT only */}
+      {game === 'val' && <BmoBudgetingPlay />}
     </div>
   );
 }

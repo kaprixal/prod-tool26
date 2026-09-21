@@ -246,7 +246,7 @@ MR_HEROES = [
     "Black Widow", "Cloak & Dagger", "Wolverine", "Mister Fantastic",
     "Invisible Woman", "Human Torch", "The Thing", "Emma Frost", "Ultron",
     "Angela", "Blade", "Daredevil", "Deadpool", "Elsa Bloodstone",
-    "Gambit", "Rogue",
+    "Gambit", "Rogue", "Black Cat",
 ]
 
 MR_ROLES = ["+", "Vanguard", "Duelist", "Strategist", "Flex"]
@@ -262,6 +262,10 @@ DL_HEROES = [
 ]
 
 DL_ROLES = ["+", "Flex"]
+
+CS2_MAPS = [
+    "+", "Ancient", "Anubis", "Dust II", "Inferno", "Mirage", "Nuke", "Overpass",
+]
 
 # OW Ban heroes organized by role
 OW_BAN_TANKS = [
@@ -311,4 +315,8 @@ def get_game_data():
             "heroes": DL_HEROES,
             "roles": DL_ROLES,
         },
+        "cs2": {
+            "maps": CS2_MAPS,
+        },
+        "tft": {},
     }

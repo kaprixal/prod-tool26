@@ -21,7 +21,7 @@ const DPS = [
   'anran', 'ashe', 'bastion', 'cassidy', 'echo', 'emre', 'freja',
   'genji', 'hanzo', 'junkrat', 'mei', 'pharah',
   'reaper', 'sojourn', 'soldier76', 'sombra', 'symmetra',
-  'torbjorn', 'tracer', 'vendetta', 'venture', 'widowmaker',
+  'sierra', 'torbjorn', 'tracer', 'vendetta', 'venture', 'widowmaker',
 ];
 
 const SUPPORTS = [

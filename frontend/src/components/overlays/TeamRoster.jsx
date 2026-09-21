@@ -44,6 +44,7 @@ const LAYOUT_6 = {
 };
 
 const SIX_PLAYER_GAMES = new Set(['mr', 'dl']);
+const NO_ROLE_GAMES = new Set(['dl', 'cs2']);
 
 export default function TeamRoster({ team = 1 }) {
   const { state } = usePolledState(1000);
@@ -93,6 +94,13 @@ export default function TeamRoster({ team = 1 }) {
     return '';
   };
 
+  /* ── CS2: resolve agent image by slot index (fixed images, not by character name) ── */
+  /* Team 1 uses agent_1–agent_5, Team 2 uses agent_6–agent_10 */
+  const cs2AgentImgPath = (slotIndex) => {
+    const num = isTeam1 ? slotIndex + 1 : slotIndex + 6;
+    return asset(`/assets/cs2_agents/agent_${num}.png`);
+  };
+
   /* onError handler — cycles through MR hero image candidates */
   const handleHeroImgError = (e, hero) => {
     if (game !== 'mr') return;
@@ -119,12 +127,12 @@ export default function TeamRoster({ team = 1 }) {
 
   return (
     <div className="stack-container text-center">
-      <img className="roster-logo" src={teamData?.logo || asset(`/assets/game_logos/${{ ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' }[game] || 'blank'}.png`)} onError={(e) => { e.target.src = asset(`/assets/game_logos/${{ ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' }[game] || 'blank'}.png`); }} alt="" />
+      <img className="roster-logo" src={teamData?.logo || asset(`/assets/game_logos/${{ ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl', cs2: 'cs2' }[game] || 'blank'}.png`)} onError={(e) => { e.target.src = asset(`/assets/game_logos/${{ ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl', cs2: 'cs2' }[game] || 'blank'}.png`); }} alt="" />
       <div className="roster-team uppercase font-integral-bold">{teamData?.name || ''}</div>
       <img className="stacked-image" src={bgImage} alt="" />
 
       {/* Role icons */}
-      {game !== 'dl' && (
+      {!NO_ROLE_GAMES.has(game) && (
         <div className={L.roleClass}>
           {players.map((p, i) => (
             <img key={i} id={`role${i + 1}`} src={roleIconPath(p.role)} alt="" />
@@ -137,7 +145,7 @@ export default function TeamRoster({ team = 1 }) {
         <div key={i} className="font-integral-bold">
           <img
             id={`roster-img-${i + 1}`}
-            src={heroImgPath(p.character)}
+            src={game === 'cs2' ? cs2AgentImgPath(i) : heroImgPath(p.character)}
             onError={(e) => handleHeroImgError(e, p.character)}
             alt=""
             style={{

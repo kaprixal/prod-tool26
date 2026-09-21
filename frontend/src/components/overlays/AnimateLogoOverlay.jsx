@@ -13,7 +13,7 @@ export default function AnimateLogoOverlay() {
 
   const cm = state?.currMatch || '1';
   const match = state?.matches?.[cm];
-  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' };
+  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl', cs2: 'cs2', tft: 'tft' };
   const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[match?.game] || 'blank'}.png`);
   const t1logo = match?.team1?.logo || defaultLogo;
   const t2logo = match?.team2?.logo || defaultLogo;

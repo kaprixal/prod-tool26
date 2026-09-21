@@ -1,11 +1,17 @@
 import { useState } from 'react';
-import { setCurrMatch } from '../../api';
+import { setCurrMatch, triggerBmoPlay } from '../../api';
 import MatchPanel from './MatchPanel';
 
 export default function LiveTab({ state, gameData, onUpdate }) {
   const [activeMatch, setActiveMatch] = useState(state.currMatch || '1');
 
+  const liveMatch = state.currMatch || '1';
+
   const handleTabSwitch = (n) => {
+    setActiveMatch(n);
+  };
+
+  const handleSetLive = (n) => {
     setActiveMatch(n);
     setCurrMatch(n);
     onUpdate();
@@ -28,17 +34,44 @@ export default function LiveTab({ state, gameData, onUpdate }) {
             onClick={() => handleTabSwitch(n)}
           >
             Match {n}
+            {liveMatch === n && (
+              <span className="ml-1.5 inline-block w-2 h-2 rounded-full bg-green-400 align-middle" />
+            )}
           </button>
         ))}
       </div>
+
+      {liveMatch !== activeMatch && (
+        <div className="mb-3">
+          <button
+            className="px-4 py-1 bg-green-700 hover:bg-green-600 active:bg-green-800 text-white text-sm rounded transition-colors font-semibold"
+            onClick={() => handleSetLive(activeMatch)}
+          >
+            Set Match {activeMatch} Live
+          </button>
+        </div>
+      )}
 
       <MatchPanel
         matchNumber={activeMatch}
         matchData={state.matches?.[activeMatch]}
         game={matchGame}
         gameData={gameData}
+        tftLobbyHistoryPlayerKey={state.tftLobbyHistoryPlayerKey}
+        tftLobbyHistoryQueue={state.tftLobbyHistoryQueue}
         onUpdate={onUpdate}
       />
+
+      {matchGame === 'val' && (
+        <div className="mt-4 pt-4">
+          <button
+            className="w-full px-4 py-2 bg-blue-700 hover:bg-blue-600 active:bg-blue-800 text-white text-sm rounded transition-colors font-bold"
+            onClick={() => triggerBmoPlay()}
+          >
+            BMO Budgeting Play
+          </button>
+        </div>
+      )}
     </>
   );
 }

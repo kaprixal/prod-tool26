@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { updateSchedule } from '../../api';
 
 export default function ScheduleSubTab({ state, onUpdate }) {
-  const [matchCount, setMatchCount] = useState(state.matchCount || '1');
+  const [matchCount, setMatchCount] = useState(state.matchCount ?? '1');
   const [formats, setFormats] = useState({
     match1Format: state.matches?.['1']?.format || 'ft2',
     match1Details: state.matches?.['1']?.details || '',
@@ -13,7 +13,7 @@ export default function ScheduleSubTab({ state, onUpdate }) {
   });
 
   useEffect(() => {
-    setMatchCount(state.matchCount || '1');
+    setMatchCount(state.matchCount ?? '1');
     setFormats({
       match1Format: state.matches?.['1']?.format || 'ft2',
       match1Details: state.matches?.['1']?.details || '',
@@ -37,7 +37,7 @@ export default function ScheduleSubTab({ state, onUpdate }) {
           <div className="flex flex-row items-center">
             <label className="pr-5 text-left">Match Count</label>
             <div>
-              {['1', '2', '3'].map((val) => (
+              {['0', '1', '2', '3'].map((val) => (
                 <label key={val} className="inline-flex items-center">
                   <input
                     type="radio"

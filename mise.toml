@@ -1,0 +1,6 @@
+[settings]
+# Railway's builder (Railpack) uses mise to install the Python version pinned
+# in runtime.txt. mise's GitHub-artifact-attestation check for python@3.12.0
+# is currently failing on Railway's build machines (a mise/GitHub issue, not
+# ours) — disabling verification here so builds aren't blocked by it.
+python.github_attestations = false

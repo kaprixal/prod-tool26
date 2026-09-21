@@ -9,6 +9,12 @@ const LS_KEY = 'prodToolState';
 // Default state factories (mirrors backend defaults)
 // ---------------------------------------------------------------------------
 
+function makeDefaultPanelists(count) {
+  return Object.fromEntries(
+    Array.from({ length: count }, (_, i) => [`p${i + 1}`, { name: '', pronouns: '' }])
+  );
+}
+
 function makeDefaultPlayer() {
   return { name: '', character: '+', role: '+' };
 }
@@ -36,8 +42,12 @@ function makeDefaultMatch() {
 export function makeDefaultState() {
   return {
     currMatch: '1',
+    stylePreset: 'CIE2026',
+    tftLobbyHistoryPlayerKey: 'p1',
+    tftLobbyHistoryQueue: 'both',
     streamTitle: '',
     subtitle: '',
+    timerMinutes: '',
     caster1: { name: '', info: '' },
     caster2: { name: '', info: '' },
     guest1: { name: '', info: '' },
@@ -48,7 +58,15 @@ export function makeDefaultState() {
       '2': { ...makeDefaultMatch(), game: '', format: 'ft2', details: '' },
       '3': { ...makeDefaultMatch(), game: '', format: 'ft2', details: '' },
     },
+    bmoPlayActive: false,
     owBans: {},
+    panelists: {
+      '2': makeDefaultPanelists(2),
+      '3': makeDefaultPanelists(3),
+      '4': makeDefaultPanelists(4),
+      '5': makeDefaultPanelists(5),
+      '6': makeDefaultPanelists(6),
+    },
   };
 }
 
@@ -73,30 +91,37 @@ export function computeMatchScores(matchData) {
   }
 
   // Determine map states based on format
+  // Helper: count wins up to (but not including) map index i
+  function winsUpTo(upTo) {
+    let w1 = 0, w2 = 0;
+    for (let k = 0; k < upTo; k++) {
+      if (winners[k] === 1 && mapdone[k] === 1) w1++;
+      if (winners[k] === 2 && mapdone[k] === 1) w2++;
+    }
+    return [w1, w2];
+  }
+  const winsNeededForState = { ft1: 1, ft2: 2, ft3: 3 }[fmt] ?? 2;
+  const formatMaps = { ft1: 1, ft2: 3, ft3: 5 }[fmt] ?? 3;
+
   if (fmt === 'ft1') {
     matchData.maps.map1.state = mapdone[0] === 0 ? 'up next' : 'done';
-  } else if (fmt === 'ft2') {
-    for (let i = 0; i < 3; i++) {
-      if (mapdone[i] === 0) {
+  } else {
+    for (let i = 0; i < formatMaps; i++) {
+      const [w1, w2] = winsUpTo(i);
+      if (w1 >= winsNeededForState || w2 >= winsNeededForState) {
+        // Series already decided — remaining maps are unplayed
+        matchData.maps[`map${i + 1}`].state = 'unplayed';
+      } else if (mapdone[i] === 0) {
         matchData.maps[`map${i + 1}`].state = 'up next';
-        for (let j = i + 1; j < 3; j++) matchData.maps[`map${j + 1}`].state = 'unplayed';
-        for (let j = 3; j < totalMaps; j++) matchData.maps[`map${j + 1}`].state = 'unplayed';
-        break;
-      } else {
-        matchData.maps[`map${i + 1}`].state = 'done';
-      }
-    }
-  } else if (fmt === 'ft3') {
-    for (let i = 0; i < totalMaps; i++) {
-      if (mapdone[i] === 0) {
-        matchData.maps[`map${i + 1}`].state = 'up next';
-        for (let j = i + 1; j < totalMaps; j++) matchData.maps[`map${j + 1}`].state = 'unplayed';
+        for (let j = i + 1; j < formatMaps; j++) matchData.maps[`map${j + 1}`].state = 'unplayed';
         break;
       } else {
         matchData.maps[`map${i + 1}`].state = 'done';
       }
     }
   }
+  // Mark maps beyond the format as unplayed
+  for (let i = formatMaps; i < totalMaps; i++) matchData.maps[`map${i + 1}`].state = 'unplayed';
 
   // Count wins
   const numMaps = { ft1: 1, ft2: 3, ft3: 5 }[fmt] || 3;
@@ -109,14 +134,22 @@ export function computeMatchScores(matchData) {
   matchData.t1TotalScore = count1;
   matchData.t2TotalScore = count2;
 
-  // Determine winner
-  const mapDoneKey = { ft1: 0, ft2: 2, ft3: 4 }[fmt] ?? 2;
-  if (mapdone[mapDoneKey] === 1) {
-    if (count1 > count2) matchData.winner = 't1';
-    else if (count2 > count1) matchData.winner = 't2';
-    else matchData.winner = 'none';
+  // Determine winner — smart detect: series decided when a team reaches the win threshold
+  const winsNeeded = { ft1: 1, ft2: 2, ft3: 3 }[fmt] ?? 2;
+  if (count1 >= winsNeeded) {
+    matchData.winner = 't1';
+  } else if (count2 >= winsNeeded) {
+    matchData.winner = 't2';
   } else {
-    matchData.winner = 'none';
+    // Fall back to checking if the last possible map is done (e.g. draw scenario)
+    const mapDoneKey = { ft1: 0, ft2: 2, ft3: 4 }[fmt] ?? 2;
+    if (mapdone[mapDoneKey] === 1) {
+      if (count1 > count2) matchData.winner = 't1';
+      else if (count2 > count1) matchData.winner = 't2';
+      else matchData.winner = 'none';
+    } else {
+      matchData.winner = 'none';
+    }
   }
 }
 
@@ -131,7 +164,7 @@ export function getState() {
       const parsed = JSON.parse(raw);
       // Ensure all expected keys exist (defensive merge with defaults)
       const def = makeDefaultState();
-      return { ...def, ...parsed, matches: { ...def.matches, ...parsed.matches } };
+      return { ...def, ...parsed, matches: { ...def.matches, ...parsed.matches }, panelists: { ...def.panelists, ...(parsed.panelists || {}) } };
     }
   } catch (e) {
     console.warn('[localStore] Could not read state:', e);
@@ -162,6 +195,8 @@ export function updateGeneralInfo(data) {
   const s = getState();
   s.streamTitle = data.streamTitle;
   s.subtitle = data.subtitle;
+  s.timerMinutes = data.timerMinutes;
+  s.timerResetAt = Date.now();
   s.caster1 = { name: data.caster1Name, info: data.caster1Info };
   s.caster2 = { name: data.caster2Name, info: data.caster2Info };
   s.guest1 = { name: data.guest1Name, info: data.guest1Info };
@@ -255,6 +290,50 @@ export function updateOwBan(hero, team) {
 
 export function resetState() {
   return saveState(makeDefaultState());
+}
+
+export function setPanelCount(count) {
+  const s = getState();
+  s.panelCount = String(count);
+  return saveState(s);
+}
+
+export function updatePanelInfo(count, panelists) {
+  const s = getState();
+  if (!s.panelists) s.panelists = {};
+  s.panelists[String(count)] = panelists;
+  s.panelCount = String(count);
+  return saveState(s);
+}
+
+export function triggerBmoPlay() {
+  const s = getState();
+  s.bmoPlayActive = true;
+  return saveState(s);
+}
+
+export function clearBmoPlay() {
+  const s = getState();
+  s.bmoPlayActive = false;
+  return saveState(s);
+}
+
+export function setStylePreset(presetId) {
+  const s = getState();
+  s.stylePreset = presetId;
+  return saveState(s);
+}
+
+export function setTftLobbyHistoryPlayerKey(playerKey) {
+  const s = getState();
+  s.tftLobbyHistoryPlayerKey = playerKey;
+  return saveState(s);
+}
+
+export function setTftLobbyHistoryQueue(queue) {
+  const s = getState();
+  s.tftLobbyHistoryQueue = queue;
+  return saveState(s);
 }
 
 export function restoreState(data) {

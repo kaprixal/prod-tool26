@@ -1,5 +1,12 @@
 import { usePolledState } from '../../hooks/usePolledState';
-import { asset } from '../../api';
+import { asset, presetAsset } from '../../api';
+import Slideshow from './Slideshow';
+
+const slideshowModules = import.meta.glob(
+  './assets/sponsor_slideshow/*.{png,jpg,jpeg,webp,gif}',
+  { eager: true }
+);
+const SLIDESHOW_IMGS = Object.values(slideshowModules).map((m) => m.default);
 
 /**
  * 1-guest interview cam overlay.
@@ -14,23 +21,23 @@ export default function GuestOverlay() {
   const match = state.matches?.[cm];
   const t1score = match?.t1TotalScore ?? 0;
   const t2score = match?.t2TotalScore ?? 0;
-  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl' };
+  const gameLogoMap = { ow2: 'ow', lol: 'lol', val: 'val', mr: 'mr', dl: 'dl', cs2: 'cs2', tft: 'tft' };
   const defaultLogo = asset(`/assets/game_logos/${gameLogoMap[match?.game] || 'blank'}.png`);
   const t1logo = match?.team1?.logo || defaultLogo;
   const t2logo = match?.team2?.logo || defaultLogo;
 
   const isZeroZero = t1score === 0 && t2score === 0;
   const vsSrc = isZeroZero
-    ? asset('/assets/casters_and_interviews/casters_vs_1.png')
-    : asset('/assets/casters_and_interviews/casters_vs_2.png');
+    ? presetAsset('casters_and_interviews', 'casters_vs_1.png')
+    : presetAsset('casters_and_interviews', 'casters_vs_2.png');
 
   return (
     <div className="stack-container text-white">
       {/* Caster names (inline) */}
-      <div id="caster-1-iname" className="caster-int font-built-bold text-3xl" style={{ top: 320 }}>
+      <div id="caster-1-iname" className="caster-int font-built-bold text-3xl" style={{ top: 335 }}>
         {state.caster1?.name}
       </div>
-      <div id="caster-2-iname" className="caster-int font-built-bold text-3xl" style={{ top: 670 }}>
+      <div id="caster-2-iname" className="caster-int font-built-bold text-3xl" style={{ top: 685 }}>
         {state.caster2?.name}
       </div>
 
@@ -101,7 +108,8 @@ export default function GuestOverlay() {
       )}
 
       {/* Background */}
-      <img className="stacked-image" src={asset('/assets/casters_and_interviews/interview_cam_box.png')} alt="" />
+      <img className="stacked-image" src={presetAsset('casters_and_interviews', 'interview_cam_box.png')} alt="" />
+    <Slideshow images={SLIDESHOW_IMGS} top={873} left={140} width={300} height={120} interval={5000}/>
     </div>
   );
 }
