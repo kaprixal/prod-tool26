@@ -183,13 +183,13 @@ LOL_ROLES = ["+", "Top", "Jungle", "Mid", "ADC", "Support"]
 
 OW_HEROES = [
     "+", "Ana", "Anran", "Ashe", "Baptiste", "Bastion", "Brigitte", "Cassidy",
-    "D.Va", "Domina", "Doomfist", "Echo", "Emre", "Genji", "Hanzo", "Hazard",
-    "Illari", "Jetpack Cat", "Junker Queen", "Junkrat", "Juno", "Kiriko",
-    "Lifeweaver", "Lucio", "Mauga", "Mei", "Mercy", "Mizuki", "Moira", "Orisa",
-    "Pharah", "Ramattra", "Reaper", "Reinhardt", "Roadhog", "Sigma", "Sojourn",
-    "Soldier: 76", "Sombra", "Symmetra", "Torbjorn", "Tracer", "Vendetta",
-    "Venture", "Widowmaker", "Winston", "Wrecking Ball", "Wuyang", "Zarya",
-    "Zenyatta",
+    "D.Mon", "D.Va", "Doctrine", "Domina", "Doomfist", "Echo", "Emre", "Genji",
+    "Hanzo", "Hazard", "Illari", "Jetpack Cat", "Junker Queen", "Junkrat", "Juno",
+    "Kiriko", "Lifeweaver", "Lucio", "Mauga", "Mei", "Mercy", "Mizuki", "Moira",
+    "Orisa", "Pharah", "Ramattra", "Reaper", "Reinhardt", "Roadhog", "Shion",
+    "Sigma", "Sojourn", "Soldier: 76", "Sombra", "Symmetra", "Torbjorn", "Tracer",
+    "Vendetta", "Venture", "Widowmaker", "Winston", "Wrecking Ball", "Wuyang",
+    "Zarya", "Zenyatta",
 ]
 
 OW_ROLES = ["+", "Tank", "DPS", "Support", "Flex"]
