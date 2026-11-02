@@ -1,0 +1,47 @@
+name: Check for new Overwatch maps
+
+on:
+  schedule:
+    # Cron can't count fortnights, so this runs on Mondays and skips every other week.
+    - cron: '0 14 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip the off week
+        id: schedule
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "schedule" ] && [ $(( $(date +%s) / 604800 % 2 )) -ne 1 ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v7
+        if: steps.schedule.outputs.run == 'true'
+
+      - name: Compare the map list with OverFast
+        if: steps.schedule.outputs.run == 'true'
+        run: python3 scripts/ow_maps.py check --report report.md
+
+      - name: Open or update the issue
+        if: steps.schedule.outputs.run == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ ! -f report.md ]; then
+            exit 0
+          fi
+          title="New Overwatch maps to add"
+          number=$(gh issue list --state open --search "\"$title\" in:title" --json number --jq '.[0].number // empty')
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --body-file report.md
+          else
+            gh issue create --title "$title" --body-file report.md
+          fi
