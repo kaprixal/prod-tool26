@@ -201,13 +201,13 @@ OW_MAPS_CONTROL = [
     "Nepal", "Oasis", "Samoa",
 ]
 OW_MAPS_ESCORT = [
-    "Circuit Royal", "Dorado", "Havana", "Junkertown", "Rialto",
+    "Circuit Royal", "Dorado", "Grímsvötn", "Havana", "Junkertown", "Rialto",
     "Route 66", "Shambali Monastery", "Watchpoint: Gibraltar",
 ]
-OW_MAPS_FLASHPOINT = ["New Junk City", "Suravasa", "Atlis"]
+OW_MAPS_FLASHPOINT = ["New Junk City", "Suravasa", "Aatlis"]
 OW_MAPS_HYBRID = [
     "Blizzard World", "Eichenwalde", "Hollywood", "King's Row",
-    "Midtown", "Numbani", "Paraíso",
+    "Midtown", "Neon Junction", "Numbani", "Paraíso",
 ]
 OW_MAPS_PUSH = ["Colosseo", "Esperanca", "New Queen Street", "Runasapi"]
 OW_MAPS_CLASH = ["Hanaoka", "Throne of Anubis"]
