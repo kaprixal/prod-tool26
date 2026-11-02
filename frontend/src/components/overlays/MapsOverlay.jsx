@@ -78,7 +78,7 @@ export default function MapsOverlay() {
   /* ---- Image path helpers ---- */
   const resolveMapImg = (m) => {
     const mapName = m.name === '+' ? 'undecided' : m.name;
-    const clean = mapName.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[\s:.'-]+/g, '');
+    const clean = mapName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[\s:.'-]+/g, '');
     if (game === 'cs2') {
       if (m.name === '+' || !CS2_MAP_IMGS[m.name]) return asset(BLANK);
       return CS2_MAP_IMGS[m.name][cs2FormatIdx];
