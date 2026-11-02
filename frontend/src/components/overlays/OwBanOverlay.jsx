@@ -12,7 +12,7 @@ import { updateOwBan, asset } from '../../api';
  */
 
 const TANKS = [
-  'domina', 'dva', 'doomfist', 'hazard', 'junkerqueen',
+  'dmon', 'domina', 'dva', 'doomfist', 'hazard', 'junkerqueen',
   'mauga', 'orisa', 'ramattra', 'reinhardt',
   'roadhog', 'sigma', 'winston', 'wreckingball', 'zarya',
 ];
@@ -20,14 +20,14 @@ const TANKS = [
 const DPS = [
   'anran', 'ashe', 'bastion', 'cassidy', 'echo', 'emre', 'freja',
   'genji', 'hanzo', 'junkrat', 'mei', 'pharah',
-  'reaper', 'sojourn', 'soldier76', 'sombra', 'symmetra',
-  'sierra', 'torbjorn', 'tracer', 'vendetta', 'venture', 'widowmaker',
+  'reaper', 'shion', 'sierra', 'sojourn', 'soldier76', 'symmetra',
+  'torbjorn', 'tracer', 'vendetta', 'venture', 'widowmaker',
 ];
 
 const SUPPORTS = [
-  'ana', 'baptiste', 'brigitte', 'illari',
+  'ana', 'baptiste', 'brigitte', 'doctrine', 'illari',
   'jetpack_cat', 'juno', 'kiriko', 'lifeweaver', 'lucio',
-  'mercy', 'mizuki', 'moira', 'wuyang', 'zenyatta',
+  'mercy', 'mizuki', 'moira', 'sombra', 'wuyang', 'zenyatta',
 ];
 
 const OVERLAY_IMAGES = {
