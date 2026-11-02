@@ -9,3 +9,8 @@ node_modules/
 **/.vite/
 
 CIE2024/
+
+# Local secrets and settings
+.env
+.env.*
+!.env.example
