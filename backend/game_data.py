@@ -183,13 +183,13 @@ LOL_ROLES = ["+", "Top", "Jungle", "Mid", "ADC", "Support"]
 
 OW_HEROES = [
     "+", "Ana", "Anran", "Ashe", "Baptiste", "Bastion", "Brigitte", "Cassidy",
-    "D.Mon", "D.Va", "Doctrine", "Domina", "Doomfist", "Echo", "Emre", "Genji",
-    "Hanzo", "Hazard", "Illari", "Jetpack Cat", "Junker Queen", "Junkrat", "Juno",
-    "Kiriko", "Lifeweaver", "Lucio", "Mauga", "Mei", "Mercy", "Mizuki", "Moira",
-    "Orisa", "Pharah", "Ramattra", "Reaper", "Reinhardt", "Roadhog", "Shion",
-    "Sigma", "Sojourn", "Soldier: 76", "Sombra", "Symmetra", "Torbjorn", "Tracer",
-    "Vendetta", "Venture", "Widowmaker", "Winston", "Wrecking Ball", "Wuyang",
-    "Zarya", "Zenyatta",
+    "D.Mon", "D.Va", "Doctrine", "Domina", "Doomfist", "Echo", "Emre", "Freja",
+    "Genji", "Hanzo", "Hazard", "Illari", "Jetpack Cat", "Junker Queen", "Junkrat",
+    "Juno", "Kiriko", "Lifeweaver", "Lucio", "Mauga", "Mei", "Mercy", "Mizuki",
+    "Moira", "Orisa", "Pharah", "Ramattra", "Reaper", "Reinhardt", "Roadhog",
+    "Shion", "Sierra", "Sigma", "Sojourn", "Soldier: 76", "Sombra", "Symmetra",
+    "Torbjorn", "Tracer", "Vendetta", "Venture", "Widowmaker", "Winston",
+    "Wrecking Ball", "Wuyang", "Zarya", "Zenyatta",
 ]
 
 OW_ROLES = ["+", "Tank", "DPS", "Support", "Flex"]
@@ -220,11 +220,10 @@ VAL_MAPS = [
 ]
 
 VAL_AGENTS = [
-    "+", "Brimstone", "Phoenix", "Sage", "Sova", "Viper", "Cypher",
-    "Reyna", "Killjoy", "Breach", "Omen", "Jett", "Raze", "Skye",
-    "Yoru", "Astra", "Kayo", "Chamber", "Neon", "Fade", "Harbor",
-    "Gekko", "Deadlock", "Iso", "Clove", "Vyse", "Veto", "Tejo",
-    "Waylay",
+    "+", "Astra", "Breach", "Brimstone", "Chamber", "Clove", "Cypher",
+    "Deadlock", "Fade", "Gekko", "Harbor", "Hush", "Iso", "Jett", "Kayo",
+    "Killjoy", "Miks", "Neon", "Omen", "Phoenix", "Raze", "Reyna", "Sage",
+    "Skye", "Sova", "Tejo", "Veto", "Viper", "Vyse", "Waylay", "Yoru",
 ]
 
 VAL_ROLES = ["+", "Sentinel", "Duelist", "Controller", "Initiator", "Flex"]
@@ -246,8 +245,9 @@ MR_HEROES = [
     "Psylocke", "Moon Knight", "Hawkeye", "Squirrel Girl", "Iron Fist",
     "Black Widow", "Cloak & Dagger", "Wolverine", "Mister Fantastic",
     "Invisible Woman", "Human Torch", "The Thing", "Emma Frost", "Ultron",
-    "Angela", "Blade", "Daredevil", "Deadpool", "Elsa Bloodstone",
-    "Gambit", "Rogue", "Black Cat",
+    "Phoenix", "Angela", "Blade", "Daredevil", "Deadpool", "Elsa Bloodstone",
+    "Gambit", "Rogue", "White Fox", "Black Cat", "Devil Dinosaur", "Cyclops",
+    "Jubilee", "The Hood", "Gorr",
 ]
 
 MR_ROLES = ["+", "Vanguard", "Duelist", "Strategist", "Flex"]
