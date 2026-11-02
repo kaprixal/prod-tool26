@@ -1,4 +1,4 @@
-name: Check for new game maps
+name: Check for game asset updates
 
 on:
   schedule:
@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@v7
         if: steps.schedule.outputs.run == 'true'
 
-      - name: Compare the map lists with live data
+      - name: Compare maps and ban screen heroes with live data
         if: steps.schedule.outputs.run == 'true'
         run: python3 scripts/game_maps.py check --report report.md
 
@@ -39,7 +39,7 @@ jobs:
           if [ ! -f report.md ]; then
             exit 0
           fi
-          title="New game maps to add"
+          title="Game assets to update"
           number=$(gh issue list --state open --search "\"$title\" in:title" --json number --jq '.[0].number // empty')
           if [ -n "$number" ]; then
             gh issue edit "$number" --body-file report.md

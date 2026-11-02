@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Keep the game map lists and map tiles in step with the live games.
 
-  check  Compare backend/game_data.py with each game's live data and report what
-         is missing. Exits non-zero if any source can't be read, so a failed
-         check is visible.
+  check  Compare backend/game_data.py and the Overwatch ban screen with live data
+         and report what is missing. Exits non-zero if any source can't be read,
+         so a failed check is visible.
   tile   Build a map's missing tiles from a landscape image (needs Pillow).
 """
 
@@ -21,6 +21,7 @@ sys.path.insert(0, str(ROOT / "backend"))
 sys.dont_write_bytecode = True  # backend/__pycache__ is tracked in git
 
 from game_data import MR_MAPS, OW_MAPS, VAL_MAPS  # noqa: E402
+from ow_ban_tiles import build_hero_report  # noqa: E402
 
 MAPS_DIR = ROOT / "frontend/src/components/overlays/assets/maps"
 CORNER_RADIUS = 30
@@ -207,23 +208,30 @@ def make_tiles(game, name, source, focus, overwrite):
 
 
 def check(report_path):
-    sections = []
+    map_sections = []
+    hero_sections = []
     failed = False
     # One unreachable source shouldn't hide what the others found.
     for game in GAMES.values():
         try:
-            sections += build_game_report(game, game["fetch"]())
+            map_sections += build_game_report(game, game["fetch"]())
         except Exception as error:
             print(f"Could not check {game['label']}: {error}", file=sys.stderr)
             failed = True
+    try:
+        hero_sections = build_hero_report()
+    except Exception as error:
+        print(f"Could not check the Overwatch ban screen: {error}", file=sys.stderr)
+        failed = True
 
+    sections = map_sections + ([HOW_TO_ADD] if map_sections else []) + hero_sections
     if sections:
-        report = "\n\n".join(sections + [HOW_TO_ADD])
+        report = "\n\n".join(sections)
         print(report)
         if report_path:
             report_path.write_text(report, encoding="utf-8")
     elif not failed:
-        print("All game maps are up to date.")
+        print("All game maps and Overwatch ban screen heroes are up to date.")
     return 1 if failed else 0
 
 
