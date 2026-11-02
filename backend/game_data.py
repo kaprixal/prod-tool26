@@ -216,7 +216,7 @@ OW_MAPS = ["+"] + OW_MAPS_CONTROL + OW_MAPS_HYBRID + OW_MAPS_ESCORT + OW_MAPS_PU
 
 VAL_MAPS = [
     "+", "Abyss", "Lotus", "Pearl", "Fracture", "Breeze", "Icebox",
-    "Bind", "Haven", "Split", "Ascent", "Sunset", "Corrode",
+    "Bind", "Haven", "Split", "Ascent", "Sunset", "Corrode", "Summit",
 ]
 
 VAL_AGENTS = [
@@ -233,7 +233,8 @@ MR_MAPS = [
     "+", "Central Park", "Hall of Djalia", "Symbiotic Surface",
     "Shin-Shibuya", "Arakko", "Midtown", "Spider-Islands",
     "Yggdrasill Path", "Krakoa", "Hell's Heaven", "Birnin T'Challa",
-    "Celestial Husk", "Royal Palace",
+    "Celestial Husk", "Royal Palace", "Heart of Heaven", "Lower Manhattan",
+    "Museum of Contemplation", "Thebes", "God Quarry",
 ]
 
 MR_HEROES = [
